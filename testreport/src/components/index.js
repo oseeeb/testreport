@@ -1,0 +1,2 @@
+//component to export
+export {};
