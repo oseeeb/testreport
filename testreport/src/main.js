@@ -23,5 +23,5 @@ Vue.use(MaterialDashboard);
 new Vue({
   el: "#app",
   render: h => h(App),
-  router,
+  router
 });

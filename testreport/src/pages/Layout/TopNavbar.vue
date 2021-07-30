@@ -2,7 +2,9 @@
   <md-toolbar md-elevation="0" class="md-transparent">
     <div class="md-toolbar-row">
       <div class="md-toolbar-section-start">
-        <h3 class="md-title"><strong>TestReport : ID_TestReport</strong> | {{ $route.name }}</h3>
+        <h3 class="md-title">
+          <strong>TestReport : ID_TestReport</strong> | {{ $route.name }}
+        </h3>
       </div>
       <div class="md-toolbar-section-end">
         <md-button
