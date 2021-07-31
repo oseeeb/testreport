@@ -1,6 +1,156 @@
 <template>
   <div class="content">
-    <div class="md-layout">  
+    <div class="md-layout md-gutter md-alignment-center">
+      <div class="md-layout-item md-xlarge-size-75 md-large-size-75 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+        <md-table v-model="infoReport" md-card>
+          <md-table-toolbar>
+            <h1 class="md-title">General Informations</h1>
+          </md-table-toolbar>
+          <md-table-row v-for="item in infoReport" :key="item">
+            <md-table-cell style="width:25%;">{{ item.elemt }}</md-table-cell>
+            <md-table-cell>{{ item.value }}</md-table-cell>
+          </md-table-row>
+        </md-table>
+      </div>  
+      <div class="md-layout-item md-xlarge-size-25  md-large-size-25 md-medium-size-25 md-small-size-50 md-xsmall-size-100">
+        <md-card class="md-accent" md-with-hover>
+          <md-ripple>
+            <md-card-header>
+              <div class="md-title">Test Result</div>
+            </md-card-header>
+            <md-card-content>
+              <span style="">FAIL</span>
+            </md-card-content>
+          </md-ripple>
+        </md-card>
+      </div>  
+    </div>
+    <div class="md-layout">
+      <md-card class="md-layout-item">
+        <md-card-header>
+          <div class="md-title">Test Plan</div>
+        </md-card-header>
+
+        <md-card-content>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+        </md-card-content>
+      </md-card>
+      <md-card class="md-layout-item">
+        <md-card-header>
+          <div class="md-title">Test Cases</div>
+        </md-card-header>
+
+        <md-card-content>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+        </md-card-content>
+      </md-card>
+      <md-card class="md-layout-item">
+        <md-card-header>
+          <div class="md-title">Test Configuration</div>
+        </md-card-header>
+
+        <md-card-content>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+        </md-card-content>
+      </md-card>
+      <md-card class="md-layout-item">
+        <md-card-header>
+          <div class="md-title">Test Level</div>
+        </md-card-header>
+
+        <md-card-content>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+        </md-card-content>
+      </md-card>  
+    </div>
+    <div class="md-layout">
+      <md-card class="md-layout-item">
+        <md-card-header>
+          <div class="md-title">Functional TestCases</div>
+        </md-card-header>
+
+        <md-card-content>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+        </md-card-content>
+      </md-card>
+      <div class="md-layout md-layout-item">
+        <md-card >
+          <md-card-header>
+            <div class="md-title">RunTime Coverage</div>
+          </md-card-header>
+
+          <md-card-content>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+          </md-card-content>
+        </md-card>
+        <md-card >
+          <md-card-header>
+            <div class="md-title">Preprocessor Coverage</div>
+          </md-card-header>
+
+          <md-card-content>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+          </md-card-content>
+        </md-card>
+      </div>
+      <div class="md-layout md-layout-item">
+        <md-card >
+          <md-card-header>
+            <div class="md-title">MISRA</div>
+          </md-card-header>
+          <md-card-content>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+          </md-card-content>
+        </md-card>
+        <md-card >
+          <md-card-header>
+            <div class="md-title">Memory Resource</div>
+          </md-card-header>
+
+          <md-card-content>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+          </md-card-content>
+        </md-card>
+        <md-card >
+          <md-card-header>
+            <div class="md-title">PCLint</div>
+          </md-card-header>
+
+          <md-card-content>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+          </md-card-content>
+        </md-card>
+        <md-card >
+          <md-card-header>
+            <div class="md-title">BuildEmbenddedCompiler</div>
+          </md-card-header>
+
+          <md-card-content>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+          </md-card-content>
+        </md-card>
+        <md-card >
+          <md-card-header>
+            <div class="md-title">BuildVisuel</div>
+          </md-card-header>
+
+          <md-card-content>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+          </md-card-content>
+        </md-card>
+      </div>
+      <div class="md-layout md-layout-item">
+        <md-card>
+          <md-card-header>
+            <div class="md-title">CodeMetric</div>
+          </md-card-header>
+
+          <md-card-content>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non.
+          </md-card-content>
+        </md-card>
+      </div>
+      
     </div>
   </div>
 </template>
@@ -8,91 +158,34 @@
 export default {
   data() {
     return {
-      dailySalesChart: {
-        data: {
-          labels: ["M", "T", "W", "T", "F", "S", "S"],
-          series: [[12, 17, 7, 17, 23, 18, 38]]
+      infoReport:[
+        {
+          elemt:"scope",
+          value:"xxxxxxxxxx"
         },
-        options: {
-          lineSmooth: this.$Chartist.Interpolation.cardinal({
-            tension: 0
-          }),
-          low: 0,
-          high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0
-          }
+        {
+          elemt:"Test Person",
+          value:"xxxxxxxxxx"
+        },
+        {
+          elemt:"Test date",
+          value:"xxxxxxxxxx"
+        },
+        {
+          elemt:"Rationale",
+          value:"xxxxxxxxxx"
+        },
+        {
+          elemt:"Links",
+          value:"xxxxxxxxxx"
         }
-      },
-      dataCompletedTasksChart: {
-        data: {
-          labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
-          series: [[230, 750, 450, 300, 280, 240, 200, 190]]
-        },
-
-        options: {
-          lineSmooth: this.$Chartist.Interpolation.cardinal({
-            tension: 0
-          }),
-          low: 0,
-          high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0
-          }
-        }
-      },
-      emailsSubscriptionChart: {
-        data: {
-          labels: [
-            "Ja",
-            "Fe",
-            "Ma",
-            "Ap",
-            "Mai",
-            "Ju",
-            "Jul",
-            "Au",
-            "Se",
-            "Oc",
-            "No",
-            "De"
-          ],
-          series: [[542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]]
-        },
-        options: {
-          axisX: {
-            showGrid: false
-          },
-          low: 0,
-          high: 1000,
-          chartPadding: {
-            top: 0,
-            right: 5,
-            bottom: 0,
-            left: 0
-          }
-        },
-        responsiveOptions: [
-          [
-            "screen and (max-width: 640px)",
-            {
-              seriesBarDistance: 5,
-              axisX: {
-                labelInterpolationFnc: function(value) {
-                  return value[0];
-                }
-              }
-            }
-          ]
-        ]
-      }
+      ]
     };
   }
 };
 </script>
+<style scoped>
+  .content{
+    padding: 0 15px !important;
+  }
+</style>
