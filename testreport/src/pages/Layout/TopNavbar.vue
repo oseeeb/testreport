@@ -3,7 +3,7 @@
     <div class="md-toolbar-row">
       <div class="md-toolbar-section-start">
         <h3 class="md-title">
-          <strong>TestReport : ID_TestReport</strong> | {{ $route.name }}
+          <strong>TestReport : {{$store.state.testdata.elements[0].name}}</strong> | {{ $route.name }}
         </h3>
       </div>
       <div class="md-toolbar-section-end">

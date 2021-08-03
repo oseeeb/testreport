@@ -1,56 +1,56 @@
-import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
+import OverviewLayout from "@/pages/Layout/OverviewLayout.vue";
 
-import Dashboard from "@/pages/Dashboard.vue";
+import Overview from "@/pages/Overview.vue";
 const routes = [
   {
     path: "/",
-    component: DashboardLayout,
+    component: OverviewLayout,
     redirect: "/overview",
     children: [
       {
         path: "overview",
         name: "overview",
-        component: Dashboard
+        component: Overview
       },
       {
         path: "test_elements",
         name: "test_elements",
-        component: Dashboard
+        component: Overview
       },
       {
         path: "test_cases",
         name: "test_cases",
-        component: Dashboard
+        component: Overview
       },
       {
         path: "test_cases_justifications",
         name: "test_cases_justifications",
-        component: Dashboard
+        component: Overview
       },
       {
         path: "test_configurations",
         name: "test_configurations",
-        component: Dashboard
+        component: Overview
       },
       {
         path: "misra",
         name: "MISRA",
-        component: Dashboard
+        component: Overview
       },
       {
         path: "code_metrics",
         name: "code_metrics",
-        component: Dashboard
+        component: Overview
       },
       {
         path: "runtime_coverage",
         name: "runtime_coverage",
-        component: Dashboard
+        component: Overview
       },
       {
         path: "memory_resources",
         name: "memory_resources",
-        component: Dashboard
+        component: Overview
       }
     ]
   }
