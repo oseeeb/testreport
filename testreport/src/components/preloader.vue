@@ -1,18 +1,25 @@
 <template>
     <div class="preloader">      
         <md-progress-spinner :md-diameter="100" :md-stroke="10" md-mode="indeterminate"></md-progress-spinner>
+        {{message}}
     </div>
 </template>
 
 <script>
 export default {
     name:'preloader',
+    props:{
+        message:{
+            type:String,
+            default:''
+        }
+    }
 }
 </script>
 
 <style scoped>
 .preloader{
-    color: #ca9c05;
+    color: #000000;
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -6,7 +6,7 @@
           <md-table-toolbar>
             <h1 class="md-title">General Informations</h1>
           </md-table-toolbar>
-          <md-table-row v-for="item in infoReport" :key="item">
+          <md-table-row v-for="item in infoReport" :key="item.id">
             <md-table-cell style="width:25%;">{{ item.elemt }}</md-table-cell>
             <md-table-cell>{{ item.value }}</md-table-cell>
           </md-table-row>
@@ -162,19 +162,51 @@ export default {
     };
   },
   mounted(){
-  var testPlanInfo = Object.entries(this.$store.state.testdata.elements[0].attributes);
-    testPlanInfo.forEach((item)=>{
-      this.infoReport.push({
-        elemt:item[0],
-        value:item[1]
-      })
-    })
-    console.log('test',this.$store.state.testdata.elements[0].attributes)
+  var testrunwithInfo = []
+  this.$store.state.testRuns.forEach(element => {
+    if(element._attributes&&element._attributes.executor){
+      testrunwithInfo.push(element);
+    }
+  })
+  this.infoReport=[
+    {
+      id:0,
+      elemt:'Scope',
+      value:this.$store.state.testdata.testplan._attributes.name
+    },
+    {
+      id:1,
+      elemt:'Test Person',
+      value:testrunwithInfo[1]._attributes.executor
+    },
+    {
+      id:2,
+      elemt:'Test Date',
+      value:testrunwithInfo[1]._attributes.date
+    },
+    {
+      id:3,
+      elemt:'Rationale',
+      value:'This is a customer overview documentation.'
+    },
+    {
+      id:4,
+      elemt:'Links',
+      value:''
+    },
+  ]
   }
 };
 </script>
 <style scoped>
   .content{
     padding: 0 15px !important;
+  }
+  .md-table-cell {
+    height: 0 !important;
+    line-height: 5px !important;
+  }
+  .md-card-header{
+    padding: 0 !important;
   }
 </style>
