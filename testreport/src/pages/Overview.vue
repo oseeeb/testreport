@@ -32,9 +32,9 @@
             <div class="md-title">Test Plan</div>
           </md-card-header>
           <md-card-content>
-              <span>{{plannedTestCase.length}} testCases</span><br/>
-              <span>{{plannedTestRun.length}} testRun</span><br/>
-              <span>{{unplannedTestCase.length}} Unplanned TestCase</span><br/>
+              <metrics-bar :Todraw="plannedTestCase" :Type="'testcase'" :Name="'Testcase'"></metrics-bar>
+              <metrics-bar :Todraw="plannedTestRun" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
+              <metrics-bar :Todraw="unplannedTestCase" :Type="'testcase'" :Name="'Unplanned TestCase'"></metrics-bar>
           </md-card-content>
         </md-card>
         <md-card>
@@ -42,8 +42,8 @@
             <div class="md-title">Functional TestCases</div>
           </md-card-header>
           <md-card-content>
-              <span>{{plannedTestCase.length}} testCases</span><br/>
-              <span>{{plannedTestRun.length}} testRun</span><br/>
+              <metrics-bar :Todraw="plannedTestCase" :Type="'testcase'" :Name="'Testcase'"></metrics-bar>
+              <metrics-bar :Todraw="plannedTestRun" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
           </md-card-content>
         </md-card>
       </div>
@@ -54,8 +54,9 @@
           </md-card-header>
 
           <md-card-content>
-              <span>{{$store.state.testCases.length}} testCases</span><br/>
-              <span>{{$store.state.testRuns.length}} testRun</span><br/></md-card-content>
+              <metrics-bar :Todraw="$store.state.testCases" :Type="'testcase'" :Name="'TestCases'"></metrics-bar>
+              <metrics-bar :Todraw="$store.state.testRuns" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
+          </md-card-content>
         </md-card>
         <md-card >
           <md-card-header>
@@ -147,7 +148,7 @@
             <div class="md-title">Preprocessor Coverage</div>
           </md-card-header>
           <md-card-content>
-            <span>{{TestRuns_PPCoverage.length}} TestRuns</span>
+            <metrics-bar :Todraw="TestRuns_PPCoverage" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
           </md-card-content>
         </md-card>
       </div>
@@ -166,7 +167,7 @@
           </md-card-header>
           <md-card-content>
             <OutputConfDevInfo :configCount="configurationCount"/>
-            <span>{{TestRuns_QACSummary.length}} Tests Run</span>
+            <metrics-bar :Todraw="TestRuns_QACSummary" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
           </md-card-content>
         </md-card>
         <md-card >
@@ -175,7 +176,7 @@
           </md-card-header>
 
           <md-card-content>
-            <span>{{TestRuns_MemoryResources.length}} Tests run</span>
+            <metrics-bar :Todraw="TestRuns_MemoryResources" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
           </md-card-content>
         </md-card>
         <md-card >
@@ -184,7 +185,7 @@
           </md-card-header>
 
           <md-card-content>
-           <span>{{TestRuns_PCLint.length}} TestRuns</span>
+            <metrics-bar :Todraw="TestRuns_PCLint" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
           </md-card-content>
         </md-card>
         <md-card >
@@ -193,7 +194,7 @@
           </md-card-header>
 
           <md-card-content>
-            <span>{{TestRuns_BuildEmbeddedCompiler.length}} TestRuns</span>
+            <metrics-bar :Todraw="TestRuns_BuildEmbeddedCompiler" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
           </md-card-content>
         </md-card>
         <md-card >
@@ -202,7 +203,7 @@
           </md-card-header>
 
           <md-card-content>
-            <span>{{TestRuns_BuildVisual.length}} TestRuns</span>
+            <metrics-bar :Todraw="TestRuns_BuildVisual" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
           </md-card-content>
         </md-card>
       </div>
@@ -219,7 +220,7 @@
             <div class="md-title">CodeMetric</div>
           </md-card-header>
           <md-card-content>
-            <span>{{TestRuns_QACSummary.length}} Tests Run</span>
+            <metrics-bar :Todraw="TestRuns_QACSummary" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
            <md-table>
               <md-table-row >
                 <md-table-cell style="width:50%;">PTH</md-table-cell>
@@ -254,10 +255,13 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
+import MetricsBar from '../components/templates/metricsBar.vue';
 import OutputConfDevInfo from '../components/templates/outputConfigDeviationInfo.vue'
 export default {
   components:{
-    OutputConfDevInfo
+    OutputConfDevInfo,
+    MetricsBar,
   },
   data() {
     return {

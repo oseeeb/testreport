@@ -4,6 +4,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import converter from 'xml-js'
 import axios from 'axios'
 import preloader from './components/preloader.vue'
@@ -21,24 +22,67 @@ export default {
     }
   },
   methods:{
+    isObject(val) {
+      return val === Object(val);
+    },
     findTestCase(elt){
-      if(elt['testgroup']){
-        var testgroup = Object.values(elt.testgroup);
-        testgroup.forEach(element=>{
-          this.findTestCase(element)
+        elt.forEach(elt=>{
+            if(elt.testcase&&Array.isArray(elt.testcase)){
+            this.testCases.push(...elt.testcase.map(eltt=>{
+              var obj = eltt;
+              obj.testgroup_attr = elt._attributes
+              return obj
+            }))
+            }
+            
+            if(elt.testcase&&!elt.testcase.length){
+              var obj = elt.testcase
+              obj.testgroup_attr = elt._attributes
+              this.testCases.push(elt.testcase)
+            }
+            
+            if(elt.testgroup){
+              if(Array.isArray(elt.testgroup)){
+                this.findTestCase(elt.testgroup)
+              }
+              else{
+                var testgroupin = elt.testgroup
+                if(Array.isArray(testgroupin.testcase))
+                  this.testCases.push(...testgroupin.testcase.map(eltt=>{
+                    var obj = eltt;
+                    obj.testgroup_attr = testgroupin._attributes
+                    return obj
+                }))
+                else{
+                  var obj = testgroupin.testcase
+                  obj.testgroup_attr = testgroupin._attributes
+                  this.testCases.push(testgroupin.testcase)
+                }
+              }
+            }
+          // if(elt.testcase&&this.isObject(elt.testcase)){
+          //   var obj = elt.testcase
+          //   obj.testgroup_attr = elt._attributes
+          //   this.testCases.push(elt.testcase)
+          // }
         })
-      }else if(elt['testcase']){
-        var testcase = Object.values(elt.testcase);       
-        this.testCases.push(...testcase.map(eltt=>{
-          var obj = eltt;
-          obj.testgroup_attr = elt._attributes
-          return obj
-        }))
-      }
+      // if(elt['testgroup']){
+      //   var testgroup = Object.values(elt.testgroup);
+      //   testgroup.forEach(element=>{
+      //     this.findTestCase(element)
+      //   })
+      // }else if(elt['testcase']){
+      //   var testcase = Object.values(elt.testcase);       
+      //   this.testCases.push(...testcase.map(eltt=>{
+      //     var obj = eltt;
+      //     obj.testgroup_attr = elt._attributes
+      //     return obj
+      //   }))
+      // }
     },
     findTestRun(elt){
       elt.forEach(element => {
-        if(element['testrun']){
+        // if(element['testrun']){
           var testrun = Object.values(element.testrun);
           this.testRuns.push(...testrun.map(elt=>{
             var obj = elt;
@@ -46,13 +90,14 @@ export default {
             obj.testgroup_attr = element.testgroup_attr
             return obj
           }))
-        }else if(Array.isArray(element)){
-          this.testRuns.push(...element.map(elt=>{
-            var obj = elt;
-            obj.testgroup_attr = element.testgroup_attr
-            return obj
-          }))
-        }
+        // }
+        // else if(Array.isArray(element)){
+        //   this.testRuns.push(...element.map(elt=>{
+        //     var obj = elt;
+        //     obj.testgroup_attr = element.testgroup_attr
+        //     return obj
+        //   }))
+        // }
       });
       
     }
@@ -70,7 +115,7 @@ export default {
       console.log('data result', this.$store.state.testdata)
   
       this.msg = 'Retrieving TestCase...'
-      this.findTestCase(this.$store.state.testdata.testplan)
+      this.findTestCase(this.$store.state.testdata.testplan.testgroup)
       this.$store.dispatch('testCases',this.testCases)
       console.log('testCases', this.testCases)
 
