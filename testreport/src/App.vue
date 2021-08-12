@@ -105,7 +105,7 @@ export default {
   mounted(){
     this.msg = 'Getting Data...'
     axios
-    .get('http://localhost:8080/testdata.xml')
+    .get('/testdata.xml')
     .then((result)=>{
       var options = {ignoreComment: true, alwaysChildren: true, compact: true};
       //convertion de xml en json avec xml2json
