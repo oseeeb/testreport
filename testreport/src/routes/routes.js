@@ -1,6 +1,7 @@
 import OverviewLayout from "@/pages/Layout/OverviewLayout.vue";
 
 import Overview from "@/pages/Overview.vue";
+import TestCases from "@/pages/TestCases.vue";
 const routes = [
   {
     path: "/",
@@ -20,7 +21,7 @@ const routes = [
       {
         path: "test_cases",
         name: "test_cases",
-        component: Overview
+        component: TestCases
       },
       {
         path: "test_cases_justifications",
