@@ -1,8 +1,8 @@
 <template>
   <div class="content">
     <div class="md-layout md-gutter md-alignment-center">
-      <div class="md-layout-item md-xlarge-size-75 md-large-size-75 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
-         <recursive-accordion :testgroupInit="$store.state.testdata.testplan.testgroup" :level="1"></recursive-accordion>
+      <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+        <recursive-accordion :testgroupInit="$store.state.testdata.testplan.testgroup" :level="0"></recursive-accordion>
       </div> 
     </div>
   </div>

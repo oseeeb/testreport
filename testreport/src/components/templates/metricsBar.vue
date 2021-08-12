@@ -47,7 +47,7 @@ export default {
                     return elt.testrun.result._text!==''
                 }
             })
-            console.log('testcasetest',testcasesTested)
+            
             var testcasesPassed = testcasesTested.filter(elt=>{
                 if(elt.testrun.length){
                     return elt.testrun.filter(elt=>{
@@ -57,7 +57,7 @@ export default {
                     return elt.testrun.result._text.includes('ok')
                 }
             })
-
+            console.log('testcasetest',testcasesPassed)
             this.metrics.Total = testCases.length
             this.metrics.Tested = testcasesTested.length
             this.metrics.Passed = testcasesPassed.length
@@ -142,7 +142,7 @@ export default {
         else if(this.Type==='testrun'){
             var testRuns = this.Todraw
             var testRunsTested = testRuns.filter(elt=>{
-                return elt.result._text===''
+                return elt.result
             })
 
             var testRunsPassed = testRunsTested.filter(elt=>{
@@ -153,15 +153,15 @@ export default {
             this.metrics.Tested = testRunsTested.length
             this.metrics.Passed = testRunsPassed.length
 
-            this.metrics.Ok = testcasesPassed.filter(elt=>{
+            this.metrics.Ok = testRunsPassed.filter(elt=>{
               return elt.result._text!=='ok'
             }).length
 
-            this.metrics.NA = testcasesTested.filter(elt=>{
+            this.metrics.NA = testRunsTested.filter(elt=>{
                 return elt.result._text==='N/A'
                 }).length
 
-            this.metrics.Warn = testcasesTested.filter(elt=>{
+            this.metrics.Warn = testRunsTested.filter(elt=>{
                 return elt.result._text==='warn'
             }).length
 

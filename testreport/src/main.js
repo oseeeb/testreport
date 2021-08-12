@@ -5,9 +5,11 @@ import VueRouter from "vue-router";
 import App from "./App";
 import store from "./store";
 import { BootstrapVue,IconsPlugin  } from 'bootstrap-vue'
+import 'bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
-
 // router setup
 import routes from "./routes/routes";
 
