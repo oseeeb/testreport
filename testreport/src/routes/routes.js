@@ -2,6 +2,9 @@ import OverviewLayout from "@/pages/Layout/OverviewLayout.vue";
 
 import Overview from "@/pages/Overview.vue";
 import TestCases from "@/pages/TestCases.vue";
+import TestElements from "@/pages/TestElements.vue";
+import TestCasesJustifications from "@/pages/TestCasesJustifications.vue";
+
 const routes = [
   {
     path: "/",
@@ -16,7 +19,7 @@ const routes = [
       {
         path: "test_elements",
         name: "test_elements",
-        component: Overview
+        component: TestElements
       },
       {
         path: "test_cases",
@@ -26,7 +29,7 @@ const routes = [
       {
         path: "test_cases_justifications",
         name: "test_cases_justifications",
-        component: Overview
+        component: TestCasesJustifications
       },
       {
         path: "test_configurations",

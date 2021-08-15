@@ -210,7 +210,7 @@ export default {
     }
 }
 </script>
-<style scoped>
+<style>
   .result-diag{
     display:flex;
     flex-direction: row;
@@ -221,7 +221,7 @@ export default {
 
   [data-tooltip] {
     position: relative;
-    z-index: 2;
+    z-index: 9999;
     cursor: default;
   }
   [data-tooltip]:before,
@@ -248,7 +248,6 @@ export default {
     color: rgb(255, 255, 255);
     content: attr(data-tooltip);
     text-align: left;
-    z-index:100;
     white-space: normal;
     font-size: 10pt;
     line-height: 1.2;

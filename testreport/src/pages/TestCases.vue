@@ -8,6 +8,7 @@
   </div>
 </template>
 <script>
+/* eslint-disable */
 import RecursiveAccordion from '../components/RecursiveAccordion.vue';
 export default {
   components:{
@@ -34,4 +35,5 @@ export default {
   .md-title{
     font-size: 0.9em !important;
   }
+  
 </style>

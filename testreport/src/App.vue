@@ -25,8 +25,8 @@ export default {
     isObject(val) {
       return val === Object(val);
     },
-    findTestCase(elt){
-        elt.forEach(elt=>{
+    findTestCase(testgroup){
+        testgroup.forEach(elt=>{
             if(elt.testcase&&Array.isArray(elt.testcase)){
             this.testCases.push(...elt.testcase.map(eltt=>{
               var obj = eltt;
