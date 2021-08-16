@@ -3,6 +3,10 @@
     <div class="md-layout md-gutter md-alignment-center">
       <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
         <md-table md-card>
+            <md-table-toolbar>
+                <h1 class="md-title">TestCases with Justification</h1>
+                <h2 class="md-subhead">Total Test Cases with Justification : {{testCasesWithJustification.length}}</h2>
+            </md-table-toolbar>
             <md-table-row>
                 <md-table-head style="width:20%;">TestCase ID</md-table-head>
                 <md-table-head style="width:20%;">Result</md-table-head>
