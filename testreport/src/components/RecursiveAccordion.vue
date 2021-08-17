@@ -1,36 +1,101 @@
 <template>
-    <div class="accordion accordion-flush" :id="'accordionFlush-'+sharename+'-'+level">
+    <div v-if="Array.isArray(testgroupInit)" class="accordion accordion-flush" :id="'accordionFlush-'+sharename+'-'+level">
         <div class="accordion-item"
             v-for="(testgroup,key) in testgroupInit" :key="key"
         >
             <h2 class="accordion-header" :id="'flush-heading'+key">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="'#flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')+'-'+key" aria-expanded="false" :aria-controls="'flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')+'-'+key">
-                {{(testgroup._attributes?testgroup._attributes.name:'no-name')}}
+              <button class="accordion-button collapsed" type="button" :style="'background-color:'+(getTestGroupResult(testgroup)==='FAIL'?'red;':(getTestGroupResult(testgroup)==='WARN'?'yellow;':'#00FF00;'))" data-bs-toggle="collapse" :data-bs-target="'#flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')+'-'+key" aria-expanded="true" :aria-controls="'flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')+'-'+key">
+                {{(testgroup._attributes?testgroup._attributes.name:'no-name')}} | {{getTestGroupResult(testgroup)}}
               </button>
             </h2>
             <div :id="'flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')+'-'+key" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" :data-bs-parent="'accordionFlush-'+sharename+'-'+level">
               <div class="accordion-body">
                     <div v-if="testgroup.testgroup">
-                        <recursive-accordion :testgroupInit="Object.values(testgroup.testgroup)" :sharename="(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')" :level="level+1"></recursive-accordion>
+                        <recursive-accordion :testgroupInit="Array.isArray(testgroup.testgroup)?Object.values(testgroup.testgroup):testgroup.testgroup" :sharename="(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')" :level="level+1"></recursive-accordion>
                     </div>
                     <div v-if="testgroup.testcase">
-                        <md-table md-card>
-                            <md-table-row>
-                                <md-table-head style="width:25%;">TestCase ID</md-table-head>
-                                <md-table-head style="width:25%;">Name</md-table-head>
-                                <md-table-head>Result</md-table-head>
-                            </md-table-row>
-                            <md-table-row v-for="(item,key) in testgroup.testcase" :key="key" >
-                                <md-table-cell style="width:25%;"><span :data-tooltip="item.description._cdata">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
-                                <md-table-cell style="width:50%;">{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
-                                <md-table-cell :style="'text-align:center;width:25%;background-color:'+(Array.isArray(item.testrun)?(item.testrun.filter(elt=>{return elt.result._text.includes('ok')}).length===item.testrun.length?'#00FF00;':'red;'):(item.testrun.result&&item.testrun.result._text.includes('ok')?'#00FF00;':'red;'))">{{ Array.isArray(item.testrun)?(item.testrun.filter(elt=>{return elt.result._text.includes('ok')}).length===item.testrun.length?'OK':'FAIL'):item.testrun.result._text}}</md-table-cell>
-                            </md-table-row>
-                        </md-table>
+                        <div v-if="Array.isArray(testgroup.testcase)">
+                            <md-table md-card>
+                                <div>
+                                    <md-table-row>
+                                        <md-table-head style="width:25%;">TestCase ID</md-table-head>
+                                        <md-table-head style="width:25%;">Name</md-table-head>
+                                        <md-table-head>Result</md-table-head>
+                                    </md-table-row>
+                                </div>
+                                <div>
+                                    <md-table-row v-for="(item,key) in testgroup.testcase" :key="key" >
+                                        <md-table-cell style="width:25%;"><span :data-tooltip="item.description?item.description._cdata:'no-description'">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
+                                        <md-table-cell style="width:50%;">{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
+                                        <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(item)}}</md-table-cell>
+                                    </md-table-row>
+                                </div>
+                            </md-table>
+                        </div>
+                        <div v-else>
+                            <md-table md-card>
+                                <md-table-row>
+                                    <md-table-head style="width:25%;">TestCase ID</md-table-head>
+                                    <md-table-head style="width:25%;">Name</md-table-head>
+                                    <md-table-head>Result</md-table-head>
+                                </md-table-row>
+                                <md-table-row >
+                                    <md-table-cell style="width:25%;"><span :data-tooltip="testgroup.testcase.description?testgroup.testcase.description._cdata:'no-description'">{{ testgroup.testcase._attributes?testgroup.testcase._attributes.id:'no-id' }}</span></md-table-cell>
+                                    <md-table-cell style="width:50%;">{{ testgroup.testcase._attributes?testgroup.testcase._attributes.name:'no-name'}}</md-table-cell>
+                                    <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(testgroup.testcase)}}</md-table-cell>
+                                </md-table-row>
+                            </md-table>
+                        </div>
                     </div>
               </div>
             </div>
         </div>
-        
+    </div>
+    <div v-else class="accordion accordion-flush" :id="'accordionFlush-'+sharename+'-'+level">
+        <div class="accordion-item">
+            <h2 class="accordion-header" :id="'flush-heading'+level">
+              <button class="accordion-button collapsed" :style="'background-color:'+(getTestGroupResult(testgroupInit)==='FAIL'?'red;':(getTestGroupResult(testgroupInit)==='WARN'?'yellow':'#00FF00;'))" type="button" data-bs-toggle="collapse" :data-bs-target="'#flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level" aria-expanded="true" :aria-controls="'flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level">
+                {{(testgroupInit._attributes?testgroupInit._attributes.name:'no-name')}} | {{getTestGroupResult(testgroupInit)}}
+              </button>
+            </h2>
+            <div :id="'flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" :data-bs-parent="'accordionFlush-'+sharename+'-'+level">
+              <div class="accordion-body">
+                    <div v-if="testgroupInit.testgroup">
+                        <recursive-accordion :testgroupInit="Array.isArray(testgroupInit.testgroup)?Object.values(testgroupInit.testgroup):testgroupInit.testgroup" :sharename="(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')" :level="level+1"></recursive-accordion>
+                    </div>
+                    <div v-if="testgroupInit.testcase">
+                        <div v-if="Array.isArray(testgroupInit.testcase)">
+                            <md-table md-card>
+                                <md-table-row>
+                                    <md-table-head style="width:25%;">TestCase ID</md-table-head>
+                                    <md-table-head style="width:25%;">Name</md-table-head>
+                                    <md-table-head>Result</md-table-head>
+                                </md-table-row>
+                                <md-table-row v-for="(item,key) in testgroupInit.testcase" :key="key" >
+                                    <md-table-cell style="width:25%;"><span :data-tooltip="item.description?item.description._cdata:'no-description'">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
+                                    <md-table-cell style="width:50%;">{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
+                                    <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':'#00FF00;')">{{ getTestCaseResult(item)}}</md-table-cell>
+                                </md-table-row>
+                            </md-table>
+                        </div>
+                        <div v-else>
+                            <md-table md-card>
+                                <md-table-row>
+                                    <md-table-head style="width:25%;">TestCase ID</md-table-head>
+                                    <md-table-head style="width:25%;">Name</md-table-head>
+                                    <md-table-head>Result</md-table-head>
+                                </md-table-row>
+                                <md-table-row >
+                                    <md-table-cell style="width:25%;"><span :data-tooltip="testgroupInit.testcase.description?testgroupInit.testcase.description._cdata:'no-description'">{{ testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.id:'no-id' }}</span></md-table-cell>
+                                    <md-table-cell style="width:50%;">{{ testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.name:'no-name'}}</md-table-cell>
+                                    <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(testgroupInit.testcase)==='FAIL'?'red;':(getTestCaseResult(testgroupInit.testcase)==='WARN'?'yellow;':'#00FF00;'))">{{ getTestCaseResult(testgroupInit.testcase)}}</md-table-cell>
+                                </md-table-row>
+                            </md-table>
+                        </div>
+                    </div>
+              </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -38,8 +103,7 @@ export default {
     name:'RecursiveAccordion',
     props:{
         testgroupInit:{
-            type:Array,
-            default: new Array
+            type:[Array, Object]
         },
         level:{
             type:Number,
@@ -53,6 +117,100 @@ export default {
     data(){
         return {
             testgroups:[]
+        }
+    },
+    methods:{
+        getsimpleResult(result){
+            if(result.includes('FAIL')){
+                return 'FAIL'
+            }
+            else if(result.includes('WARN')){
+                return 'WARN'
+            }
+            else if(result.includes('OK')){
+                return 'OK'
+            }
+        },
+        getResult(result){
+            if(result.includes('fail')){
+                return 'FAIL'
+            }
+            else if(result.includes('warn')){
+                return 'WARN'
+            }
+            else if(result.includes('N/A')){
+                return 'OK'
+            }
+            else{
+                return 'OK'
+            }
+        },
+        getTestRunResult(testrun){
+            if(testrun.result){
+                if('_text' in testrun.result){
+                        return this.getResult(testrun.result._text)
+                }
+                else{
+                    var result = []
+                    testrun.result.forEach(elt=>{
+                    result.push(this.getResult(elt._text))
+                    })
+                    return this.getsimpleResult(result)
+                }
+            }
+        },
+        getTestCaseResult(testcase){
+            if(testcase.testrun){
+                if('result' in testcase.testrun){
+                    return this.getTestRunResult(testcase.testrun)
+                }else{
+                    var result = []
+                    testcase.testrun.forEach(elt=>{
+                        result.push(this.getTestRunResult(elt))
+                    })
+
+                    return this.getsimpleResult(result)
+                }
+            }
+        },
+        getTestGroupResult(testgroup){
+            var result = []
+
+            if(testgroup.testgroup){
+                if(Array.isArray(testgroup.testgroup)){
+                    testgroup.testgroup.forEach(elt=>{
+                        result.push(this.getTestGroupResult(elt))
+                    })
+                }else{
+                    result.push(this.getTestGroupResult(testgroup.testgroup))
+                }
+            }
+
+            if('testcase' in testgroup){
+                if('testrun' in testgroup.testcase){
+                    result.push(this.getTestCaseResult(testgroup.testcase))
+                }else{
+                    testgroup.testcase.forEach(elt=>{
+                        result.push(this.getTestCaseResult(elt))
+                    })
+                }
+            }
+
+            return this.getsimpleResult(result)
+            
+        },
+        generateTR(testcase){
+            var rows = ''
+            testcase.forEach(item=>{
+                rows+='<md-table-row><md-table-cell style="width:25%;"><span data-tooltip="'+(item.description?item.description._cdata:'no-description')+'">'+item._attributes?item._attributes.id:'no-id'+'</span></md-table-cell>'
+                rows+='<md-table-cell style="width:50%;">'+(item._attributes?item._attributes.name:'no-name')+'</md-table-cell>'
+                rows+='<md-table-cell style="text-align:center;width:25%;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))+'">'+this.getTestCaseResult(item)+'</md-table-cell></md-table-row>'
+            })
+
+            return rows
+        },
+        HandleClick(){
+            alert('tesgt')
         }
     },
     mounted(){
