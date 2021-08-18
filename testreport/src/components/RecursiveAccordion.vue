@@ -15,19 +15,39 @@
                     </div>
                     <div v-if="testgroup.testcase">
                         <div v-if="Array.isArray(testgroup.testcase)">
-                            <md-table md-card>
-                                <div>
-                                    <md-table-row>
-                                        <md-table-head style="width:25%;">TestCase ID</md-table-head>
-                                        <md-table-head style="width:25%;">Name</md-table-head>
-                                        <md-table-head>Result</md-table-head>
+                            <md-table md-card class="fold-table">
+                                <md-table-row>
+                                    <md-table-head>TestCase ID</md-table-head>
+                                    <md-table-head>Name</md-table-head>
+                                    <md-table-head>Result</md-table-head>
+                                </md-table-row>
+                                <div v-for="(item,key) in testgroup.testcase" :key="key" >
+                                    <md-table-row class="view" :ref="item._attributes.id">
+                                        <md-table-cell><span :data-tooltip="item.description?item.description._cdata:'no-description'">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
+                                        <md-table-cell>{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
+                                        <md-table-cell :style="'text-align:center;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(item)}}</md-table-cell>
                                     </md-table-row>
-                                </div>
-                                <div>
-                                    <md-table-row v-for="(item,key) in testgroup.testcase" :key="key" >
-                                        <md-table-cell style="width:25%;"><span :data-tooltip="item.description?item.description._cdata:'no-description'">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
-                                        <md-table-cell style="width:50%;">{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
-                                        <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(item)}}</md-table-cell>
+                                    <md-table-row class="fold">
+                                        <div v-if="Array.isArray(item.testrun)">       
+                                            <md-table>
+                                               <md-table-row v-for="(itex,kex) in item.testrun" :key="kex">
+                                                    <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
+                                                    <md-table-cell>{{itex._attributes.date}}</md-table-cell>
+                                                    <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
+                                                    <md-table-cell :style="'background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
+                                                </md-table-row>
+                                            </md-table>
+                                           </div>
+                                           <div v-else>
+                                               <md-table>
+                                                    <md-table-row>
+                                                        <md-table-cell style="width:20%;">{{item.testrun._attributes.parameter}}</md-table-cell>
+                                                        <md-table-cell style="width:20%;">{{item.testrun._attributes.date}}</md-table-cell>
+                                                        <md-table-cell style="width:20%;">{{item.testrun._attributes.executor}}</md-table-cell>
+                                                        <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(item.testrun)}}</md-table-cell>
+                                                    </md-table-row>
+                                                </md-table>
+                                           </div>
                                     </md-table-row>
                                 </div>
                             </md-table>
@@ -199,16 +219,6 @@ export default {
             return this.getsimpleResult(result)
             
         },
-        generateTR(testcase){
-            var rows = ''
-            testcase.forEach(item=>{
-                rows+='<md-table-row><md-table-cell style="width:25%;"><span data-tooltip="'+(item.description?item.description._cdata:'no-description')+'">'+item._attributes?item._attributes.id:'no-id'+'</span></md-table-cell>'
-                rows+='<md-table-cell style="width:50%;">'+(item._attributes?item._attributes.name:'no-name')+'</md-table-cell>'
-                rows+='<md-table-cell style="text-align:center;width:25%;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))+'">'+this.getTestCaseResult(item)+'</md-table-cell></md-table-row>'
-            })
-
-            return rows
-        },
         HandleClick(){
             alert('tesgt')
         }
@@ -236,5 +246,55 @@ export default {
 }
 .accordion-header {
     margin: 0 !important;
+}
+</style>
+<style lang="scss" scoped>
+table {
+  width: 100%;
+  th { text-align: left; border-bottom: 1px solid #ccc;}
+  th, td { padding: .4em; }
+}
+
+// fold table 
+table.fold-table {
+  > tbody {
+    // view segment
+    > tr.view {
+      td, th {cursor: pointer;}
+      td:first-child, 
+      th:first-child { 
+        position: relative;
+        padding-left:20px;
+        &:before {
+          position: absolute;
+          top:50%; left:5px;
+          width: 9px; height: 16px;
+          margin-top: -8px;
+          font: 16px fontawesome;
+          color: #999;
+          content: "\f0d7";
+          transition: all .3s ease;
+        }
+      }
+      &:nth-child(4n-1) { background: #eee; }
+      &:hover { background: #000; }
+      &.open {
+        background: tomato;
+        color: white;
+        td:first-child, th:first-child {
+          &:before {
+            transform: rotate(-180deg);
+            color: #333;
+          }
+        }
+      }
+    }
+  
+    // fold segment
+    > tr.fold {
+      display: none;
+      &.open { display:table-row; }
+    }
+  }
 }
 </style>
