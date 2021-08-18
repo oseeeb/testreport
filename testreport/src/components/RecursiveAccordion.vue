@@ -37,17 +37,17 @@
                                                     <md-table-cell :style="'background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
                                                 </md-table-row>
                                             </md-table>
-                                           </div>
-                                           <div v-else>
-                                               <md-table>
-                                                    <md-table-row>
-                                                        <md-table-cell style="width:20%;">{{item.testrun._attributes.parameter}}</md-table-cell>
-                                                        <md-table-cell style="width:20%;">{{item.testrun._attributes.date}}</md-table-cell>
-                                                        <md-table-cell style="width:20%;">{{item.testrun._attributes.executor}}</md-table-cell>
-                                                        <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(item.testrun)}}</md-table-cell>
-                                                    </md-table-row>
-                                                </md-table>
-                                           </div>
+                                        </div>
+                                        <div v-else>
+                                            <md-table>
+                                                <md-table-row>
+                                                    <md-table-cell style="width:20%;">{{item.testrun._attributes.parameter}}</md-table-cell>
+                                                    <md-table-cell style="width:20%;">{{item.testrun._attributes.date}}</md-table-cell>
+                                                    <md-table-cell style="width:20%;">{{item.testrun._attributes.executor}}</md-table-cell>
+                                                    <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(item.testrun)}}</md-table-cell>
+                                                </md-table-row>
+                                            </md-table>
+                                        </div>
                                     </md-table-row>
                                 </div>
                             </md-table>
@@ -62,8 +62,31 @@
                                 <md-table-row >
                                     <md-table-cell style="width:25%;"><span :data-tooltip="testgroup.testcase.description?testgroup.testcase.description._cdata:'no-description'">{{ testgroup.testcase._attributes?testgroup.testcase._attributes.id:'no-id' }}</span></md-table-cell>
                                     <md-table-cell style="width:50%;">{{ testgroup.testcase._attributes?testgroup.testcase._attributes.name:'no-name'}}</md-table-cell>
-                                    <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(testgroup.testcase)}}</md-table-cell>
+                                    <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(testgroup.testcase)==='FAIL'?'red;':(getTestCaseResult(testgroup.testcase)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(testgroup.testcase)}}</md-table-cell>
                                 </md-table-row>
+                                
+                                    <md-table-row class="fold">
+                                        <div v-if="Array.isArray(testgroup.testcase.testrun)">       
+                                            <md-table>
+                                               <md-table-row v-for="(itex,kex) in testgroup.testcase.testrun" :key="kex">
+                                                    <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
+                                                    <md-table-cell>{{itex._attributes.date}}</md-table-cell>
+                                                    <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
+                                                    <md-table-cell :style="'background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
+                                                </md-table-row>
+                                            </md-table>
+                                        </div>
+                                        <div v-else>
+                                            <md-table>
+                                                <md-table-row>
+                                                    <md-table-cell style="width:20%;">{{testgroup.testcase.testrun._attributes.parameter}}</md-table-cell>
+                                                    <md-table-cell style="width:20%;">{{testgroup.testcase.testrun._attributes.date}}</md-table-cell>
+                                                    <md-table-cell style="width:20%;">{{testgroup.testcase.testrun._attributes.executor}}</md-table-cell>
+                                                    <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(testgroup.testcase.testrun)==='FAIL'?'red;':(getTestRunResult(testgroup.testcase.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(testgroup.testcase.testrun)}}</md-table-cell>
+                                                </md-table-row>
+                                            </md-table>
+                                        </div>
+                                    </md-table-row>
                             </md-table>
                         </div>
                     </div>
@@ -85,17 +108,41 @@
                     </div>
                     <div v-if="testgroupInit.testcase">
                         <div v-if="Array.isArray(testgroupInit.testcase)">
-                            <md-table md-card>
+                            <md-table md-card class="fold-table">
                                 <md-table-row>
-                                    <md-table-head style="width:25%;">TestCase ID</md-table-head>
-                                    <md-table-head style="width:25%;">Name</md-table-head>
+                                    <md-table-head>TestCase ID</md-table-head>
+                                    <md-table-head>Name</md-table-head>
                                     <md-table-head>Result</md-table-head>
                                 </md-table-row>
-                                <md-table-row v-for="(item,key) in testgroupInit.testcase" :key="key" >
-                                    <md-table-cell style="width:25%;"><span :data-tooltip="item.description?item.description._cdata:'no-description'">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
-                                    <md-table-cell style="width:50%;">{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
-                                    <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':'#00FF00;')">{{ getTestCaseResult(item)}}</md-table-cell>
-                                </md-table-row>
+                                <div v-for="(item,key) in testgroupInit.testcase" :key="key" >
+                                    <md-table-row class="view" :ref="item._attributes.id">
+                                        <md-table-cell><span :data-tooltip="item.description?item.description._cdata:'no-description'">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
+                                        <md-table-cell>{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
+                                        <md-table-cell :style="'text-align:center;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(item)}}</md-table-cell>
+                                    </md-table-row>
+                                    <md-table-row class="fold">
+                                        <div v-if="Array.isArray(item.testrun)">       
+                                            <md-table>
+                                               <md-table-row v-for="(itex,kex) in item.testrun" :key="kex">
+                                                    <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
+                                                    <md-table-cell>{{itex._attributes.date}}</md-table-cell>
+                                                    <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
+                                                    <md-table-cell :style="'background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
+                                                </md-table-row>
+                                            </md-table>
+                                        </div>
+                                        <div v-else>
+                                            <md-table>
+                                                <md-table-row>
+                                                    <md-table-cell style="width:20%;">{{item.testrun._attributes.parameter}}</md-table-cell>
+                                                    <md-table-cell style="width:20%;">{{item.testrun._attributes.date}}</md-table-cell>
+                                                    <md-table-cell style="width:20%;">{{item.testrun._attributes.executor}}</md-table-cell>
+                                                    <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(item.testrun)}}</md-table-cell>
+                                                </md-table-row>
+                                            </md-table>
+                                        </div>
+                                    </md-table-row>
+                                </div>
                             </md-table>
                         </div>
                         <div v-else>
@@ -108,8 +155,31 @@
                                 <md-table-row >
                                     <md-table-cell style="width:25%;"><span :data-tooltip="testgroupInit.testcase.description?testgroupInit.testcase.description._cdata:'no-description'">{{ testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.id:'no-id' }}</span></md-table-cell>
                                     <md-table-cell style="width:50%;">{{ testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.name:'no-name'}}</md-table-cell>
-                                    <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(testgroupInit.testcase)==='FAIL'?'red;':(getTestCaseResult(testgroupInit.testcase)==='WARN'?'yellow;':'#00FF00;'))">{{ getTestCaseResult(testgroupInit.testcase)}}</md-table-cell>
+                                    <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(testgroupInit.testcase)==='FAIL'?'red;':(getTestCaseResult(testgroupInit.testcase)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(testgroupInit.testcase)}}</md-table-cell>
                                 </md-table-row>
+                                
+                                    <md-table-row class="fold">
+                                        <div v-if="Array.isArray(testgroupInit.testcase.testrun)">       
+                                            <md-table>
+                                               <md-table-row v-for="(itex,kex) in testgroupInit.testcase.testrun" :key="kex">
+                                                    <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
+                                                    <md-table-cell>{{itex._attributes.date}}</md-table-cell>
+                                                    <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
+                                                    <md-table-cell :style="'background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
+                                                </md-table-row>
+                                            </md-table>
+                                        </div>
+                                        <div v-else>
+                                            <md-table>
+                                                <md-table-row>
+                                                    <md-table-cell style="width:20%;">{{testgroupInit.testcase.testrun._attributes.parameter}}</md-table-cell>
+                                                    <md-table-cell style="width:20%;">{{testgroupInit.testcase.testrun._attributes.date}}</md-table-cell>
+                                                    <md-table-cell style="width:20%;">{{testgroupInit.testcase.testrun._attributes.executor}}</md-table-cell>
+                                                    <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(testgroupInit.testcase.testrun)==='FAIL'?'red;':(getTestRunResult(testgroupInit.testcase.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(testgroupInit.testcase.testrun)}}</md-table-cell>
+                                                </md-table-row>
+                                            </md-table>
+                                        </div>
+                                    </md-table-row>
                             </md-table>
                         </div>
                     </div>
@@ -216,6 +286,7 @@ export default {
                 }
             }
 
+            console.log('result testgroup',this.getsimpleResult(result))
             return this.getsimpleResult(result)
             
         },
