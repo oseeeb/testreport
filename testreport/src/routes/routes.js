@@ -4,6 +4,7 @@ import Overview from "@/pages/Overview.vue";
 import TestCases from "@/pages/TestCases.vue";
 import TestElements from "@/pages/TestElements.vue";
 import TestCasesJustifications from "@/pages/TestCasesJustifications.vue";
+import TestConfigurations from "@/pages/TestConfigurations.vue";
 
 const routes = [
   {
@@ -18,23 +19,23 @@ const routes = [
       },
       {
         path: "test_elements",
-        name: "test_elements",
+        name: "TestElements",
         component: TestElements
       },
       {
         path: "test_cases",
-        name: "test_cases",
+        name: "TestCases",
         component: TestCases
       },
       {
         path: "test_cases_justifications",
-        name: "test_cases_justifications",
+        name: "TestCasesJustifications",
         component: TestCasesJustifications
       },
       {
         path: "test_configurations",
-        name: "test_configurations",
-        component: Overview
+        name: "TestConfigurations",
+        component: TestConfigurations
       },
       {
         path: "misra",

@@ -364,6 +364,9 @@ export default {
 
   this.testConfigs = [...(new Set(this.testConfigs))]
   
+  this.$store.dispatch('testConfigs',this.testConfigs)
+  console.log('testconfig',this.$store.state.testConfigs)
+  
   this.$store.state.testRuns.forEach(element => {
     if(element['log_QACSummary']){
       this.TestRuns_QACSummary.push(element);

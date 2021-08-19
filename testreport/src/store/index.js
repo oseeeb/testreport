@@ -11,7 +11,8 @@ export default new Vuex.Store({
     state: {
       testdata:null,
       testCases:null,
-      testRuns:null
+      testRuns:null,
+      testConfigs:null
     },
     //definition d'un modificateur de variable d'etat
     mutations: {
@@ -24,6 +25,9 @@ export default new Vuex.Store({
         testRuns(state,testRuns){
           state.testRuns = testRuns
         },
+        testConfigs(state,testConfigs){
+          state.testConfigs = testConfigs
+        },
     },
     //definition d'un recuperateur de contenu de variable
     getters:{
@@ -35,6 +39,9 @@ export default new Vuex.Store({
         },
         testRuns: (state)=>{
           return state.testRuns;
+        },
+        testConfigs: (state)=>{
+          return state.testConfigs;
         }
     },
     //definition des actions possible sur nos modificateurs
@@ -47,6 +54,9 @@ export default new Vuex.Store({
         },
         testRuns(context, testRuns){
           context.commit('testRuns',testRuns);
+        },
+        testConfigs(context, testConfigs){
+          context.commit('testConfigs',testConfigs);
         }
     },
   })
