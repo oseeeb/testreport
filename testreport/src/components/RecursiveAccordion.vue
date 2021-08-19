@@ -28,7 +28,7 @@
                                         <md-table-cell>{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
                                         <md-table-cell :style="'text-align:center;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(item)}}</md-table-cell>
                                     </md-table-row>
-                                    <md-table-row :id="item._attributes?item._attributes.id:'no-id'" class="collapse" :key="'collapse'+(item._attributes?item._attributes.id:'no-id')+key">
+                                    <md-table-row :id="item._attributes?item._attributes.id:'no-id'"  :key="'collapse'+(item._attributes?item._attributes.id:'no-id')+key">
                                         <div v-if="Array.isArray(item.testrun)">       
                                             <md-table>
                                                <md-table-row v-for="(itex,kex) in item.testrun" :key="kex">
