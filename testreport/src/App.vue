@@ -18,7 +18,8 @@ export default {
       loading:true,
       msg:'',
       testCases:[],
-      testRuns:[]
+      testRuns:[],
+      testConfigs:[]
     }
   },
   methods:{
@@ -99,7 +100,15 @@ export default {
         //   }))
         // }
       });
-      
+    },
+    findTestConfig(testRuns){
+      testRuns.forEach(element=>{
+        if(element._attributes&&element._attributes.config){
+          this.testConfigs.push(element._attributes.config)
+        }
+      })
+
+      this.testConfigs = [...(new Set(this.testConfigs))]
     }
   },
   mounted(){
@@ -112,17 +121,19 @@ export default {
       var res = converter.xml2js(result.data, options);
       //sauvegarde du resultat convertit  
       this.$store.dispatch('testdata',res)
-      console.log('data result', this.$store.state.testdata)
   
       this.msg = 'Retrieving TestCase...'
       this.findTestCase(this.$store.state.testdata.testplan.testgroup)
       this.$store.dispatch('testCases',this.testCases)
-      console.log('testCases', this.testCases)
 
       this.msg = 'Retrieving TestRuns...'
       this.findTestRun(this.testCases)
       this.$store.dispatch('testRuns',this.testRuns)
-      console.log('tests runs',this.testRuns)
+
+      this.msg = 'Retrieving TestConfigs...'
+      this.findTestConfig(this.testRuns)
+      this.$store.dispatch('testConfigs',this.testConfigs)
+      
       this.loading = false;
     })
   }

@@ -158,7 +158,7 @@
             <div class="md-title">Test Configuration</div>
           </md-card-header>
           <md-card-content>
-            <span>{{testConfigs.length}} TestConfigs</span> 
+            <span>{{$store.state.testConfigs.length}} TestConfigs</span> 
           </md-card-content>
         </md-card>
         <md-card >
@@ -270,7 +270,7 @@ export default {
       unplannedTestCase:[],
       plannedTestRun:[],
       unplannedTestRun:[],
-      testConfigs:[],
+      testConfigs:[...this.$store.state.testConfigs],
       TestRuns_QACSummary:[],
       TestRuns_MemoryResources:[],
       configurationCount:0,
@@ -355,17 +355,6 @@ export default {
 
   this.findTestRun(this.plannedTestCase,this.plannedTestRun)
   this.findTestRun(this.unplannedTestCase,this.unplannedTestRun)
-
-  this.$store.state.testRuns.forEach(element=>{
-    if(element._attributes&&element._attributes.config){
-      this.testConfigs.push(element._attributes.config)
-    }
-  })
-
-  this.testConfigs = [...(new Set(this.testConfigs))]
-  
-  this.$store.dispatch('testConfigs',this.testConfigs)
-  console.log('testconfig',this.$store.state.testConfigs)
   
   this.$store.state.testRuns.forEach(element => {
     if(element['log_QACSummary']){
