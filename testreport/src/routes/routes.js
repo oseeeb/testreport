@@ -5,6 +5,7 @@ import TestCases from "@/pages/TestCases.vue";
 import TestElements from "@/pages/TestElements.vue";
 import TestCasesJustifications from "@/pages/TestCasesJustifications.vue";
 import TestConfigurations from "@/pages/TestConfigurations.vue";
+import Misra from "@/pages/Misra.vue";
 
 const routes = [
   {
@@ -40,7 +41,7 @@ const routes = [
       {
         path: "misra",
         name: "MISRA",
-        component: Overview
+        component: Misra
       },
       {
         path: "code_metrics",

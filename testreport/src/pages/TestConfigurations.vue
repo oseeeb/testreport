@@ -30,7 +30,7 @@
       <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
        <md-table md-card md-fixed-header>
            <md-table-toolbar>
-               <h2>TestConfiguration</h2>
+               <h2>TestConfiguration Matrix</h2>
            </md-table-toolbar>
             <md-table-row class="tLegend">
                 <md-table-head>Testcases</md-table-head>
