@@ -56,6 +56,41 @@
                 </md-table-row>
             </md-table>
         </div> 
+        <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+            <md-table md-card>
+                <md-table-toolbar>
+                    <h1 class="md-title">QAC Summary for all configurations</h1>
+                </md-table-toolbar>
+                <md-table-row>
+                    
+                    <md-table-head>MISRA rule</md-table-head>
+                    <md-table-head>Number of configurations with deviations</md-table-head>
+                    <md-table-head>Sum of deviations for all configurations</md-table-head>
+                    <md-table-head>Max deviations per configuration</md-table-head>
+                    <md-table-head>Justifications</md-table-head>
+                </md-table-row>
+                <md-table-row v-for="(item,key) in MISRA_Rules" :key="key">
+                    <md-table-cell>{{item._attributes.msgId}}</md-table-cell>
+                    <md-table-cell>{{getMatchingRules(MISRA_Rules,item._attributes.msgId).length}}/{{nrOfConfigs}}</md-table-cell>
+                    <md-table-cell>{{getSum(MISRA_Rules,item._attributes.msgId)}}</md-table-cell>
+                    <md-table-cell>{{getMaxOcc(MISRA_Rules,item._attributes.msgId)}}</md-table-cell>
+                    <md-table-cell>
+                        <template v-if="item.version==='9'">
+                            <template v-if="Array.isArray(item.message)">
+                                <md-table-row v-for="(itex,kex) in item.message" :key="kex">
+                                    <template v-if="getjustificationCount(itex)===0">
+                                        <template v-if="itex._attributes.file==='multi-homed'||itex._attributes.file==='cma'">
+                                            <md-table-cell>{{itex._attributes.file}}</md-table-cell>
+                                            <md-table-cell></md-table-cell>
+                                        </template>
+                                    </template>
+                                </md-table-row>
+                            </template>
+                        </template>
+                    </md-table-cell>
+                </md-table-row>
+            </md-table>
+        </div> 
       </div> 
     </div>
   </div>
@@ -72,6 +107,29 @@ export default {
         TestRunsWithContainedMisraJustifications:[],
         TestRuns_QACSummary:[]
     }
+  },
+  computed:{
+      MISRA_Rules(){
+          var rules = []
+          
+          this.TestRuns_QACSummary.forEach(elt=>{
+              if('log_QACSummary' in elt){
+                  elt.log_QACSummary.mcm.map(elmt=>{
+                      var obj = {}
+                      obj=elmt
+                      obj.version = elt.log_QACSummary._attributes.version
+
+                      return obj
+                  })
+                  rules.push(...elt.log_QACSummary.mcm)
+              }
+          })
+
+          return rules
+      },
+      nrOfConfigs(){
+          return this.TestRuns_QACSummary.length
+      }
   },
   methods:{
       getResultCompliance(){
@@ -130,7 +188,60 @@ export default {
               this.bgcolor_compliance = '#00FF00'
           }
 
+      },
+      getMatchingRules(rules,currentId){
+          return rules.filter(elt=>{return elt._attributes.msgId===currentId})
+      },
+      getSum(rules,currid){
+          var MatchingRules = this.getMatchingRules(rules,currid)
+          console.log('match',MatchingRules)
+
+          if(Array.isArray(MatchingRules)){
+              var occurences = []
+              MatchingRules.forEach(elt=>{
+                  occurences.push(parseInt(elt._attributes.occurence))
+              })
+              return occurences.reduce((acc,curr)=>acc+curr)
+          }
+          else{
+              return MatchingRules
+          }
+      },
+      getMaxOcc(rules,currid){
+        var MatchingRules = this.getMatchingRules(rules,currid)
+
+        if(Array.isArray(MatchingRules)){
+              MatchingRules.map(elt=>{
+                var obj = elt
+                obj._attributes.occurence = parseInt(obj._attributes.occurence) 
+                return obj
+              })
+              
+              MatchingRules.sort((a,b)=>{
+                  return a._attributes.occurence-b._attributes.occurence
+              })
+
+              return MatchingRules[0]._attributes.occurence
+
+          }
+          else{
+              return MatchingRules
+          }
+      },
+      getjustificationCount(msg){
+          var count = []
+          if(Array.isArray(msg.justification)){
+              msg.justification.forEach(elt=>{
+                  count.push(parseInt(elt._attributes.count))
+              })
+          }
+          else{
+              count.push(parseInt(msg.justification._attributes.count))
+          }
+
+          return count.reduce((acc,curr)=>acc+curr)
       }
+
   },
   mounted(){
      this.getResultCompliance()
