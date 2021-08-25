@@ -6,6 +6,9 @@ import TestElements from "@/pages/TestElements.vue";
 import TestCasesJustifications from "@/pages/TestCasesJustifications.vue";
 import TestConfigurations from "@/pages/TestConfigurations.vue";
 import Misra from "@/pages/Misra.vue";
+import CodeMetric from "@/pages/CodeMetric.vue";
+import RuntimeCoverage from "@/pages/RuntimeCoverage.vue";
+import MemoryResource from "@/pages/MemoryResource.vue";
 
 const routes = [
   {
@@ -46,17 +49,17 @@ const routes = [
       {
         path: "code_metrics",
         name: "code_metrics",
-        component: Overview
+        component: CodeMetric
       },
       {
         path: "runtime_coverage",
         name: "runtime_coverage",
-        component: Overview
+        component: RuntimeCoverage
       },
       {
         path: "memory_resources",
         name: "memory_resources",
-        component: Overview
+        component: MemoryResource
       }
     ]
   }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
   <div class="content">
     <div class="md-layout md-gutter md-alignment-center">
@@ -23,7 +24,6 @@
   </div>
 </template>
 <script>
-/* eslint-disable */
 export default {
   data() {
     return {

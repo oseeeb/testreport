@@ -10,7 +10,7 @@
                 <span>{{compliance_result}}</span>
             </div>
         </div> 
-        <div v-if="TestRuns_QACSummary.length!==0" class="md-layout-item md-xlarge-size-75 md-large-size-75 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+        <div v-if="TestRuns_QACSummary.length!==0" class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
             <md-table md-card>
             <md-table-toolbar>
                 <h1 class="md-title">Test Environnement</h1>
@@ -75,18 +75,63 @@
                     <md-table-cell>{{getSum(MISRA_Rules,item._attributes.msgId)}}</md-table-cell>
                     <md-table-cell>{{getMaxOcc(MISRA_Rules,item._attributes.msgId)}}</md-table-cell>
                     <md-table-cell>
-                        <template v-if="item.version==='9'">
-                            <template v-if="Array.isArray(item.message)">
-                                <md-table-row v-for="(itex,kex) in item.message" :key="kex">
-                                    <template v-if="getjustificationCount(itex)===0">
-                                        <template v-if="itex._attributes.file==='multi-homed'||itex._attributes.file==='cma'">
-                                            <md-table-cell>{{itex._attributes.file}}</md-table-cell>
-                                            <md-table-cell></md-table-cell>
+                        <md-table>
+                            <template v-if="item.version==='9'">
+                                <template v-if="Array.isArray(item.message)">
+                                    <md-table-row v-for="(itex,kex) in item.message" :key="kex">
+                                        <template v-if="getjustificationCount(itex)===0">
+                                            <template v-if="itex._attributes.file==='multi-homed'||itex._attributes.file==='cma'">
+                                                <md-table-cell>{{itex._attributes.file}}</md-table-cell>
+                                                <md-table-cell></md-table-cell>
+                                            </template>
+                                            <template v-else>
+                                                <md-table-cell class="yellow">{{itex._attributes.file}}</md-table-cell>
+                                                <md-table-cell class="yellow">Unjustified occurrences of msg {{itex._attributes.msgId}}</md-table-cell>
+                                            </template>
                                         </template>
-                                    </template>
-                                </md-table-row>
+                                        <template v-else>
+                                            <md-table-cell>{{itex._attributes.file}}</md-table-cell>
+                                            <md-table-cell>
+                                                <template v-if="Array.isArray(itex.justification)">
+                                                    <template v-for="(itey,kem) in itex.justification">
+                                                        <span :key="kem" v-if="itey.text._text.substring(0,6)==='MD_MSR_'">{{itey.text._text}}</span>
+                                                        <span :key="kem" v-else-if="itey.text._text.substring(0,6)==='MD_CBD_'">{{itey.text._text}}</span>
+                                                        <span :key="kem" v-else-if="itey.text._text.substring(0,6)==='MD_CSL_'">{{itey.text._text}}</span>
+                                                        <span :key="kem" v-else-if="itey.text._text.substring(0,2)==='MD_'">
+                                                            <a :href="'#'+itey.text._text">{{itey.text._text}}</a>
+                                                        </span>
+                                                        <span :key="kem" v-else>{{itey.text._text}}</span>
+                                                    </template>
+                                                </template>
+                                                <template v-else>
+                                                    <span v-if="itex.justification.text._text.substring(0,6)==='MD_MSR_'">{{itex.justification.text._text}}</span>
+                                                    <span v-else-if="itex.justification.text._text.substring(0,6)==='MD_CBD_'">{{itex.justification.text._text}}</span>
+                                                    <span v-else-if="itex.justification.text._text.substring(0,6)==='MD_CSL_'">{{itex.justification.text._text}}</span>
+                                                    <span v-else-if="itex.justification.text._text.substring(0,2)==='MD_'">
+                                                        <a :href="'#'+itex.justification.text._text">{{itex.justification.text._text}}</a>
+                                                    </span>
+                                                    <span v-else>{{itex.justification.text._text}}</span>
+                                                </template>
+                                            </md-table-cell>
+                                        </template>
+                                    </md-table-row>
+                                </template>
+                                <template v-else>
+                                    <md-table-row>
+                                        <template v-if="getjustificationCount(item.message)===0">
+                                            <template v-if="item.message._attributes.file==='multi-homed'||item.message._attributes.file==='cma'">
+                                                <md-table-cell>{{item.message._attributes.file}}</md-table-cell>
+                                                <md-table-cell></md-table-cell>
+                                            </template>
+                                            <template v-else>
+                                                <md-table-cell class="yellow">{{item.message._attributes.file}}</md-table-cell>
+                                                <md-table-cell class="yellow">Unjustified occurrences of msg {{item.message._attributes.msgId}}</md-table-cell>
+                                            </template>
+                                        </template>
+                                    </md-table-row>
+                                </template>
                             </template>
-                        </template>
+                        </md-table>
                     </md-table-cell>
                 </md-table-row>
             </md-table>
