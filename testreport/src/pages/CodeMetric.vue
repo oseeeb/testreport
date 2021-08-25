@@ -138,36 +138,36 @@
                 <template v-for="(item,key) in condFiles">
                     <md-table-row :key="key">
                         <md-table-cell>{{item.name}}</md-table-cell>
-                        <md-table-cell>{{item.BME}}</md-table-cell>
-                        <md-table-cell>{{item.BMO}}</md-table-cell>
-                        <md-table-cell>{{item.BMS}}</md-table-cell>
-                        <md-table-cell>{{item.BUG}}</md-table-cell>
-                        <md-table-cell>{{item.CDN}}</md-table-cell>
-                        <md-table-cell>{{item.DEV}}</md-table-cell>
-                        <md-table-cell>{{item.DIF}}</md-table-cell>
-                        <md-table-cell>{{item.ECT}}</md-table-cell>
-                        <md-table-cell>{{item.EFF}}</md-table-cell>
-                        <md-table-cell>{{item.FCO}}</md-table-cell>
-                        <md-table-cell>{{item.FNC}}</md-table-cell>
-                        <md-table-cell>{{item.HAL}}</md-table-cell>
-                        <md-table-cell>{{item.M20}}</md-table-cell>
-                        <md-table-cell>{{item.M21}}</md-table-cell>
-                        <md-table-cell>{{item.M22}}</md-table-cell>
-                        <md-table-cell>{{item.M28}}</md-table-cell>
-                        <md-table-cell>{{item.M33}}</md-table-cell>
-                        <md-table-cell>{{item.OPN}}</md-table-cell>
-                        <md-table-cell>{{item.OPT}}</md-table-cell>
-                        <md-table-cell>{{item.SCT}}</md-table-cell>
-                        <md-table-cell>{{item.SHN}}</md-table-cell>
-                        <md-table-cell>{{item.TDE}}</md-table-cell>
-                        <md-table-cell>{{item.TDO}}</md-table-cell>
-                        <md-table-cell>{{item.TDS}}</md-table-cell>
-                        <md-table-cell>{{item.TLN}}</md-table-cell>
-                        <md-table-cell>{{item.TOT}}</md-table-cell>
-                        <md-table-cell>{{item.TPP}}</md-table-cell>
-                        <md-table-cell>{{item.VAR}}</md-table-cell>
-                        <md-table-cell>{{item.VOL}}</md-table-cell>
-                        <md-table-cell>{{item.ZIP}}</md-table-cell>
+                        <md-table-cell>{{item.BME.min===item.BME.max?item.BME.min:item.BME.min+'...'+item.BME.max}}</md-table-cell>
+                        <md-table-cell>{{item.BMO.min===item.BMO.max?item.BMO.min:item.BMO.min+'...'+item.BMO.max}}</md-table-cell>
+                        <md-table-cell>{{item.BMS.min===item.BMS.max?item.BMS.min:item.BMS.min+'...'+item.BMS.max}}</md-table-cell>
+                        <md-table-cell>{{item.BUG.min===item.BUG.max?item.BUG.min:item.BUG.min+'...'+item.BUG.max}}</md-table-cell>
+                        <md-table-cell>{{item.CDN.min===item.CDN.max?item.CDN.min:item.CDN.min+'...'+item.CDN.max}}</md-table-cell>
+                        <md-table-cell>{{item.DEV.min===item.DEV.max?item.DEV.min:item.DEV.min+'...'+item.DEV.max}}</md-table-cell>
+                        <md-table-cell>{{item.DIF.min===item.DIF.max?item.DIF.min:item.DIF.min+'...'+item.DIF.max}}</md-table-cell>
+                        <md-table-cell>{{item.ECT.min===item.ECT.max?item.ECT.min:item.ECT.min+'...'+item.ECT.max}}</md-table-cell>
+                        <md-table-cell>{{item.EFF.min===item.EFF.max?item.EFF.min:item.EFF.min+'...'+item.EFF.max}}</md-table-cell>
+                        <md-table-cell>{{item.FCO.min===item.FCO.max?item.FCO.min:item.FCO.min+'...'+item.FCO.max}}</md-table-cell>
+                        <md-table-cell>{{item.FNC.min===item.FNC.max?item.FNC.min:item.FNC.min+'...'+item.FNC.max}}</md-table-cell>
+                        <md-table-cell>{{item.HAL.min===item.HAL.max?item.HAL.min:item.HAL.min+'...'+item.HAL.max}}</md-table-cell>
+                        <md-table-cell>{{item.M20.min===item.M20.max?item.M20.min:item.M20.min+'...'+item.M20.max}}</md-table-cell>
+                        <md-table-cell>{{item.M21.min===item.M21.max?item.M21.min:item.M21.min+'...'+item.M21.max}}</md-table-cell>
+                        <md-table-cell>{{item.M22.min===item.M22.max?item.M22.min:item.M22.min+'...'+item.M22.max}}</md-table-cell>
+                        <md-table-cell>{{item.M28.min===item.M28.max?item.M28.min:item.M28.min+'...'+item.M28.max}}</md-table-cell>
+                        <md-table-cell>{{item.M33.min===item.M33.max?item.M33.min:item.M33.min+'...'+item.M33.max}}</md-table-cell>
+                        <md-table-cell>{{item.OPN.min===item.OPN.max?item.OPN.min:item.OPN.min+'...'+item.OPN.max}}</md-table-cell>
+                        <md-table-cell>{{item.OPT.min===item.OPT.max?item.OPT.min:item.OPT.min+'...'+item.OPT.max}}</md-table-cell>
+                        <md-table-cell>{{item.SCT.min===item.SCT.max?item.SCT.min:item.SCT.min+'...'+item.SCT.max}}</md-table-cell>
+                        <md-table-cell>{{item.SHN.min===item.SHN.max?item.SHN.min:item.SHN.min+'...'+item.SHN.max}}</md-table-cell>
+                        <md-table-cell>{{item.TDE.min===item.TDE.max?item.TDE.min:item.TDE.min+'...'+item.TDE.max}}</md-table-cell>
+                        <md-table-cell>{{item.TDO.min===item.TDO.max?item.TDO.min:item.TDO.min+'...'+item.TDO.max}}}</md-table-cell>
+                        <md-table-cell>{{item.TDS.min===item.TDS.max?item.TDS.min:item.TDS.min+'...'+item.TDS.max}}</md-table-cell>
+                        <md-table-cell>{{item.TLN.min===item.TLN.max?item.TLN.min:item.TLN.min+'...'+item.TLN.max}}</md-table-cell>
+                        <md-table-cell>{{item.TOT.min===item.TOT.max?item.TOT.min:item.TOT.min+'...'+item.TOT.max}}</md-table-cell>
+                        <md-table-cell>{{item.TPP.min===item.TPP.max?item.TPP.min:item.TPP.min+'...'+item.TPP.max}}</md-table-cell>
+                        <md-table-cell>{{item.VAR.min===item.VAR.max?item.VAR.min:item.VAR.min+'...'+item.VAR.max}}</md-table-cell>
+                        <md-table-cell>{{item.VOL.min===item.VOL.max?item.VOL.min:item.VOL.min+'...'+item.VOL.max}}</md-table-cell>
+                        <md-table-cell>{{item.ZIP.min===item.ZIP.max?item.ZIP.min:item.ZIP.min+'...'+item.ZIP.max}}</md-table-cell>
                     </md-table-row>
                 </template>
             </md-table>
@@ -255,14 +255,13 @@ export default {
           this.files.forEach(elt=>{
               var resultSingleFilter = this.condFiles.filter(ely=>{return ely.name===elt._attributes.name}).length===0
               var criterias = Object.keys(elt)
-              criterias.pop()
         
               if(resultSingleFilter){
                   var obj = {}
                   criterias.forEach(criteria=>{
                     obj[criteria] = {
-                        min:parseInt(elt[criteria]._text),
-                        max:parseInt(elt[criteria]._text)
+                        min:parseFloat(elt[criteria]._text),
+                        max:parseFloat(elt[criteria]._text)
                     }
                   })
                     obj.name = elt._attributes.name
@@ -272,11 +271,11 @@ export default {
               else{
                 var file = this.condFiles.find(eltt=>{return eltt.name===elt._attributes.name})
                 criterias.forEach(criteria=>{
-                    if(file[criteria].min > parseInt(elt[criteria]._text)) {
-                        file[criteria].min = parseInt(elt[criteria]._text)
+                    if(file[criteria].min > parseFloat(elt[criteria]._text)) {
+                        file[criteria].min = parseFloat(elt[criteria]._text)
                     }
-                    if(file[criteria].max < parseInt(elt[criteria]._text)){
-                        file[criteria].max = parseInt(elt[criteria]._text)
+                    if(file[criteria].max < parseFloat(elt[criteria]._text)){
+                        file[criteria].max = parseFloat(elt[criteria]._text)
                     }
                 })
               }
@@ -289,7 +288,7 @@ export default {
                   max:0,
               }
               path.map(elt=>{
-                  return parseInt(elt)
+                  return parseFloat(elt)
               })
 
               path.sort((a,b)=>{return a-b})

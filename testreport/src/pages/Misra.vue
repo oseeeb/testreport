@@ -156,7 +156,7 @@ export default {
   computed:{
       MISRA_Rules(){
           var rules = []
-          
+          var distinctRules = []
           this.TestRuns_QACSummary.forEach(elt=>{
               if('log_QACSummary' in elt){
                   elt.log_QACSummary.mcm.map(elmt=>{
@@ -169,7 +169,12 @@ export default {
                   rules.push(...elt.log_QACSummary.mcm)
               }
           })
-
+            rules=Object.values(
+                rules.reduce((a, b) => {
+                if (!a[b._attributes.msgId]) a[b._attributes.msgId] = b 
+                return a
+            }, {})
+            )
           return rules
       },
       nrOfConfigs(){
