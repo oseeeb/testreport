@@ -39,7 +39,7 @@
                     <md-table-cell>BMO</md-table-cell>
                     <md-table-cell>BMS</md-table-cell>
                     <md-table-cell>BUG</md-table-cell>
-                    <md-table-cell>CDN</md-table-cell>
+                    <md-table-cell>1..20</md-table-cell>
                     <md-table-cell>DEV</md-table-cell>
                     <md-table-cell>DIF</md-table-cell>
                     <md-table-cell>ECT</md-table-cell>
@@ -67,7 +67,7 @@
                     <md-table-cell>ZIP</md-table-cell>
                 </md-table-row>
                 <md-table-row>
-                    <md-table-cell>Allowed Range</md-table-cell>
+                    <md-table-cell>Metrics Abreviations</md-table-cell>
                     <md-table-cell>BME</md-table-cell>
                     <md-table-cell>BMO</md-table-cell>
                     <md-table-cell>BMS</md-table-cell>
@@ -170,6 +170,167 @@
                         <md-table-cell>{{item.ZIP.min===item.ZIP.max?item.ZIP.min:item.ZIP.min+'...'+item.ZIP.max}}</md-table-cell>
                     </md-table-row>
                 </template>
+                <md-table-row>
+                    <md-table-cell colspan="31">Functions</md-table-cell>
+                </md-table-row>
+                <md-table-row>
+                    <md-table-cell>Allowed Range</md-table-cell>
+                    <md-table-cell>AKI</md-table-cell>
+                    <md-table-cell>AV1</md-table-cell>
+                    <md-table-cell>AV2</md-table-cell>
+                    <md-table-cell>AV3</md-table-cell>
+                    <md-table-cell>BAK</md-table-cell>
+                    <md-table-cell>CAL</md-table-cell>
+                    <md-table-cell>CYC</md-table-cell>
+                    <md-table-cell>ELF</md-table-cell>
+                    <md-table-cell>FDN</md-table-cell>
+                    <md-table-cell>FDT</md-table-cell>
+                    <md-table-cell>FN1</md-table-cell>
+                    <md-table-cell>FN2</md-table-cell>
+                    <md-table-cell>GTO</md-table-cell>
+                    <md-table-cell>KDN</md-table-cell>
+                    <md-table-cell>KNT</md-table-cell>
+                    <md-table-cell>LCT</md-table-cell>
+                    <md-table-cell>LIN</md-table-cell>
+                    <md-table-cell>LOP</md-table-cell>
+                    <md-table-cell>M07</md-table-cell>
+                    <md-table-cell>M19</md-table-cell>
+                    <md-table-cell>M29</md-table-cell>
+                    <md-table-cell>MCC</md-table-cell>
+                    <md-table-cell>MIF</md-table-cell>
+                    <md-table-cell>NPATH</md-table-cell>
+                    <md-table-cell>PAR</md-table-cell>
+                    <md-table-cell>PBG</md-table-cell>
+                    <md-table-cell>PDN</md-table-cell>
+                    <md-table-cell>PTH</md-table-cell>
+                    <md-table-cell>RET</md-table-cell>
+                    <md-table-cell>ST1</md-table-cell>
+                    <md-table-cell>ST2</md-table-cell>
+                    <md-table-cell>ST3</md-table-cell>
+                    <md-table-cell>SUB</md-table-cell>
+                    <md-table-cell>UNR</md-table-cell>
+                    <md-table-cell>UNV</md-table-cell>
+                    <md-table-cell>XLN</md-table-cell>
+                </md-table-row>
+                <md-table-row>
+                    <md-table-cell>Allowed Range</md-table-cell>
+                    <md-table-cell>AKI</md-table-cell>
+                    <md-table-cell>AV1</md-table-cell>
+                    <md-table-cell>AV2</md-table-cell>
+                    <md-table-cell>AV3</md-table-cell>
+                    <md-table-cell>BAK</md-table-cell>
+                    <md-table-cell>CAL</md-table-cell>
+                    <md-table-cell>CYC</md-table-cell>
+                    <md-table-cell>ELF</md-table-cell>
+                    <md-table-cell>FDN</md-table-cell>
+                    <md-table-cell>FDT</md-table-cell>
+                    <md-table-cell>FN1</md-table-cell>
+                    <md-table-cell>FN2</md-table-cell>
+                    <md-table-cell>GTO</md-table-cell>
+                    <md-table-cell>KDN</md-table-cell>
+                    <md-table-cell>KNT</md-table-cell>
+                    <md-table-cell>LCT</md-table-cell>
+                    <md-table-cell>LIN</md-table-cell>
+                    <md-table-cell>LOP</md-table-cell>
+                    <md-table-cell>M07</md-table-cell>
+                    <md-table-cell>M19</md-table-cell>
+                    <md-table-cell>M29</md-table-cell>
+                    <md-table-cell>MCC</md-table-cell>
+                    <md-table-cell>MIF</md-table-cell>
+                    <md-table-cell>NPATH</md-table-cell>
+                    <md-table-cell>PAR</md-table-cell>
+                    <md-table-cell>PBG</md-table-cell>
+                    <md-table-cell>PDN</md-table-cell>
+                    <md-table-cell>PTH</md-table-cell>
+                    <md-table-cell>RET</md-table-cell>
+                    <md-table-cell>ST1</md-table-cell>
+                    <md-table-cell>ST2</md-table-cell>
+                    <md-table-cell>ST3</md-table-cell>
+                    <md-table-cell>SUB</md-table-cell>
+                    <md-table-cell>UNR</md-table-cell>
+                    <md-table-cell>UNV</md-table-cell>
+                    <md-table-cell>XLN</md-table-cell>
+                </md-table-row>
+                <md-table-row>
+                    <md-table-cell>Allowed Range</md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'AKI'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'AV1'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'AV2'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'AV3'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'BAK'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'CAL'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'CYC'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'ELF'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'FDN'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'FDT'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'FN1'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'FN2'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'GTO'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'KDN'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'KNT'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'LCT'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'LIN'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'LOP'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'M07'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'M19'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'M29'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'MCC'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'MIF'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'NPATH'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'PAR'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'PBG'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'PDN'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'PTH'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'RET'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'ST1'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'ST2'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'ST3'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'SUB'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'UNR'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'UNV'),1,20)"></md-table-cell>
+                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'XLN'),1,20)"></md-table-cell>
+                </md-table-row>
+                <template v-for="(item,key) in condFunct">
+                    <md-table-row :key="key">
+                        <md-table-cell>{{item.name}}</md-table-cell>
+                        <md-table-cell>{{item.AKI.min===item.AKI.max?item.AKI.min:item.AKI.min+'...'+item.AKI.max}}</md-table-cell>
+                        <md-table-cell>{{item.AV1.min===item.AV1.max?item.AV1.min:item.AV1.min+'...'+item.AV1.max}}</md-table-cell>
+                        <md-table-cell>{{item.AV2.min===item.AV2.max?item.AV2.min:item.AV2.min+'...'+item.AV2.max}}</md-table-cell>
+                        <md-table-cell>{{item.AV3.min===item.AV3.max?item.AV3.min:item.AV3.min+'...'+item.AV3.max}}</md-table-cell>
+                        <md-table-cell>{{item.BAK.min===item.BAK.max?item.BAK.min:item.BAK.min+'...'+item.BAK.max}}</md-table-cell>
+                        <md-table-cell>{{item.CAL.min===item.CAL.max?item.CAL.min:item.CAL.min+'...'+item.CAL.max}}</md-table-cell>
+                        <md-table-cell>{{item.CYC.min===item.CYC.max?item.CYC.min:item.CYC.min+'...'+item.CYC.max}}</md-table-cell>
+                        <md-table-cell>{{item.ELF.min===item.ELF.max?item.ELF.min:item.ELF.min+'...'+item.ELF.max}}</md-table-cell>
+                        <md-table-cell>{{item.FDN.min===item.FDN.max?item.FDN.min:item.FDN.min+'...'+item.FDN.max}}</md-table-cell>
+                        <md-table-cell>{{item.FDT.min===item.FDT.max?item.FDT.min:item.FDT.min+'...'+item.FDT.max}}</md-table-cell>
+                        <md-table-cell>{{item.FN1.min===item.FN1.max?item.FN1.min:item.FN1.min+'...'+item.FN1.max}}</md-table-cell>
+                        <md-table-cell>{{item.FN2.min===item.FN2.max?item.FN2.min:item.FN2.min+'...'+item.FN2.max}}</md-table-cell>
+                        <md-table-cell>{{item.GTO.min===item.GTO.max?item.GTO.min:item.GTO.min+'...'+item.GTO.max}}</md-table-cell>
+                        <md-table-cell>{{item.KDN.min===item.KDN.max?item.KDN.min:item.KDN.min+'...'+item.KDN.max}}</md-table-cell>
+                        <md-table-cell>{{item.KNT.min===item.KNT.max?item.KNT.min:item.KNT.min+'...'+item.KNT.max}}</md-table-cell>
+                        <md-table-cell>{{item.LCT.min===item.LCT.max?item.LCT.min:item.LCT.min+'...'+item.LCT.max}}</md-table-cell>
+                        <md-table-cell>{{item.LIN.min===item.LIN.max?item.LIN.min:item.LIN.min+'...'+item.LIN.max}}</md-table-cell>
+                        <md-table-cell>{{item.LOP.min===item.LOP.max?item.LOP.min:item.LOP.min+'...'+item.LOP.max}}</md-table-cell>
+                        <md-table-cell>{{item.M07.min===item.M07.max?item.M07.min:item.M07.min+'...'+item.M07.max}}</md-table-cell>
+                        <md-table-cell>{{item.M19.min===item.M19.max?item.M19.min:item.M19.min+'...'+item.M19.max}}</md-table-cell>
+                        <md-table-cell>{{item.M29.min===item.M29.max?item.M29.min:item.M29.min+'...'+item.M29.max}}</md-table-cell>
+                        <md-table-cell>{{item.MCC.min===item.MCC.max?item.MCC.min:item.MCC.min+'...'+item.MCC.max}}</md-table-cell>
+                        <md-table-cell>{{item.MIF.min===item.MIF.max?item.MIF.min:item.MIF.min+'...'+item.MIF.max}}</md-table-cell>
+                        <md-table-cell>{{item.NPATH.min===item.NPATH.max?item.NPATH.min:item.NPATH.min+'...'+item.NPATH.max}}</md-table-cell>
+                        <md-table-cell>{{item.PAR.min===item.PAR.max?item.PAR.min:item.PAR.min+'...'+item.PAR.max}}</md-table-cell>
+                        <md-table-cell>{{item.PBG.min===item.PBG.max?item.PBG.min:item.PBG.min+'...'+item.PBG.max}}</md-table-cell>
+                        <md-table-cell>{{item.PDN.min===item.PDN.max?item.PDN.min:item.PDN.min+'...'+item.PDN.max}}</md-table-cell>
+                        <md-table-cell>{{item.PTH.min===item.PTH.max?item.PTH.min:item.PTH.min+'...'+item.PTH.max}}</md-table-cell>
+                        <md-table-cell>{{item.RET.min===item.RET.max?item.RET.min:item.RET.min+'...'+item.RET.max}}</md-table-cell>
+                        <md-table-cell>{{item.ST1.min===item.ST1.max?item.ST1.min:item.ST1.min+'...'+item.ST1.max}}</md-table-cell>
+                        <md-table-cell>{{item.ST2.min===item.ST2.max?item.ST2.min:item.ST2.min+'...'+item.ST2.max}}</md-table-cell>
+                        <md-table-cell>{{item.ST3.min===item.ST3.max?item.ST3.min:item.ST3.min+'...'+item.ST3.max}}</md-table-cell>
+                        <md-table-cell>{{item.SUB.min===item.SUB.max?item.SUB.min:item.SUB.min+'...'+item.SUB.max}}</md-table-cell>
+                        <md-table-cell>{{item.UNR.min===item.UNR.max?item.UNR.min:item.UNR.min+'...'+item.UNR.max}}</md-table-cell>
+                        <md-table-cell>{{item.UNV.min===item.UNV.max?item.UNV.min:item.UNV.min+'...'+item.UNV.max}}</md-table-cell>
+                        <md-table-cell>{{item.XLN.min===item.XLN.max?item.XLN.min:item.XLN.min+'...'+item.XLN.max}}</md-table-cell>
+                    </md-table-row>
+                </template>
             </md-table>
         </div>
     </div>
@@ -186,7 +347,8 @@ export default {
         log_QACMetrics:[],
         files:[],
         functions:[],
-        condFiles:[]
+        condFiles:[],
+        condFunct:[]
     }
   },
   computed:{
@@ -238,7 +400,7 @@ export default {
               }
           })
 
-          console.log('log files',this.files)
+          console.log('log functions',this.functions)
     
       },
       filters(bigdata,criteria){
@@ -276,6 +438,37 @@ export default {
                     }
                     if(file[criteria].max < parseFloat(elt[criteria]._text)){
                         file[criteria].max = parseFloat(elt[criteria]._text)
+                    }
+                })
+              }
+          })
+      },
+      filters3(){
+
+          this.functions.forEach(elt=>{
+              var resultSingleFilter = this.condFunct.filter(ely=>{return ely.name===elt._attributes.name}).length===0
+              var criterias = Object.keys(elt)
+        
+              if(resultSingleFilter){
+                  var obj = {}
+                  criterias.forEach(criteria=>{
+                    obj[criteria] = {
+                        min:parseFloat(elt[criteria]._text),
+                        max:parseFloat(elt[criteria]._text)
+                    }
+                  })
+                    obj.name = elt._attributes.name
+                  this.condFunct.push(obj)
+                  
+              }
+              else{
+                var func = this.condFunct.find(eltt=>{return eltt.name===elt._attributes.name})
+                criterias.forEach(criteria=>{
+                    if(func[criteria].min > parseFloat(elt[criteria]._text)) {
+                        func[criteria].min = parseFloat(elt[criteria]._text)
+                    }
+                    if(func[criteria].max < parseFloat(elt[criteria]._text)){
+                        func[criteria].max = parseFloat(elt[criteria]._text)
                     }
                 })
               }
@@ -328,6 +521,7 @@ export default {
   mounted(){
      this.getResultCompliance()
      this.filters2()
+     this.filters3()
      console.log('condfle',this.condFiles)
   }
 };
