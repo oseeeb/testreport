@@ -54,17 +54,6 @@
                     <md-table-cell>M33</md-table-cell>
                     <md-table-cell>OPN</md-table-cell>
                     <md-table-cell>OPT</md-table-cell>
-                    <md-table-cell>SCT</md-table-cell>
-                    <md-table-cell>SHN</md-table-cell>
-                    <md-table-cell>TDE</md-table-cell>
-                    <md-table-cell>TDO</md-table-cell>
-                    <md-table-cell>TDS</md-table-cell>
-                    <md-table-cell>TLN</md-table-cell>
-                    <md-table-cell>TOT</md-table-cell>
-                    <md-table-cell>TPP</md-table-cell>
-                    <md-table-cell>VAR</md-table-cell>
-                    <md-table-cell>VOL</md-table-cell>
-                    <md-table-cell>ZIP</md-table-cell>
                 </md-table-row>
                 <md-table-row>
                     <md-table-cell>Metrics Abreviations</md-table-cell>
@@ -87,17 +76,6 @@
                     <md-table-cell>M33</md-table-cell>
                     <md-table-cell>OPN</md-table-cell>
                     <md-table-cell>OPT</md-table-cell>
-                    <md-table-cell>SCT</md-table-cell>
-                    <md-table-cell>SHN</md-table-cell>
-                    <md-table-cell>TDE</md-table-cell>
-                    <md-table-cell>TDO</md-table-cell>
-                    <md-table-cell>TDS</md-table-cell>
-                    <md-table-cell>TLN</md-table-cell>
-                    <md-table-cell>TOT</md-table-cell>
-                    <md-table-cell>TPP</md-table-cell>
-                    <md-table-cell>VAR</md-table-cell>
-                    <md-table-cell>VOL</md-table-cell>
-                    <md-table-cell>ZIP</md-table-cell>
                 </md-table-row>
                 <md-table-row>
                     <md-table-cell>Mesured Values</md-table-cell>
@@ -120,20 +98,9 @@
                     <md-table-cell v-html="GetMinMaxInfo(filters(files,'M33'),1,20)"></md-table-cell>
                     <md-table-cell v-html="GetMinMaxInfo(filters(files,'OPN'),1,20)"></md-table-cell>
                     <md-table-cell v-html="GetMinMaxInfo(filters(files,'OPT'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'SCT'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'SHN'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'TDE'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'TDO'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'TDS'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'TLN'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'TOT'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'TPP'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'VAR'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'VOL'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(files,'ZIP'),1,20)"></md-table-cell>
                 </md-table-row>
                 <md-table-row>
-                    <md-table-cell colspan="31">Files</md-table-cell>
+                    <md-table-cell colspan="21" :style="'width:20%;background-color:grey;color:white;font-weight:bold'">Files</md-table-cell>
                 </md-table-row>
                 <template v-for="(item,key) in condFiles">
                     <md-table-row :key="key">
@@ -157,56 +124,29 @@
                         <md-table-cell>{{item.M33.min===item.M33.max?item.M33.min:item.M33.min+'...'+item.M33.max}}</md-table-cell>
                         <md-table-cell>{{item.OPN.min===item.OPN.max?item.OPN.min:item.OPN.min+'...'+item.OPN.max}}</md-table-cell>
                         <md-table-cell>{{item.OPT.min===item.OPT.max?item.OPT.min:item.OPT.min+'...'+item.OPT.max}}</md-table-cell>
-                        <md-table-cell>{{item.SCT.min===item.SCT.max?item.SCT.min:item.SCT.min+'...'+item.SCT.max}}</md-table-cell>
-                        <md-table-cell>{{item.SHN.min===item.SHN.max?item.SHN.min:item.SHN.min+'...'+item.SHN.max}}</md-table-cell>
-                        <md-table-cell>{{item.TDE.min===item.TDE.max?item.TDE.min:item.TDE.min+'...'+item.TDE.max}}</md-table-cell>
-                        <md-table-cell>{{item.TDO.min===item.TDO.max?item.TDO.min:item.TDO.min+'...'+item.TDO.max}}}</md-table-cell>
-                        <md-table-cell>{{item.TDS.min===item.TDS.max?item.TDS.min:item.TDS.min+'...'+item.TDS.max}}</md-table-cell>
-                        <md-table-cell>{{item.TLN.min===item.TLN.max?item.TLN.min:item.TLN.min+'...'+item.TLN.max}}</md-table-cell>
-                        <md-table-cell>{{item.TOT.min===item.TOT.max?item.TOT.min:item.TOT.min+'...'+item.TOT.max}}</md-table-cell>
-                        <md-table-cell>{{item.TPP.min===item.TPP.max?item.TPP.min:item.TPP.min+'...'+item.TPP.max}}</md-table-cell>
-                        <md-table-cell>{{item.VAR.min===item.VAR.max?item.VAR.min:item.VAR.min+'...'+item.VAR.max}}</md-table-cell>
-                        <md-table-cell>{{item.VOL.min===item.VOL.max?item.VOL.min:item.VOL.min+'...'+item.VOL.max}}</md-table-cell>
-                        <md-table-cell>{{item.ZIP.min===item.ZIP.max?item.ZIP.min:item.ZIP.min+'...'+item.ZIP.max}}</md-table-cell>
                     </md-table-row>
                 </template>
                 <md-table-row>
-                    <md-table-cell colspan="31">Functions</md-table-cell>
+                    <md-table-cell colspan="21" :style="'width:20%;background-color:grey;color:white;font-weight:bold'">Functions</md-table-cell>
                 </md-table-row>
                 <md-table-row>
-                    <md-table-cell>Allowed Range</md-table-cell>
-                    <md-table-cell>AKI</md-table-cell>
-                    <md-table-cell>AV1</md-table-cell>
-                    <md-table-cell>AV2</md-table-cell>
-                    <md-table-cell>AV3</md-table-cell>
-                    <md-table-cell>BAK</md-table-cell>
-                    <md-table-cell>CAL</md-table-cell>
+                    <md-table-cell>Metrics Abreviations</md-table-cell>
+                    <md-table-cell>PTH</md-table-cell>
                     <md-table-cell>CYC</md-table-cell>
-                    <md-table-cell>ELF</md-table-cell>
-                    <md-table-cell>FDN</md-table-cell>
-                    <md-table-cell>FDT</md-table-cell>
-                    <md-table-cell>FN1</md-table-cell>
-                    <md-table-cell>FN2</md-table-cell>
+                    <md-table-cell>CAL</md-table-cell>
+                    <md-table-cell>PAR</md-table-cell>
+                    <md-table-cell>MIF</md-table-cell>
+                    <md-table-cell>BAK</md-table-cell>
                     <md-table-cell>GTO</md-table-cell>
-                    <md-table-cell>KDN</md-table-cell>
+                    <md-table-cell>M19</md-table-cell>
+                    <md-table-cell>RET</md-table-cell>
+                    <md-table-cell>ST3</md-table-cell>
+                    <md-table-cell>AV1</md-table-cell>
                     <md-table-cell>KNT</md-table-cell>
                     <md-table-cell>LCT</md-table-cell>
                     <md-table-cell>LIN</md-table-cell>
-                    <md-table-cell>LOP</md-table-cell>
                     <md-table-cell>M07</md-table-cell>
-                    <md-table-cell>M19</md-table-cell>
                     <md-table-cell>M29</md-table-cell>
-                    <md-table-cell>MCC</md-table-cell>
-                    <md-table-cell>MIF</md-table-cell>
-                    <md-table-cell>NPATH</md-table-cell>
-                    <md-table-cell>PAR</md-table-cell>
-                    <md-table-cell>PBG</md-table-cell>
-                    <md-table-cell>PDN</md-table-cell>
-                    <md-table-cell>PTH</md-table-cell>
-                    <md-table-cell>RET</md-table-cell>
-                    <md-table-cell>ST1</md-table-cell>
-                    <md-table-cell>ST2</md-table-cell>
-                    <md-table-cell>ST3</md-table-cell>
                     <md-table-cell>SUB</md-table-cell>
                     <md-table-cell>UNR</md-table-cell>
                     <md-table-cell>UNV</md-table-cell>
@@ -214,117 +154,107 @@
                 </md-table-row>
                 <md-table-row>
                     <md-table-cell>Allowed Range</md-table-cell>
-                    <md-table-cell>AKI</md-table-cell>
-                    <md-table-cell>AV1</md-table-cell>
-                    <md-table-cell>AV2</md-table-cell>
-                    <md-table-cell>AV3</md-table-cell>
-                    <md-table-cell>BAK</md-table-cell>
-                    <md-table-cell>CAL</md-table-cell>
+                    <md-table-cell>1..80 (decomposition threshold: 80)</md-table-cell>
+                    <md-table-cell>1..10 (decomposition threshold: 20)</md-table-cell>
+                    <md-table-cell>0..7</md-table-cell>
+                    <md-table-cell>0..5	</md-table-cell>
+                    <md-table-cell>0..4 (decomposition threshold: 6)	</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0..1</md-table-cell>
+                    <md-table-cell>0..1</md-table-cell>
+                    <md-table-cell>1..50</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                </md-table-row>
+                <md-table-row>
+                    <md-table-cell>Mesured Values</md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'PTH'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'CYC'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'CAL'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'PAR'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'MIF'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'BAK'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'GTO'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'M19'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'RET'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'ST3'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'AV1'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'KNT'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'LCT'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'LIN'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'M07'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'M29'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'SUB'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'UNR'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'UNV'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'XLN'),1,20)"></md-table-cell>
+                </md-table-row>
+            </md-table>
+        </div>
+        <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+            <md-table md-card>
+                <md-table-toolbar>
+                    <h1 class="md-title">Function Metrics (Detailed)</h1>
+                </md-table-toolbar>
+                 <md-table-row>
+                    <md-table-cell></md-table-cell>
+                    <md-table-cell colspan="6">Supervised metrics</md-table-cell>
+                    <md-table-cell colspan="4">Info-only metrics</md-table-cell>
+                    <md-table-cell colspan="10">Measured-only metrics</md-table-cell>
+                </md-table-row>
+                 <md-table-row>
+                    <md-table-cell>Functions</md-table-cell>
+                    <md-table-cell>PTH</md-table-cell>
                     <md-table-cell>CYC</md-table-cell>
-                    <md-table-cell>ELF</md-table-cell>
-                    <md-table-cell>FDN</md-table-cell>
-                    <md-table-cell>FDT</md-table-cell>
-                    <md-table-cell>FN1</md-table-cell>
-                    <md-table-cell>FN2</md-table-cell>
+                    <md-table-cell>CAL</md-table-cell>
+                    <md-table-cell>PAR</md-table-cell>
+                    <md-table-cell>MIF</md-table-cell>
+                    <md-table-cell>BAK</md-table-cell>
                     <md-table-cell>GTO</md-table-cell>
-                    <md-table-cell>KDN</md-table-cell>
+                    <md-table-cell>M19</md-table-cell>
+                    <md-table-cell>RET</md-table-cell>
+                    <md-table-cell>ST3</md-table-cell>
+                    <md-table-cell>AV1</md-table-cell>
                     <md-table-cell>KNT</md-table-cell>
                     <md-table-cell>LCT</md-table-cell>
                     <md-table-cell>LIN</md-table-cell>
-                    <md-table-cell>LOP</md-table-cell>
                     <md-table-cell>M07</md-table-cell>
-                    <md-table-cell>M19</md-table-cell>
                     <md-table-cell>M29</md-table-cell>
-                    <md-table-cell>MCC</md-table-cell>
-                    <md-table-cell>MIF</md-table-cell>
-                    <md-table-cell>NPATH</md-table-cell>
-                    <md-table-cell>PAR</md-table-cell>
-                    <md-table-cell>PBG</md-table-cell>
-                    <md-table-cell>PDN</md-table-cell>
-                    <md-table-cell>PTH</md-table-cell>
-                    <md-table-cell>RET</md-table-cell>
-                    <md-table-cell>ST1</md-table-cell>
-                    <md-table-cell>ST2</md-table-cell>
-                    <md-table-cell>ST3</md-table-cell>
                     <md-table-cell>SUB</md-table-cell>
                     <md-table-cell>UNR</md-table-cell>
                     <md-table-cell>UNV</md-table-cell>
                     <md-table-cell>XLN</md-table-cell>
-                </md-table-row>
-                <md-table-row>
-                    <md-table-cell>Allowed Range</md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'AKI'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'AV1'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'AV2'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'AV3'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'BAK'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'CAL'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'CYC'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'ELF'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'FDN'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'FDT'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'FN1'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'FN2'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'GTO'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'KDN'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'KNT'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'LCT'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'LIN'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'LOP'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'M07'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'M19'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'M29'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'MCC'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'MIF'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'NPATH'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'PAR'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'PBG'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'PDN'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'PTH'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'RET'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'ST1'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'ST2'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'ST3'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'SUB'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'UNR'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'UNV'),1,20)"></md-table-cell>
-                    <md-table-cell  v-html="GetMinMaxInfo(filters(functions,'XLN'),1,20)"></md-table-cell>
                 </md-table-row>
                 <template v-for="(item,key) in condFunct">
                     <md-table-row :key="key">
                         <md-table-cell>{{item.name}}</md-table-cell>
-                        <md-table-cell>{{item.AKI.min===item.AKI.max?item.AKI.min:item.AKI.min+'...'+item.AKI.max}}</md-table-cell>
-                        <md-table-cell>{{item.AV1.min===item.AV1.max?item.AV1.min:item.AV1.min+'...'+item.AV1.max}}</md-table-cell>
-                        <md-table-cell>{{item.AV2.min===item.AV2.max?item.AV2.min:item.AV2.min+'...'+item.AV2.max}}</md-table-cell>
-                        <md-table-cell>{{item.AV3.min===item.AV3.max?item.AV3.min:item.AV3.min+'...'+item.AV3.max}}</md-table-cell>
-                        <md-table-cell>{{item.BAK.min===item.BAK.max?item.BAK.min:item.BAK.min+'...'+item.BAK.max}}</md-table-cell>
-                        <md-table-cell>{{item.CAL.min===item.CAL.max?item.CAL.min:item.CAL.min+'...'+item.CAL.max}}</md-table-cell>
+                        <md-table-cell>{{item.PTH.min===item.PTH.max?item.PTH.min:item.PTH.min+'...'+item.PTH.max}}</md-table-cell>
                         <md-table-cell>{{item.CYC.min===item.CYC.max?item.CYC.min:item.CYC.min+'...'+item.CYC.max}}</md-table-cell>
-                        <md-table-cell>{{item.ELF.min===item.ELF.max?item.ELF.min:item.ELF.min+'...'+item.ELF.max}}</md-table-cell>
-                        <md-table-cell>{{item.FDN.min===item.FDN.max?item.FDN.min:item.FDN.min+'...'+item.FDN.max}}</md-table-cell>
-                        <md-table-cell>{{item.FDT.min===item.FDT.max?item.FDT.min:item.FDT.min+'...'+item.FDT.max}}</md-table-cell>
-                        <md-table-cell>{{item.FN1.min===item.FN1.max?item.FN1.min:item.FN1.min+'...'+item.FN1.max}}</md-table-cell>
-                        <md-table-cell>{{item.FN2.min===item.FN2.max?item.FN2.min:item.FN2.min+'...'+item.FN2.max}}</md-table-cell>
+                        <md-table-cell>{{item.CAL.min===item.CAL.max?item.CAL.min:item.CAL.min+'...'+item.CAL.max}}</md-table-cell>
+                        <md-table-cell>{{item.PAR.min===item.PAR.max?item.PAR.min:item.PAR.min+'...'+item.PAR.max}}</md-table-cell>
+                        <md-table-cell>{{item.MIF.min===item.MIF.max?item.MIF.min:item.MIF.min+'...'+item.MIF.max}}</md-table-cell>
+                        <md-table-cell>{{item.BAK.min===item.BAK.max?item.BAK.min:item.BAK.min+'...'+item.BAK.max}}</md-table-cell>
+
                         <md-table-cell>{{item.GTO.min===item.GTO.max?item.GTO.min:item.GTO.min+'...'+item.GTO.max}}</md-table-cell>
-                        <md-table-cell>{{item.KDN.min===item.KDN.max?item.KDN.min:item.KDN.min+'...'+item.KDN.max}}</md-table-cell>
+                        <md-table-cell>{{item.M19.min===item.M19.max?item.M19.min:item.M19.min+'...'+item.M19.max}}</md-table-cell>
+                        <md-table-cell>{{item.RET.min===item.RET.max?item.RET.min:item.RET.min+'...'+item.RET.max}}</md-table-cell>
+                        <md-table-cell>{{item.ST3.min===item.ST3.max?item.ST3.min:item.ST3.min+'...'+item.ST3.max}}</md-table-cell>
+
+                        <md-table-cell>{{item.AV1.min===item.AV1.max?item.AV1.min:item.AV1.min+'...'+item.AV1.max}}</md-table-cell>
                         <md-table-cell>{{item.KNT.min===item.KNT.max?item.KNT.min:item.KNT.min+'...'+item.KNT.max}}</md-table-cell>
                         <md-table-cell>{{item.LCT.min===item.LCT.max?item.LCT.min:item.LCT.min+'...'+item.LCT.max}}</md-table-cell>
                         <md-table-cell>{{item.LIN.min===item.LIN.max?item.LIN.min:item.LIN.min+'...'+item.LIN.max}}</md-table-cell>
-                        <md-table-cell>{{item.LOP.min===item.LOP.max?item.LOP.min:item.LOP.min+'...'+item.LOP.max}}</md-table-cell>
                         <md-table-cell>{{item.M07.min===item.M07.max?item.M07.min:item.M07.min+'...'+item.M07.max}}</md-table-cell>
-                        <md-table-cell>{{item.M19.min===item.M19.max?item.M19.min:item.M19.min+'...'+item.M19.max}}</md-table-cell>
                         <md-table-cell>{{item.M29.min===item.M29.max?item.M29.min:item.M29.min+'...'+item.M29.max}}</md-table-cell>
-                        <md-table-cell>{{item.MCC.min===item.MCC.max?item.MCC.min:item.MCC.min+'...'+item.MCC.max}}</md-table-cell>
-                        <md-table-cell>{{item.MIF.min===item.MIF.max?item.MIF.min:item.MIF.min+'...'+item.MIF.max}}</md-table-cell>
-                        <md-table-cell>{{item.NPATH.min===item.NPATH.max?item.NPATH.min:item.NPATH.min+'...'+item.NPATH.max}}</md-table-cell>
-                        <md-table-cell>{{item.PAR.min===item.PAR.max?item.PAR.min:item.PAR.min+'...'+item.PAR.max}}</md-table-cell>
-                        <md-table-cell>{{item.PBG.min===item.PBG.max?item.PBG.min:item.PBG.min+'...'+item.PBG.max}}</md-table-cell>
-                        <md-table-cell>{{item.PDN.min===item.PDN.max?item.PDN.min:item.PDN.min+'...'+item.PDN.max}}</md-table-cell>
-                        <md-table-cell>{{item.PTH.min===item.PTH.max?item.PTH.min:item.PTH.min+'...'+item.PTH.max}}</md-table-cell>
-                        <md-table-cell>{{item.RET.min===item.RET.max?item.RET.min:item.RET.min+'...'+item.RET.max}}</md-table-cell>
-                        <md-table-cell>{{item.ST1.min===item.ST1.max?item.ST1.min:item.ST1.min+'...'+item.ST1.max}}</md-table-cell>
-                        <md-table-cell>{{item.ST2.min===item.ST2.max?item.ST2.min:item.ST2.min+'...'+item.ST2.max}}</md-table-cell>
-                        <md-table-cell>{{item.ST3.min===item.ST3.max?item.ST3.min:item.ST3.min+'...'+item.ST3.max}}</md-table-cell>
                         <md-table-cell>{{item.SUB.min===item.SUB.max?item.SUB.min:item.SUB.min+'...'+item.SUB.max}}</md-table-cell>
                         <md-table-cell>{{item.UNR.min===item.UNR.max?item.UNR.min:item.UNR.min+'...'+item.UNR.max}}</md-table-cell>
                         <md-table-cell>{{item.UNV.min===item.UNV.max?item.UNV.min:item.UNV.min+'...'+item.UNV.max}}</md-table-cell>

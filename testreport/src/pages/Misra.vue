@@ -59,79 +59,76 @@
         <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
             <md-table md-card>
                 <md-table-toolbar>
-                    <h1 class="md-title">QAC Summary for all configurations</h1>
+                    <h1 class="md-title">QAC messages</h1>
                 </md-table-toolbar>
                 <md-table-row>
                     
-                    <md-table-head>MISRA rule</md-table-head>
-                    <md-table-head>Number of configurations with deviations</md-table-head>
-                    <md-table-head>Sum of deviations for all configurations</md-table-head>
-                    <md-table-head>Max deviations per configuration</md-table-head>
+                    <md-table-head>Message ID</md-table-head>
+                    <md-table-head>Affected configurations</md-table-head>
+                    <md-table-head>Occurrences</md-table-head>
+                    <md-table-head>Justifications</md-table-head>
+                    <md-table-head>Open messages</md-table-head>
+                </md-table-row>
+                <md-table-row v-for="(item,key) in QAC_Rules_Cond" :key="key">
+                    <md-table-cell>
+                        <a v-if="item.version==='9'" :href="'file:///\\vi.vector.int\\DE\\STR\\Restricted\\PES\\zCDK\\TestReport_References\\Code_MsgRef.html#'+item._attributes.msgId"> 
+                            {{item._attributes.msgId}}
+                        </a>
+                        <a v-else :href="'file:///\\vi.vector.int\\DE\\STR\\Restricted\\PES\\zCDK\\TestReport_References\\Code_QAC_MsgRef.html'+item._attributes.msgId"> 
+                            {{item._attributes.msgId}}
+                        </a>
+                        ({{item.msgId}})
+                    </md-table-cell>
+                    <md-table-cell>{{getAffectectedTestruns(item._attributes.msgId).length}}</md-table-cell>
+                    <md-table-cell>{{getMaxMinOcc(QAC_Rules,item._attributes.msgId).min===getMaxMinOcc(QAC_Rules,item._attributes.msgId).max?getMaxMinOcc(QAC_Rules,item._attributes.msgId).min:getMaxMinOcc(QAC_Rules,item._attributes.msgId).min+'...'+getMaxMinOcc(QAC_Rules,item._attributes.msgId).max}}</md-table-cell>
+                    <md-table-cell><span>{{item.justification.text._text}}</span></md-table-cell>
+                    <md-table-cell>0</md-table-cell>
+                </md-table-row>
+            </md-table>
+        </div> 
+        <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+            <md-table md-card>
+                <md-table-toolbar>
+                    <h1 class="md-title">MISRA RULES</h1>
+                </md-table-toolbar>
+                <md-table-row>
+                    
+                    <md-table-head>Rule ID</md-table-head>
+                    <md-table-head>Affected configurations</md-table-head>
+                    <md-table-head>Occurrences</md-table-head>
                     <md-table-head>Justifications</md-table-head>
                 </md-table-row>
-                <md-table-row v-for="(item,key) in MISRA_Rules" :key="key">
+                <md-table-row v-for="(item,key) in MISRA_Rules_Cond" :key="key">
                     <md-table-cell>{{item._attributes.msgId}}</md-table-cell>
-                    <md-table-cell>{{getMatchingRules(MISRA_Rules,item._attributes.msgId).length}}/{{nrOfConfigs}}</md-table-cell>
-                    <md-table-cell>{{getSum(MISRA_Rules,item._attributes.msgId)}}</md-table-cell>
-                    <md-table-cell>{{getMaxOcc(MISRA_Rules,item._attributes.msgId)}}</md-table-cell>
+                    <md-table-cell>{{getMatchingRules(MISRA_Rules,item._attributes.msgId).length}}</md-table-cell>
+                    <md-table-cell>{{getMaxMinOcc(MISRA_Rules,item._attributes.msgId).min+'...'+getMaxMinOcc(MISRA_Rules,item._attributes.msgId).max}}</md-table-cell>
                     <md-table-cell>
-                        <md-table>
-                            <template v-if="item.version==='9'">
-                                <template v-if="Array.isArray(item.message)">
-                                    <md-table-row v-for="(itex,kex) in item.message" :key="kex">
-                                        <template v-if="getjustificationCount(itex)===0">
-                                            <template v-if="itex._attributes.file==='multi-homed'||itex._attributes.file==='cma'">
-                                                <md-table-cell>{{itex._attributes.file}}</md-table-cell>
-                                                <md-table-cell></md-table-cell>
-                                            </template>
-                                            <template v-else>
-                                                <md-table-cell class="yellow">{{itex._attributes.file}}</md-table-cell>
-                                                <md-table-cell class="yellow">Unjustified occurrences of msg {{itex._attributes.msgId}}</md-table-cell>
-                                            </template>
-                                        </template>
-                                        <template v-else>
-                                            <md-table-cell>{{itex._attributes.file}}</md-table-cell>
-                                            <md-table-cell>
-                                                <template v-if="Array.isArray(itex.justification)">
-                                                    <template v-for="(itey,kem) in itex.justification">
-                                                        <span :key="kem" v-if="itey.text._text.substring(0,6)==='MD_MSR_'">{{itey.text._text}}</span>
-                                                        <span :key="kem" v-else-if="itey.text._text.substring(0,6)==='MD_CBD_'">{{itey.text._text}}</span>
-                                                        <span :key="kem" v-else-if="itey.text._text.substring(0,6)==='MD_CSL_'">{{itey.text._text}}</span>
-                                                        <span :key="kem" v-else-if="itey.text._text.substring(0,2)==='MD_'">
-                                                            <a :href="'#'+itey.text._text">{{itey.text._text}}</a>
-                                                        </span>
-                                                        <span :key="kem" v-else>{{itey.text._text}}</span>
-                                                    </template>
-                                                </template>
-                                                <template v-else>
-                                                    <span v-if="itex.justification.text._text.substring(0,6)==='MD_MSR_'">{{itex.justification.text._text}}</span>
-                                                    <span v-else-if="itex.justification.text._text.substring(0,6)==='MD_CBD_'">{{itex.justification.text._text}}</span>
-                                                    <span v-else-if="itex.justification.text._text.substring(0,6)==='MD_CSL_'">{{itex.justification.text._text}}</span>
-                                                    <span v-else-if="itex.justification.text._text.substring(0,2)==='MD_'">
-                                                        <a :href="'#'+itex.justification.text._text">{{itex.justification.text._text}}</a>
-                                                    </span>
-                                                    <span v-else>{{itex.justification.text._text}}</span>
-                                                </template>
-                                            </md-table-cell>
-                                        </template>
-                                    </md-table-row>
+                        <template v-if="Array.isArray(item.message)">
+                            <template v-for="(itex,kex) in item.message">
+                                <span :key="kex" v-if="getjustificationCount(itex)===0">
+                                    <span v-if="itex._attributes.file==='multi-homed'||itex._attributes.file==='cma'"></span>
+                                    <span style="background-color:yellow;" v-else>Unjustified occurrences of msg {{item._attributes.msgId}}</span>
+                                </span>
+                                <template v-else-if="Array.isArray(itex.justification)">
+                                    <span v-for="(itey,kem) in itex.justification" :key="kem">{{itey.text._text}},</span>
                                 </template>
                                 <template v-else>
-                                    <md-table-row>
-                                        <template v-if="getjustificationCount(item.message)===0">
-                                            <template v-if="item.message._attributes.file==='multi-homed'||item.message._attributes.file==='cma'">
-                                                <md-table-cell>{{item.message._attributes.file}}</md-table-cell>
-                                                <md-table-cell></md-table-cell>
-                                            </template>
-                                            <template v-else>
-                                                <md-table-cell class="yellow">{{item.message._attributes.file}}</md-table-cell>
-                                                <md-table-cell class="yellow">Unjustified occurrences of msg {{item.message._attributes.msgId}}</md-table-cell>
-                                            </template>
-                                        </template>
-                                    </md-table-row>
+                                    <span :key="kex">{{itex.justification.text._text}}</span>
                                 </template>
                             </template>
-                        </md-table>
+                        </template>
+                        <template v-else>
+                            <span v-if="getjustificationCount(item.message)===0">
+                                <span v-if="item.message._attributes.file==='multi-homed'||item.message._attributes.file==='cma'"></span>
+                                <span style="background-color:yellow;" v-else>Unjustified occurrences of msg {{item.message._attributes.msgId}}</span>
+                            </span>
+                            <template v-else-if="Array.isArray(item.message.justification)">
+                                <span v-for="(itey,kem) in item.message.justification" :key="kem">{{itey.text._text}},</span>
+                            </template>
+                            <template v-else>
+                                <span>{{item.message.justification.text._text}}</span>
+                            </template>
+                        </template>
                     </md-table-cell>
                 </md-table-row>
             </md-table>
@@ -156,7 +153,6 @@ export default {
   computed:{
       MISRA_Rules(){
           var rules = []
-          var distinctRules = []
           this.TestRuns_QACSummary.forEach(elt=>{
               if('log_QACSummary' in elt){
                   elt.log_QACSummary.mcm.map(elmt=>{
@@ -169,13 +165,54 @@ export default {
                   rules.push(...elt.log_QACSummary.mcm)
               }
           })
-            rules=Object.values(
-                rules.reduce((a, b) => {
-                if (!a[b._attributes.msgId]) a[b._attributes.msgId] = b 
-                return a
-            }, {})
-            )
+            
           return rules
+      },
+      MISRA_Rules_Cond(){
+         var rules=Object.values(
+                this.MISRA_Rules.reduce((a, b) => {
+                    if (!a[b._attributes.msgId]) a[b._attributes.msgId] = b 
+                    return a
+                }, {})
+            )
+            return rules
+      },
+      QAC_Rules(){
+           var rulesmsg = []
+          this.TestRuns_QACSummary.forEach(elt=>{
+              if('log_QACSummary' in elt){
+                  elt.log_QACSummary.mcm.forEach(elmt=>{
+                        if(('message' in elmt)&&Array.isArray(elmt.message)){
+                            elmt.message.map(elmtt=>{
+                                var obj = {}
+                                obj=elmtt
+                                obj.version = elmt.version
+                                obj.msgId = elmt._attributes.msgId
+                                return obj
+                            })
+
+                            rulesmsg.push(...elmt.message)
+                        }else if(('message' in elmt)){
+                            var obj = {}
+                            obj = elmt.message
+                            obj.version = elmt.version
+                            obj.msgId = elmt._attributes.msgId
+                            rulesmsg.push(elmt.message)
+                        }
+                  })
+              }
+          })
+        
+          return rulesmsg
+      },
+      QAC_Rules_Cond(){
+         var rules=Object.values(
+                this.QAC_Rules.reduce((a, b) => {
+                    if (!a[b._attributes.msgId]) a[b._attributes.msgId] = b 
+                    return a
+                }, {})
+            )
+            return rules
       },
       nrOfConfigs(){
           return this.TestRuns_QACSummary.length
@@ -183,7 +220,6 @@ export default {
   },
   methods:{
       getResultCompliance(){
-
           this.$store.state.testCases.forEach(elt=>{
               if('testrun' in elt){
                   if(Array.isArray(elt.testrun)){
@@ -205,7 +241,6 @@ export default {
                   }
               }
           })
-        console.log(this.TestRuns_QACSummary)
           var TestRunsRelevantForTestResult = this.TestRuns_QACSummary.concat(this.TestRunsWithContainedMisraJustifications)
           var MissingJustificationsText = ' (due to missing justifications)';
 
@@ -244,7 +279,6 @@ export default {
       },
       getSum(rules,currid){
           var MatchingRules = this.getMatchingRules(rules,currid)
-          console.log('match',MatchingRules)
 
           if(Array.isArray(MatchingRules)){
               var occurences = []
@@ -257,7 +291,7 @@ export default {
               return MatchingRules
           }
       },
-      getMaxOcc(rules,currid){
+      getMaxMinOcc(rules,currid){
         var MatchingRules = this.getMatchingRules(rules,currid)
 
         if(Array.isArray(MatchingRules)){
@@ -270,8 +304,14 @@ export default {
               MatchingRules.sort((a,b)=>{
                   return a._attributes.occurence-b._attributes.occurence
               })
+            var match = {
+                min:0,
+                max:0
+            }
 
-              return MatchingRules[0]._attributes.occurence
+            match.min = MatchingRules[0]._attributes.occurence
+            match.max = MatchingRules[MatchingRules.length-1]._attributes.occurence
+              return match
 
           }
           else{
@@ -290,11 +330,37 @@ export default {
           }
 
           return count.reduce((acc,curr)=>acc+curr)
+      },
+      getAffectectedTestruns(currid){
+          var AffectedTestruns = []
+          this.TestRuns_QACSummary.forEach(elt=>{
+              if('log_QACSummary' in elt){
+                  elt.log_QACSummary.mcm.forEach(elmt=>{
+                     if(('message' in elmt)&&Array.isArray(elmt.message)){
+                            elmt.message.forEach(elmtt=>{
+                                if(elmtt._attributes.msgId===currid){
+                                   // if(AffectedTestruns.find(affected=>{return affected.testcase_attr===elt.testcase_attr})==="undefined"){
+                                        AffectedTestruns.push(elt)
+                                  //  }
+                                }
+                            })
+                        }else if(('message' in elmt)){
+                            if(elmt.message._attributes.msgId===currid){
+                               // if(AffectedTestruns.find(affected=>{return affected.testcase_attr===elt.testcase_attr})==="undefined"){
+                                        AffectedTestruns.push(elt)
+                               //     }
+                            }
+                        }
+                  })
+              }
+          })
+          return AffectedTestruns
       }
 
   },
   mounted(){
      this.getResultCompliance()
+     console.log('qac rules', this.QAC_Rules_Cond)
   }
 };
 </script>
