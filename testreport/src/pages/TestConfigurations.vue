@@ -28,7 +28,7 @@
        </md-table>
       </div> 
       <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
-       <md-table md-card md-fixed-header>
+       <md-table md-card>
            <md-table-toolbar>
                <h2>TestConfiguration Matrix</h2>
            </md-table-toolbar>
@@ -149,14 +149,16 @@ export default {
     }
   },
   mounted(){
-      this.testconfigs=[...this.$store.state.testConfigs]
-      this.testconfigs.forEach(elt=>{
-          var pathelt = elt.split('\\')
-          console.log('path elt', pathelt)
-          pathelt.pop()
-          this.paths.push(pathelt.join('\\'))
-      })
-      this.paths = [...(new Set(this.paths))]
+    this.testconfigs=[...this.$store.state.testConfigs]
+    this.testconfigs.forEach(elt=>{
+        var pathelt = elt.split('\\')
+        console.log('path elt', pathelt)
+        pathelt.pop()
+        this.paths.push(pathelt.join('\\'))
+    })
+    this.paths = [...(new Set(this.paths))]
+    
+    console.log(this.testconfigs)
 
   }
 };

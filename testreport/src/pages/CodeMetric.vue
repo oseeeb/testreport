@@ -28,7 +28,26 @@
                 </md-table-row>
             </md-table>
         </div>
-      <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+        <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+            <md-table md-card>
+                <md-table-toolbar>
+                    <h1 class="md-title">Overview of tested configurations({{TestRuns_QACSummary.length}})</h1>
+                </md-table-toolbar>
+                <md-table-row>
+                    <md-table-head style="width:20%;">Configuration reference</md-table-head>
+                    <md-table-head style="width:20%;">Date</md-table-head>
+                    <md-table-head style="width:20%;">Tester</md-table-head>
+                    <md-table-head style="width:20%;">Result</md-table-head>
+                </md-table-row>
+                <md-table-row v-for="(item,key) in TestRuns_QACSummary" :key="key">
+                    <md-table-cell>{{item._attributes.parameter}}</md-table-cell>
+                    <md-table-cell>{{item._attributes.date}}</md-table-cell>
+                    <md-table-cell>{{item._attributes.executor}}</md-table-cell>
+                    <md-table-cell>{{item.result._text}}</md-table-cell>
+                </md-table-row>
+            </md-table>
+        </div> 
+        <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
             <md-table md-card>
                 <md-table-toolbar>
                     <h1 class="md-title">Code Metrics</h1>
@@ -126,8 +145,18 @@
                         <md-table-cell>{{item.OPT.min===item.OPT.max?item.OPT.min:item.OPT.min+'...'+item.OPT.max}}</md-table-cell>
                     </md-table-row>
                 </template>
-                <md-table-row>
-                    <md-table-cell colspan="21" :style="'width:20%;background-color:grey;color:white;font-weight:bold'">Functions</md-table-cell>
+            </md-table>
+        </div>
+        <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+            <md-table md-card>
+                <md-table-toolbar>
+                    <h1 class="md-title">Function Metrics</h1>
+                </md-table-toolbar>
+                 <md-table-row>
+                    <md-table-cell></md-table-cell>
+                    <md-table-cell colspan="6">Supervised metrics</md-table-cell>
+                    <md-table-cell colspan="4">Info-only metrics</md-table-cell>
+                    <md-table-cell colspan="10">Measured-only metrics</md-table-cell>
                 </md-table-row>
                 <md-table-row>
                     <md-table-cell>Metrics Abreviations</md-table-cell>
@@ -198,18 +227,8 @@
                     <md-table-cell v-html="GetMinMaxInfo(filters(functions,'UNV'),1,20)"></md-table-cell>
                     <md-table-cell v-html="GetMinMaxInfo(filters(functions,'XLN'),1,20)"></md-table-cell>
                 </md-table-row>
-            </md-table>
-        </div>
-        <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
-            <md-table md-card>
-                <md-table-toolbar>
-                    <h1 class="md-title">Function Metrics (Detailed)</h1>
-                </md-table-toolbar>
                  <md-table-row>
-                    <md-table-cell></md-table-cell>
-                    <md-table-cell colspan="6">Supervised metrics</md-table-cell>
-                    <md-table-cell colspan="4">Info-only metrics</md-table-cell>
-                    <md-table-cell colspan="10">Measured-only metrics</md-table-cell>
+                    <md-table-cell colspan="21" :style="'width:20%;background-color:grey;color:white;font-weight:bold'">Functions (detailed)</md-table-cell>
                 </md-table-row>
                  <md-table-row>
                     <md-table-cell>Functions</md-table-cell>
