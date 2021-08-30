@@ -39,7 +39,7 @@
 <style scoped>
 div.MetricBarBase
 {
-    height: 6px;
+    height: 2px;
     background-color: #a5a5a5;
     border-style: none;
     border-width: 0;
@@ -47,7 +47,7 @@ div.MetricBarBase
 
 div.MetricBarRed
 {
-    height: 6px;
+    height: 2px;
     background-color: #FF0000;
     border-style: none;
     border-width: 0;
@@ -55,7 +55,7 @@ div.MetricBarRed
 
 div.MetricBarGreen
 {
-    height: 6px;
+    height: 2px;
     background-color: #00A000;
     border-style: none;
     border-width: 0;
@@ -63,7 +63,7 @@ div.MetricBarGreen
 
 div.MetricBarLime
 {
-    height: 6px;
+    height: 2px;
     background-color: #00FF00;
     border-style: none;
     border-width: 0;

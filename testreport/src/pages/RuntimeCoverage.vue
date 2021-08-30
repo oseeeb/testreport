@@ -45,7 +45,9 @@
                         <md-table-cell></md-table-cell>
                     </md-table-row>
                     <template v-for="(quality,key) in qualitys">
-                        <span :key="key"></span>
+                         <md-table-row style="background-color:darkgrey;color:white" :key="key" colspan="7">
+                             <md-table-cell colspan="7">{{quality}}</md-table-cell>
+                        </md-table-row>
                         <template v-for="(log,key) in logs">
                             <template v-if="quality===getqualityFromString(log.testrunAttr.parameter)">
                                 <md-table-row :key="key">
@@ -65,6 +67,73 @@
                     </template> 
                 </md-table>
             </div>
+            <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+                <md-table md-card>
+                    <md-table-toolbar>
+                        <h1 class="md-title">FileCoverage</h1>
+                    </md-table-toolbar>
+                     <md-table-row>
+                        <md-table-cell colspan="2">file name</md-table-cell>
+                        <md-table-cell>FC<br/>Justified% (Measured%)</md-table-cell>
+                        <md-table-cell>C/DC<br/>Justified% (Measured%)</md-table-cell>
+                        <md-table-cell>SC<br/>Justified% (Measured%)</md-table-cell>
+                        <md-table-cell>CC<br/>Justified% (Measured%)</md-table-cell>
+                        <md-table-cell>BC<br/>Justified% (Measured%)</md-table-cell>
+                        <md-table-cell></md-table-cell>
+                    </md-table-row>
+                    <template v-if="moduleCodeCoverageUniqueFileNodes.length<100">
+                        <template v-for="(file,key) in moduleCodeCoverageUniqueFileNodes">
+                            <md-table-row :key="key">
+                                <md-table-cell colspan="2">
+                                    {{file.name._text}}
+                                </md-table-cell>
+                                <md-table-cell><show-coverage-data :coverage="getCoverage(file)[0]"></show-coverage-data></md-table-cell>
+                                <md-table-cell><show-coverage-data :coverage="getCoverage(file)[1]"></show-coverage-data></md-table-cell>
+                                <md-table-cell><show-coverage-data :coverage="getCoverage(file)[2]"></show-coverage-data></md-table-cell>
+                                <md-table-cell><show-coverage-data :coverage="getCoverage(file)[3]"></show-coverage-data></md-table-cell>
+                                <md-table-cell><show-coverage-data :coverage="getCoverage(file)[4]"></show-coverage-data></md-table-cell>
+                                <md-table-cell></md-table-cell>
+                            </md-table-row>
+                        </template>
+                    </template>
+                    <template v-else>
+                        <md-table-row>
+                            <md-table-cell colspan="7">There are {{moduleCodeCoverageUniqueFileNodes.length}} differently named files in {{moduleCodeCoverageFileNodes.length}} files. Details are not displayed.</md-table-cell>
+                        </md-table-row>
+                    </template>
+                </md-table>
+            </div>
+            <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
+                <md-table md-card>
+                    <md-table-toolbar>
+                        <h1 class="md-title">Functions coverage</h1>
+                    </md-table-toolbar>
+                     <md-table-row>
+                        <md-table-cell colspan="2">Function name</md-table-cell>
+                        <md-table-cell v-if="riskMetricAvailableForFunctions"><span class="riskTooltip" :data-tooltip="'Risk metric per function, maximum over all configurations, based on cyclomatic complexity and code coverage. It helps detecting complex functions with low code coverage (such functions have greater risk of issues).\n\nThresholds:\n\n>= 4: justifiable deviation\n\n>= 10: approval required'">Risk metric<br/>Justified (Measured)</span></md-table-cell>
+                        <md-table-cell>FC<br/>Justified% (Measured%)</md-table-cell>
+                        <md-table-cell>C/DC<br/>Justified% (Measured%)</md-table-cell>
+                        <md-table-cell>SC<br/>Justified% (Measured%)</md-table-cell>
+                        <md-table-cell>CC<br/>Justified% (Measured%)</md-table-cell>
+                        <md-table-cell>BC<br/>Justified% (Measured%)</md-table-cell>
+                    </md-table-row>
+                    <template v-if="moduleCodeCoverageUniqueFunctionNodes.length<200">
+                       <output-function-data-for-module-code-coverage
+                        v-for="(func,key) in moduleCodeCoverageUniqueFunctionNodes"
+                        :key="key"
+                        :functionNodes="moduleCodeCoverageFunctionNodes"
+                        :func="func"
+                        :outputFunctionsWithRiskMetricViolationOnly="false"
+                        :riskMetricAvailableForFunctions="riskMetricAvailableForFunctions"
+                       ></output-function-data-for-module-code-coverage>
+                    </template>
+                    <template v-else>
+                        <md-table-row>
+                            <md-table-cell colspan="7">There are {{moduleCodeCoverageUniqueFileNodes.length}} differently named files in {{moduleCodeCoverageFileNodes.length}} files. Details are not displayed.</md-table-cell>
+                        </md-table-row>
+                    </template>
+                </md-table>
+            </div>
         </template>
     </div>
   </div>
@@ -72,9 +141,11 @@
 <script>
 /* eslint-disable */
 import ShowCoverageData from '../components/templates/ShowCoverageData.vue'
+import OutputFunctionDataForModuleCodeCoverage from '../components/templates/OutputFunctionDataForModuleCodeCoverage.vue'
 export default {
   components:{
-      ShowCoverageData
+      ShowCoverageData,
+      OutputFunctionDataForModuleCodeCoverage
   },
   data() {
     return {
@@ -103,6 +174,41 @@ export default {
       },
       logs(){
           return [...this.log_FunctionCoverageNodesForModuleCodeCoverage,...this.logRuntimeCoverageNodesForModuleCodeCoverage]
+      },
+      moduleCodeCoverageUniqueFileNodes(){
+          var unique_files = []
+          this.moduleCodeCoverageFileNodes.forEach(file=>{
+              var testPresence = unique_files.find(ufile=>{return file.name._text===ufile.name._text})
+
+              if(!testPresence){
+                  unique_files.push(file)
+              }
+          })
+          
+          return unique_files
+      },
+      moduleCodeCoverageUniqueFunctionNodes(){
+          var unique_functions = []
+          this.moduleCodeCoverageFunctionNodes.forEach(func=>{
+              var testPresence = unique_functions.find(ufunc=>{return func.name._text===ufunc.name._text})
+
+              if(!testPresence){
+                  unique_functions.push(func)
+              }
+          })
+          
+          return unique_functions
+      },
+      riskMetricAvailableForFunctions(){
+          var risky_metrics = []
+        
+            this.moduleCodeCoverageFunctionNodes.forEach(func=>{
+                if('riskCYC' in func || 'riskCYCJust' in func){
+                    risky_metrics.push(func)
+                }
+            })
+        
+        return risky_metrics.length>0;
       }
     },
   methods:{
@@ -204,8 +310,6 @@ export default {
             }
         })
 
-        console.log('logRuntimeCoverageNodesForModuleCodeCoverage',this.logRuntimeCoverageNodesForModuleCodeCoverage)
-        console.log('moduleCodeCoverageTestRuns',this.moduleCodeCoverageTestRuns)
     },
     getqualityFromString(parameter){
         var quality = parameter.match(/.*quality=/)
@@ -316,7 +420,7 @@ export default {
   },
   mounted(){
      this.getResultCompliance()
-     console.log(this.qualitys)
+     console.log('functions uniques',this.moduleCodeCoverageUniqueFunctionNodes)
   }
 };
 </script>
@@ -329,4 +433,16 @@ export default {
       padding: 15px;
   }
   
+  .riskTooltip[data-tooltip]:before {
+        left: -15em;
+        white-space: pre-wrap; /* css-3 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -pre-wrap; /* Opera 4-6 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+    
+    .riskTooltip[data-tooltip]:after {
+        left: 0;
+    }
 </style>
