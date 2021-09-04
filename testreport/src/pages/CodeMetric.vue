@@ -256,28 +256,28 @@
                 <template v-for="(item,key) in condFunct">
                     <md-table-row :key="key">
                         <md-table-cell>{{item.name}}</md-table-cell>
-                        <md-table-cell>{{item.PTH.min===item.PTH.max?item.PTH.min:item.PTH.min+'...'+item.PTH.max}}</md-table-cell>
-                        <md-table-cell>{{item.CYC.min===item.CYC.max?item.CYC.min:item.CYC.min+'...'+item.CYC.max}}</md-table-cell>
-                        <md-table-cell>{{item.CAL.min===item.CAL.max?item.CAL.min:item.CAL.min+'...'+item.CAL.max}}</md-table-cell>
-                        <md-table-cell>{{item.PAR.min===item.PAR.max?item.PAR.min:item.PAR.min+'...'+item.PAR.max}}</md-table-cell>
-                        <md-table-cell>{{item.MIF.min===item.MIF.max?item.MIF.min:item.MIF.min+'...'+item.MIF.max}}</md-table-cell>
-                        <md-table-cell>{{item.BAK.min===item.BAK.max?item.BAK.min:item.BAK.min+'...'+item.BAK.max}}</md-table-cell>
+                        <md-table-cell>{{item.PTH?(item.PTH.min===item.PTH.max?item.PTH.min:item.PTH.min+'...'+item.PTH.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.CYC?(item.CYC.min===item.CYC.max?item.CYC.min:item.CYC.min+'...'+item.CYC.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.CAL?(item.CAL.min===item.CAL.max?item.CAL.min:item.CAL.min+'...'+item.CAL.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.PAR?(item.PAR.min===item.PAR.max?item.PAR.min:item.PAR.min+'...'+item.PAR.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.MIF?(item.MIF.min===item.MIF.max?item.MIF.min:item.MIF.min+'...'+item.MIF.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.BAK?(item.BAK.min===item.BAK.max?item.BAK.min:item.BAK.min+'...'+item.BAK.max):'n/a'}}</md-table-cell>
 
-                        <md-table-cell>{{item.GTO.min===item.GTO.max?item.GTO.min:item.GTO.min+'...'+item.GTO.max}}</md-table-cell>
-                        <md-table-cell>{{item.M19.min===item.M19.max?item.M19.min:item.M19.min+'...'+item.M19.max}}</md-table-cell>
-                        <md-table-cell>{{item.RET.min===item.RET.max?item.RET.min:item.RET.min+'...'+item.RET.max}}</md-table-cell>
-                        <md-table-cell>{{item.ST3.min===item.ST3.max?item.ST3.min:item.ST3.min+'...'+item.ST3.max}}</md-table-cell>
+                        <md-table-cell>{{item.GTO?(item.GTO.min===item.GTO.max?item.GTO.min:item.GTO.min+'...'+item.GTO.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.M19?(item.M19.min===item.M19.max?item.M19.min:item.M19.min+'...'+item.M19.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.RET?(item.RET.min===item.RET.max?item.RET.min:item.RET.min+'...'+item.RET.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.ST3?(item.ST3.min===item.ST3.max?item.ST3.min:item.ST3.min+'...'+item.ST3.max):'n/a'}}</md-table-cell>
 
-                        <md-table-cell>{{item.AV1.min===item.AV1.max?item.AV1.min:item.AV1.min+'...'+item.AV1.max}}</md-table-cell>
-                        <md-table-cell>{{item.KNT.min===item.KNT.max?item.KNT.min:item.KNT.min+'...'+item.KNT.max}}</md-table-cell>
-                        <md-table-cell>{{item.LCT.min===item.LCT.max?item.LCT.min:item.LCT.min+'...'+item.LCT.max}}</md-table-cell>
-                        <md-table-cell>{{item.LIN.min===item.LIN.max?item.LIN.min:item.LIN.min+'...'+item.LIN.max}}</md-table-cell>
-                        <md-table-cell>{{item.M07.min===item.M07.max?item.M07.min:item.M07.min+'...'+item.M07.max}}</md-table-cell>
-                        <md-table-cell>{{item.M29.min===item.M29.max?item.M29.min:item.M29.min+'...'+item.M29.max}}</md-table-cell>
-                        <md-table-cell>{{item.SUB.min===item.SUB.max?item.SUB.min:item.SUB.min+'...'+item.SUB.max}}</md-table-cell>
-                        <md-table-cell>{{item.UNR.min===item.UNR.max?item.UNR.min:item.UNR.min+'...'+item.UNR.max}}</md-table-cell>
-                        <md-table-cell>{{item.UNV.min===item.UNV.max?item.UNV.min:item.UNV.min+'...'+item.UNV.max}}</md-table-cell>
-                        <md-table-cell>{{item.XLN.min===item.XLN.max?item.XLN.min:item.XLN.min+'...'+item.XLN.max}}</md-table-cell>
+                        <md-table-cell>{{item.AV1?(item.AV1.min===item.AV1.max?item.AV1.min:item.AV1.min+'...'+item.AV1.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.KNT?(item.KNT.min===item.KNT.max?item.KNT.min:item.KNT.min+'...'+item.KNT.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.LCT?(item.LCT.min===item.LCT.max?item.LCT.min:item.LCT.min+'...'+item.LCT.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.LIN?(item.LIN.min===item.LIN.max?item.LIN.min:item.LIN.min+'...'+item.LIN.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.M07?(item.M07.min===item.M07.max?item.M07.min:item.M07.min+'...'+item.M07.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.M29?(item.M29.min===item.M29.max?item.M29.min:item.M29.min+'...'+item.M29.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.SUB?(item.SUB.min===item.SUB.max?item.SUB.min:item.SUB.min+'...'+item.SUB.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.UNR?(item.UNR.min===item.UNR.max?item.UNR.min:item.UNR.min+'...'+item.UNR.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.UNV?(item.UNV.min===item.UNV.max?item.UNV.min:item.UNV.min+'...'+item.UNV.max):'n/a'}}</md-table-cell>
+                        <md-table-cell>{{item.XLN?(item.XLN.min===item.XLN.max?item.XLN.min:item.XLN.min+'...'+item.XLN.max):'n/a'}}</md-table-cell>
                     </md-table-row>
                 </template>
             </md-table>
@@ -356,7 +356,9 @@ export default {
           var datas = []
           if(Array.isArray(bigdata)){
             bigdata.forEach(elt=>{
-                datas.push(elt[criteria]._text)
+                if(criteria in elt){
+                    datas.push(elt[criteria]._text)
+                }
             })
           }
           return datas

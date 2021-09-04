@@ -81,7 +81,16 @@
                     </md-table-cell>
                     <md-table-cell>{{getAffectectedTestruns(item._attributes.msgId).length}}</md-table-cell>
                     <md-table-cell>{{getMaxMinOcc(QAC_Rules,item._attributes.msgId).min===getMaxMinOcc(QAC_Rules,item._attributes.msgId).max?getMaxMinOcc(QAC_Rules,item._attributes.msgId).min:getMaxMinOcc(QAC_Rules,item._attributes.msgId).min+'...'+getMaxMinOcc(QAC_Rules,item._attributes.msgId).max}}</md-table-cell>
-                    <md-table-cell><span>{{item.justification.text._text}}</span></md-table-cell>
+                    <md-table-cell>
+                        <span v-if="Array.isArray(item.justification)">
+                            <template v-for="just in item.justification">
+                                {{just.text._text}}
+                            </template>
+                        </span>
+                        <span v-else>
+                            {{item.justification.text?item.justification.text._text:'n/a'}}
+                        </span>
+                    </md-table-cell>
                     <md-table-cell>0</md-table-cell>
                 </md-table-row>
             </md-table>
@@ -102,7 +111,7 @@
                     <md-table-cell>{{item._attributes.msgId}}</md-table-cell>
                     <md-table-cell>{{getMatchingRules(MISRA_Rules,item._attributes.msgId).length}}</md-table-cell>
                     <md-table-cell>{{getMaxMinOcc(MISRA_Rules,item._attributes.msgId).min+'...'+getMaxMinOcc(MISRA_Rules,item._attributes.msgId).max}}</md-table-cell>
-                    <md-table-cell>
+                    <md-table-cell v-if="'message' in item">
                         <template v-if="Array.isArray(item.message)">
                             <template v-for="(itex,kex) in item.message">
                                 <span :key="kex" v-if="getjustificationCount(itex)===0">
@@ -130,6 +139,7 @@
                             </template>
                         </template>
                     </md-table-cell>
+                    <md-table-cell v-else></md-table-cell>
                 </md-table-row>
             </md-table>
         </div> 
@@ -155,10 +165,11 @@ export default {
           var rules = []
           this.TestRuns_QACSummary.forEach(elt=>{
               if('log_QACSummary' in elt){
+                  console.log('log_QAC', elt)
                   elt.log_QACSummary.mcm.map(elmt=>{
                       var obj = {}
                       obj=elmt
-                      obj.version = elt.log_QACSummary._attributes.version
+                      obj.version = elt.log_QACSummary._attributes?elt.log_QACSummary._attributes.version:'0'
 
                       return obj
                   })
@@ -175,6 +186,7 @@ export default {
                     return a
                 }, {})
             )
+            console.log('MISRA_Rules_Cond', rules)
             return rules
       },
       QAC_Rules(){
@@ -320,16 +332,21 @@ export default {
       },
       getjustificationCount(msg){
           var count = []
-          if(Array.isArray(msg.justification)){
-              msg.justification.forEach(elt=>{
-                  count.push(parseInt(elt._attributes.count))
-              })
-          }
-          else{
-              count.push(parseInt(msg.justification._attributes.count))
-          }
+          if('justification' in msg){
+            if(Array.isArray(msg.justification)){
+                msg.justification.forEach(elt=>{
+                    count.push(parseInt(elt._attributes.count))
+                })
+            }
+            else{
+                count.push(parseInt(msg.justification._attributes.count))
+            }
 
-          return count.reduce((acc,curr)=>acc+curr)
+            return count.reduce((acc,curr)=>acc+curr)
+          }else{
+            return 0
+          }
+          
       },
       getAffectectedTestruns(currid){
           var AffectedTestruns = []

@@ -53,13 +53,13 @@
                                 <md-table-row :key="key">
                                     <md-table-cell colspan="2">
                                         {{log.testrunAttr.parameter}}
-                                        <a :href="log.link._text">[Details Report]</a>
+                                        <a :href="log.link?log.link._text:'#'">[Details Report]</a>
                                     </md-table-cell>
-                                    <md-table-cell><show-coverage-data :coverage="getCoverage(log.summary)[0]"></show-coverage-data></md-table-cell>
-                                    <md-table-cell><show-coverage-data :coverage="getCoverage(log.summary)[1]"></show-coverage-data></md-table-cell>
-                                    <md-table-cell><show-coverage-data :coverage="getCoverage(log.summary)[2]"></show-coverage-data></md-table-cell>
-                                    <md-table-cell><show-coverage-data :coverage="getCoverage(log.summary)[3]"></show-coverage-data></md-table-cell>
-                                    <md-table-cell><show-coverage-data :coverage="getCoverage(log.summary)[4]"></show-coverage-data></md-table-cell>
+                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[0]:[]"></show-coverage-data></md-table-cell>
+                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[1]:[]"></show-coverage-data></md-table-cell>
+                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[2]:[]"></show-coverage-data></md-table-cell>
+                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[3]:[]"></show-coverage-data></md-table-cell>
+                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[4]:[]"></show-coverage-data></md-table-cell>
                                     <md-table-cell></md-table-cell>
                                 </md-table-row>
                             </template>
@@ -284,7 +284,11 @@ export default {
 
         this.log_FunctionCoverageNodesForModuleCodeCoverage.forEach(elt=>{
             if('file' in elt){
-                this.moduleCodeCoverageFileNodes.push(elt.file)
+                if(Array.isArray(elt.file)){
+                    this.moduleCodeCoverageFileNodes.push(...elt.file)
+                }else{
+                    this.moduleCodeCoverageFileNodes.push(elt.file)
+                }
             }
             if ('function' in elt){
                 if(Array.isArray(elt.function)){
@@ -297,7 +301,11 @@ export default {
 
         this.logRuntimeCoverageNodesForModuleCodeCoverage.forEach(elt=>{
             if('file' in elt){
-                this.moduleCodeCoverageFileNodes.push(elt.file)
+                if(Array.isArray(elt.file)){
+                    this.moduleCodeCoverageFileNodes.push(...elt.file)
+                }else{
+                    this.moduleCodeCoverageFileNodes.push(elt.file)
+                }
             }
         })
         this.moduleCodeCoverageFileNodes.forEach(elt=>{
@@ -335,43 +343,43 @@ export default {
         var coverages =[
             {
                 type : 'FC',
-                count : summary.modFctCnt._text,
-                covered : summary.modFctCovered._text,
-                accepted : summary.modFctCoveredJust._text,
-                percentage : summary.cov_fct._text,
-                percentageJustified : summary.covJust_fct._text,
+                count : summary.modFctCnt?summary.modFctCnt._text:0,
+                covered : summary.modFctCovered?summary.modFctCovered._text:0,
+                accepted : summary.modFctCoveredJust?summary.modFctCoveredJust._text:0,
+                percentage : summary.cov_fct?summary.cov_fct._text:0,
+                percentageJustified : summary.covJust_fct?summary.covJust_fct._text:0,
             },
             {
                 type : 'DC',
-                count : summary.modDecCnt._text,
-                covered : summary.modDecCovered._text,
-                accepted : summary.modDecCoveredJust._text,
-                percentage : summary.dec_fct._text,
-                percentageJustified : summary.decJust_fct._text,
+                count : summary.modDecCnt?summary.modDecCnt._text:0,
+                covered : summary.modDecCovered?summary.modDecCovered._text:0,
+                accepted : summary.modDecCoveredJust?summary.modDecCoveredJust._text:0,
+                percentage : summary.dec_fct?summary.dec_fct._text:0,
+                percentageJustified : summary.decJust_fct?summary.decJust_fct._text:0,
             },
             {
                 type : 'SC',
-                count : summary.stmtCnt._text,
-                covered : summary.stmtCovered._text,
-                accepted : summary.stmtCoveredJust._text,
-                percentage : summary.stmt_fct._text,
-                percentageJustified : summary.stmtJust_fct._text,
+                count : summary.stmtCnt?summary.stmtCnt._text:0,
+                covered : summary.stmtCovered?summary.stmtCovered._text:0,
+                accepted : summary.stmtCoveredJust?summary.stmtCoveredJust._text:0,
+                percentage : summary.stmt_fct?summary.stmt_fct._text:0,
+                percentageJustified : summary.stmtJust_fct?summary.stmtJust_fct._text:0,
             },
             {
                 type : 'CC',
-                count : summary.callsCnt._text,
-                covered : summary.callsCovered._text,
-                accepted : summary.callsCoveredJust._text,
-                percentage : summary.callcov_fct._text,
-                percentageJustified : summary.callcovJust_fct._text,
+                count : summary.callsCnt?summary.callsCnt._text:0,
+                covered : summary.callsCovered?summary.callsCovered._text:0,
+                accepted : summary.callsCoveredJust?summary.callsCoveredJust._text:0,
+                percentage : summary.callcov_fct?summary.callcov_fct._text:0,
+                percentageJustified : summary.callcovJust_fct?summary.callcovJust_fct._text:0,
             },
             {
                 type : 'BC',
-                count : summary.decisionCnt._text,
-                covered : summary.decisionCovered._text,
-                accepted : summary.decisionCoveredJust._text,
-                percentage : summary.decisionCnt._text==='0'?'N/A':(summary.decisionCovered._text?(parseInt(summary.decisionCovered._text)*100/summary.decisionCnt._text):'N/A'),
-                percentageJustified : summary.decisionCnt._text==='0'?'N/A':(summary.decisionCoveredJust._text?(parseInt(summary.decisionCoveredJust._text)*100/summary.decisionCnt._text):'N/A'),
+                count : summary.decisionCnt?summary.decisionCnt._text:0,
+                covered : summary.decisionCovered?summary.decisionCovered._text:0,
+                accepted : summary.decisionCoveredJust?summary.decisionCoveredJust._text:0,
+                percentage : summary.decisionCnt?(summary.decisionCnt._text==='0'?'N/A':(summary.decisionCovered._text?(parseInt(summary.decisionCovered._text)*100/summary.decisionCnt._text):'N/A')):0,
+                percentageJustified : summary.decisionCnt?(summary.decisionCnt._text==='0'?'N/A':(summary.decisionCoveredJust._text?(parseInt(summary.decisionCoveredJust._text)*100/summary.decisionCnt._text):'N/A')):0,
             }
         ]
 
@@ -420,7 +428,7 @@ export default {
   },
   mounted(){
      this.getResultCompliance()
-     console.log('functions uniques',this.moduleCodeCoverageUniqueFunctionNodes)
+     console.log('moduleCodeCoverageUniqueFileNodes',this.moduleCodeCoverageUniqueFileNodes)
   }
 };
 </script>

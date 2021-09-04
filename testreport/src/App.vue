@@ -23,88 +23,86 @@ export default {
     }
   },
   methods:{
-    isObject(val) {
-      return val === Object(val);
-    },
-    findTestCase(testgroup){
-        testgroup.forEach(elt=>{
-            if(elt.testcase&&Array.isArray(elt.testcase)){
-            this.testCases.push(...elt.testcase.map(eltt=>{
-              var obj = eltt;
-              obj.testgroup_attr = elt._attributes
+    findTestCaseInGroup(testgroup){
+      if('testcase' in testgroup){
+        if(Array.isArray(testgroup.testcase)){
+          this.testCases.push(...testgroup.testcase.map(testcase=>{
+              var obj = testcase;
+              obj.testgroup_attr = testcase._attributes
               return obj
             }))
-            }
-            
-            if(elt.testcase&&!elt.testcase.length){
-              var obj = elt.testcase
-              obj.testgroup_attr = elt._attributes
-              this.testCases.push(elt.testcase)
-            }
-            
-            if(elt.testgroup){
-              if(Array.isArray(elt.testgroup)){
-                this.findTestCase(elt.testgroup)
-              }
-              else{
-                var testgroupin = elt.testgroup
-                if(Array.isArray(testgroupin.testcase))
-                  this.testCases.push(...testgroupin.testcase.map(eltt=>{
-                    var obj = eltt;
-                    obj.testgroup_attr = testgroupin._attributes
-                    return obj
-                }))
-                else{
-                  var obj = testgroupin.testcase
-                  obj.testgroup_attr = testgroupin._attributes
-                  this.testCases.push(testgroupin.testcase)
-                }
-              }
-            }
-          // if(elt.testcase&&this.isObject(elt.testcase)){
-          //   var obj = elt.testcase
-          //   obj.testgroup_attr = elt._attributes
-          //   this.testCases.push(elt.testcase)
-          // }
-        })
-      // if(elt['testgroup']){
-      //   var testgroup = Object.values(elt.testgroup);
-      //   testgroup.forEach(element=>{
-      //     this.findTestCase(element)
-      //   })
-      // }else if(elt['testcase']){
-      //   var testcase = Object.values(elt.testcase);       
-      //   this.testCases.push(...testcase.map(eltt=>{
-      //     var obj = eltt;
-      //     obj.testgroup_attr = elt._attributes
-      //     return obj
-      //   }))
-      // }
+        }else{
+          var obj = testgroup.testcase
+          obj.testgroup_attr = testgroup._attributes
+          this.testCases.push(obj)
+        }
+      }
+
+      if('testgroup' in testgroup){
+        this.findTestCase(testgroup.testgroup)
+      }
     },
-    findTestRun(elt){
-      elt.forEach(element => {
-        // if(element['testrun']){
-          var testrun = Object.values(element.testrun);
-          this.testRuns.push(...testrun.map(elt=>{
-            var obj = elt;
-            obj.testcase_attr = element._attributes
-            obj.testgroup_attr = element.testgroup_attr
-            return obj
-          }))
-        // }
-        // else if(Array.isArray(element)){
-        //   this.testRuns.push(...element.map(elt=>{
-        //     var obj = elt;
-        //     obj.testgroup_attr = element.testgroup_attr
-        //     return obj
-        //   }))
-        // }
-      });
+    findTestCase(testgroup){
+      if(Array.isArray(testgroup)){
+        testgroup.forEach(elt=>{
+          this.findTestCaseInGroup(elt)
+        })
+      }
+      else{
+        this.findTestCaseInGroup(testgroup)
+      }
+        
+    },
+    findTestRun(testcases){
+      if(Array.isArray(testcases)){
+        testcases.forEach(testcase=>{
+          if('testrun' in testcase){
+            if(Array.isArray(testcase.testrun)){
+              this.testRuns.push(...testcase.testrun.map(testrun=>{
+                  var obj = testrun;
+                  obj.testcase_attr = testcase._attributes
+                  return obj
+                }))
+            }else{
+              var obj = testcase.testrun
+              obj.testcase_attr = testcase._attributes
+              this.testRuns.push(obj)
+            }
+          }
+        })
+      }else{
+        if('testrun' in testcases){
+            if(Array.isArray(testcases.testrun)){
+              this.testRuns.push(...testcases.testrun.map(testrun=>{
+                  var obj = testrun;
+                  obj.testcase_attr = testcases._attributes
+                  return obj
+                }))
+            }else{
+              var obj = testcases.testrun
+              obj.testcase_attr = testcases._attributes
+              this.testRuns.push(obj)
+            }
+          }
+      }
+      
     },
     findTestConfig(testRuns){
-      testRuns.forEach(element=>{
-        if(element._attributes&&element._attributes.config){
-          this.testConfigs.push(element._attributes.config)
+      testRuns.forEach(testrun=>{
+        if('config' in testrun._attributes){
+          this.testConfigs.push(testrun._attributes.config)
+        }
+        if('parameter' in testrun._attributes){
+          if(testrun._attributes.parameter.match(new RegExp("config=(.*),"))){
+            var config = testrun._attributes.parameter.match(new RegExp("config=(.*)"))[1];
+            if(config.includes(',')){
+              this.testConfigs.push(config.split(',')[0])
+            }
+            else{
+              this.testConfigs.push(config)
+            }
+            
+          }
         }
       })
 
@@ -119,6 +117,7 @@ export default {
       var options = {ignoreComment: true, alwaysChildren: true, compact: true};
       //convertion de xml en json avec xml2json
       var res = converter.xml2js(result.data, options);
+      console.log('result analyse',res)
       //sauvegarde du resultat convertit  
       this.$store.dispatch('testdata',res)
   
@@ -133,6 +132,8 @@ export default {
       this.msg = 'Retrieving TestConfigs...'
       this.findTestConfig(this.testRuns)
       this.$store.dispatch('testConfigs',this.testConfigs)
+      
+      console.log('testConfigs',this.testConfigs)
       
       this.loading = false;
     })

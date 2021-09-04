@@ -20,8 +20,33 @@
                     {{path}}
                 </md-table-row>
                 <md-table-row v-for="(config,kex) in filteredConfigs(path)" :key="(kex+testconfigs.length)">   
-                  <md-table-cell>{{config}}</md-table-cell> 
-                  <md-table-cell>{{getquality(config)}}</md-table-cell>                
+                  <md-table-cell>{{config.configName}}</md-table-cell> 
+                  <md-table-cell>{{getquality(config.name)}}</md-table-cell>  
+                  <md-table-cell>
+                    <template v-if="config.Functional.NrOfTestCases>0">
+                      <md-table>
+                        <md-table-row>
+                            <md-table-cell>
+                              <span :class="config.Functional.status==='OK'?'symbol_ok':'symbol_fail'"> </span>
+                            </md-table-cell>
+                        </md-table-row>
+                      </md-table>
+                    </template>
+                  </md-table-cell> 
+                  <md-table-cell>
+                    <template v-if="config.Misra.NrOfDeviatedRules>0">
+                      <md-table>
+                        <md-table-row>
+                            <md-table-cell>
+                              <span :class="config.Misra.status==='OK'?'symbol_ok':'symbol_fail'"> </span>
+                            </md-table-cell>
+                            <md-table-cell>
+                              {{config.Misra.NrOfDeviatedRules}}
+                            </md-table-cell>
+                        </md-table-row>
+                      </md-table>
+                    </template>
+                  </md-table-cell>              
                 </md-table-row>
             </template>
 
@@ -34,9 +59,9 @@
            </md-table-toolbar>
             <md-table-row class="tLegend">
                 <md-table-head>Testcases</md-table-head>
-                <md-table-head v-for="(config,kem) in testconfigs" :key="kem">{{config}}</md-table-head>
+                <md-table-head v-for="(config,kem) in testconfigs" :key="kem">{{config.name}}</md-table-head>
             </md-table-row>
-            <md-table-row v-for="(testcase,ken) in $store.state.testCases" :key="ken">  
+            <md-table-row v-for="(testcase,ken) in $store.state.testCases" :key="ken+$store.state.testCases.length">  
               <md-table-cell>{{testcase._attributes.id}}</md-table-cell>
               <md-table-cell :style="'background-color:'+(getResultConfig(testcase,config)==='FAIL'?'red;':getResultConfig(testcase,config)==='WARN'?'yellow;':getResultConfig(testcase,config)==='OK'?'#00FF00;':'')" v-for="(config,ket) in testconfigs" :key="ket">{{getResultConfig(testcase,config)}}</md-table-cell>                
             </md-table-row>
@@ -58,21 +83,24 @@ export default {
   },
   methods:{
     filteredConfigs(path){
-      return this.testconfigs.filter(elt=>{
-        return elt.includes(path)
+      return this.testconfigs.filter(config=>{
+        return config.name.includes(path)
       })
     },
     getquality(config){
       var testRunsRuntime = []
-      this.$store.state.testRuns.forEach(elt=>{
-        if(('log_RuntimeCoverage' in elt)&&elt._attributes.config===config){
-          testRunsRuntime.push(elt)
-        }
+      this.$store.state.testRuns.forEach(testrun=>{
+          if(('config' in testrun._attributes)&&(testrun._attributes.config.includes(config))){
+            testRunsRuntime.push(testrun)
+          }
+          else if(('parameter' in testrun._attributes)&&(testrun._attributes.parameter.includes(config))){
+            testRunsRuntime.push(testrun)
+          }
       })
 
       if(testRunsRuntime.length!==0){
         if('parameter' in testRunsRuntime[0]._attributes){
-          var quality = testRunsRuntime[0]._attributes.parameter.match(/.*quality=/)
+          var quality = testRunsRuntime[0]._attributes.parameter.match(new RegExp("quality=(.*),"))
           if((quality==='')||(quality==='OverallCoverage')||(quality===null)){
             return 'QM'
           }
@@ -93,6 +121,32 @@ export default {
       }
       else{
         return 'no config corresponding'
+      }
+    },
+    getlogbytestconfig(config){
+      var testRunslog = []
+      var testRundlog_QAC = []
+      this.$store.state.testRuns.forEach(testrun=>{
+          if(('config' in testrun._attributes)&&(testrun._attributes.config.includes(config))){
+            if('log' in testrun){
+              testRunslog.push(testrun)
+            }
+            if('log_QACSummary' in testrun){
+              testRundlog_QAC.push(testrun)
+            }
+          }
+          else if(('parameter' in testrun._attributes)&&(testrun._attributes.parameter.includes(config))){
+            if('log' in testrun){
+              testRunslog.push(testrun)
+            }
+            if('log_QACSummary' in testrun){
+              testRundlog_QAC.push(testrun)
+            }
+          }
+      })
+      return {
+        test_fonctional:testRunslog,
+        test_MISRA:testRundlog_QAC
       }
     },
     getsimpleResult(result){
@@ -121,7 +175,7 @@ export default {
         }
     },
     getTestRunResult(testrun){
-        if(testrun.result){
+        if('result' in testrun){
             if('_text' in testrun.result){
               return this.getResult(testrun.result._text)
             }
@@ -134,32 +188,112 @@ export default {
             }
         }
     },
+    getResultbytesruns(testruns){
+      if(testruns.length>0){
+         var result = []
+          testruns.forEach(testrun=>{
+          result.push(this.getTestRunResult(testrun))
+          })
+          return this.getsimpleResult(result)
+      }else{
+        return ''
+      }
+    },
     getResultConfig(testcase,config){
       if('testrun' in testcase){
         if(Array.isArray(testcase.testrun)){
-          var testrun = testcase.testrun.filter(elt=>{return elt._attributes.config===config})
-          if(testrun[0]){
-            return this.getTestRunResult(testrun[0])
+          
+          var testruns = testcase.testrun.filter(elt=>{
+            if('config' in elt._attributes){
+              return elt._attributes.config.includes(config.name)
+            }
+            else if('parameter' in elt._attributes){
+              return elt._attributes.parameter.includes(config.name)
+            }})
+          if(testruns.length>0){
+            return this.getResultbytesruns(testruns)
           }
         }
-        else if(testcase.testrun._attributes.config===config){
-          return this.getTestRunResult(testcase.testrun)
+        else {
+           if(('config' in testcase.testrun._attributes && testcase.testrun._attributes.config.includes(config.name))||('parameter' in testcase.testrun._attributes && testcase.testrun._attributes.parameter.includes(config.name))){
+              return this.getTestRunResult(testcase.testrun)
+            }
         }
       }
     }
   },
   mounted(){
-    this.testconfigs=[...this.$store.state.testConfigs]
-    this.testconfigs.forEach(elt=>{
-        var pathelt = elt.split('\\')
-        console.log('path elt', pathelt)
-        pathelt.pop()
-        this.paths.push(pathelt.join('\\'))
+    var configNames=[...this.$store.state.testConfigs]
+
+    configNames.forEach(name=>{
+      var config = {}
+
+      config.name = name
+      config.Coverage_Status = 'TBD'
+
+      var pathelt = name.split('\\')
+      pathelt.pop()
+      config.ConfigPath  = pathelt.join('\\')
+
+      this.paths.push(config.ConfigPath) 
+      config.QualityLevel = this.getquality(name)
+
+      config.configName = name.replace(config.ConfigPath,'')
+      var testRunsFunctionnalResultforthisConfig = this.getResultbytesruns(this.getlogbytestconfig(name).test_fonctional)
+      config.Functional = {
+        result : testRunsFunctionnalResultforthisConfig,
+        status : testRunsFunctionnalResultforthisConfig!=='processorError'&&testRunsFunctionnalResultforthisConfig!=='FAIL'&&testRunsFunctionnalResultforthisConfig!=='WARN'?'OK':'FAIL',
+        NrOfTestCases : this.getlogbytestconfig(name).test_fonctional.length
+      }
+      var testRunsMisraResultforthisConfig = this.getResultbytesruns(this.getlogbytestconfig(name).test_MISRA)
+      
+      var builds = []
+      this.getlogbytestconfig(name).test_MISRA.forEach(testrun=>{
+        if('log_build' in testrun){
+          if('message' in testrun.log_build){
+            if(Array.isArray(testrun.log_build.message)){
+              testrun.log_build.message.forEach(message=>{
+                if(message.result._text!=='info'){
+                  builds.push(message)
+                }
+              })
+            }else{
+              if(testrun.log_build.message.result._text!=='info'){
+                  builds.push(message)
+                }
+            }
+          }
+        }
+      })
+      
+      var rules = []
+      this.getlogbytestconfig(name).test_MISRA.forEach(testrun=>{
+        if('log_QACSummary' in testrun){
+          if('mcm' in testrun.log_QACSummary){
+            if(Array.isArray(testrun.log_QACSummary.mcm)){
+              rules.push(...testrun.log_QACSummary.mcm)
+            }else{
+              rules.push(testrun.log_QACSummary.mcm)
+            }
+          }
+        }
+      })
+      
+      config.Misra = {
+        result : testRunsMisraResultforthisConfig,
+        status : rules.length===0?'OK':'FAIL',
+        NrOfOpenFindings : builds.length,
+        NrOfDeviatedRules : rules.length
+      }
+
+    //  config.testruns = [...this.getlogbytestconfig(name).test_MISRA,...this.getlogbytestconfig(name).test_functional]
+
+      this.testconfigs.push(config)
     })
+
     this.paths = [...(new Set(this.paths))]
     
-    console.log(this.testconfigs)
-
+    console.log('this testconfigs',this.testconfigs)
   }
 };
 </script>
