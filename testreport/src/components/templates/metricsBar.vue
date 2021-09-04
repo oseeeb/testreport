@@ -37,79 +37,127 @@ export default {
             metrics:{}
         }
     },
+    methods:{
+        getsimpleResult(result){
+            if(result.includes('FAIL')){
+                return 'FAIL'
+            }
+            else if(result.includes('WARN')){
+                return 'WARN'
+            }
+            else if(result.includes('OK.N/A')){
+                return 'OK.N/A'
+            }
+            else if(result.includes('OK')){
+                return 'OK'
+            }
+        },
+        getResult(result){
+            if(result.includes('fail')){
+                return 'FAIL'
+            }
+            else if(result.includes('warn')){
+                return 'WARN'
+            }
+            else if(result.includes('N/A')){
+                return 'OK.N/A'
+            }
+            else{
+                return 'OK'
+            }
+        },
+        getTestRunResult(testrun){
+            if(testrun.result){
+                if('_text' in testrun.result){
+                        return this.getResult(testrun.result._text)
+                }
+                else{
+                    var result = []
+                    testrun.result.forEach(elt=>{
+                    result.push(this.getResult(elt._text))
+                    })
+                    return this.getsimpleResult(result)
+                }
+            }
+        },
+        getTestCaseResult(testcase){
+            if(testcase.testrun){
+                if('result' in testcase.testrun){
+                    return this.getTestRunResult(testcase.testrun)
+                }else{
+                    var result = []
+                    testcase.testrun.forEach(testrun=>{
+                        result.push(this.getTestRunResult(testrun))
+                    })
+
+                    return this.getsimpleResult(result)
+                }
+            }
+        }
+    },
     mounted(){
         if(this.Type==='testcase'){
+            console.log('name',this.name)
+            console.log('testcases',this.Todraw)
             var testCases = this.Todraw
-            var testcasesTested = testCases.filter(elt=>{
-                if(elt.testrun.length){
-                    return elt.testrun.filter(elt=>{return elt.result._text===''}).length===0
+            var testcasesTested = testCases.filter(testcase=>{
+                if(Array.isArray(testcase.testrun)){
+                    return testcase.testrun.filter(testrun=>{
+                        if(Array.isArray(testrun.result)){
+                            return testrun.result.filter(result=>{ return result._text!==''}).length>0
+                        }else{
+                            return testrun.result._text!==''
+                        }
+                    }).length>0
                 }else{
-                    return elt.testrun.result._text!==''
+                    if(Array.isArray(testcase.testrun.result)){
+                            return testcase.testrun.result.filter(result=>{ return result._text!==''}).length>0
+                        }else{
+                            return testcase.testrun.result._text!==''
+                        }
                 }
             })
             
-            var testcasesPassed = testcasesTested.filter(elt=>{
-                if(elt.testrun.length){
-                    return elt.testrun.filter(elt=>{
-                        var test = !elt.result._text.includes('ok')
-                        return test}).length===0
-                }else{
-                    return elt.testrun.result._text.includes('ok')
-                }
+            var testcasesPassed = testcasesTested.filter(testcase=>{
+                return this.getTestCaseResult(testcase).includes('OK')
             })
+
             console.log('testcasetest',testcasesPassed)
             this.metrics.Total = testCases.length
             this.metrics.Tested = testcasesTested.length
             this.metrics.Passed = testcasesPassed.length
 
-            this.metrics.Ok = testcasesPassed.filter(elt=>{
-                if(elt.testrun.length){
-                    return elt.testrun.filter(elt=>{return elt.result._text!=='ok'}).length===0
-                }else{
-                    return elt.testrun.result._text==='ok'
-                }}).length
+            this.metrics.Ok = testcasesPassed.filter(testcase=>{
+                return this.getTestCaseResult(testcase)==='OK'}).length
 
-            this.metrics.NA = testcasesTested.filter(elt=>{
-                if(elt.testrun.length){
-                    return elt.testrun.filter(elt=>{return elt.result._text!=='N/A'}).length===0
-                }else{
-                    return elt.testrun.result._text==='N/A'
-                }}).length
+            this.metrics.NA = testcasesTested.filter(testcase=>{
+                return this.getTestCaseResult(testcase).includes('N/A')}).length
 
-            this.metrics.Warn = testCases.filter(elt=>{
-                if(elt.testrun.length){
-                    return elt.testrun.filter(elt=>{return elt.result._text==='warn'&&(elt.justification&&elt.justification.length===0)}).length!==0
-                }else{
-                    return elt.testrun.result._text==='warn'&&(elt.testrun.justification&&elt.testrun.justification.length===0)
-                }
+            this.metrics.Warn = testCases.filter(testcase=>{
+                return this.getTestCaseResult(testcase)==='WARN'
             }).length
-            this.metrics.Warn_Justified = testcasesTested.filter(elt=>{
-                if(elt.testrun.length){
-                    return elt.testrun.filter(elt=>{elt.result._text==='warn'&&(elt.justification&&elt.justification.length!==0)}).length!==0
-                }else{
-                    return elt.testrun.result._text==='warn'&&(elt.testrun.justification&&elt.testrun.justification.length!==0)
-                }
+            this.metrics.Warn_Justified = testcasesTested.filter(testcase=>{
+                return this.getTestCaseResult(testcase)==='WARN'
             }).length
-            this.metrics.Fail = testCases.filter(elt=>{
-                if(elt.testrun.length){
-                    return elt.testrun.filter(elt=>{elt.result._text==='fail'&&(elt.justification&&elt.justification.length===0)}).length!==0
-                }else{
-                    return elt.testrun.result._text==='fail'&&(elt.testrun.justification&&elt.testrun.justification.length===0)
-                }
+
+            // this.metrics.Fail = testCases.filter(elt=>{
+            //     if(elt.testrun.length){
+            //         return elt.testrun.filter(elt=>{elt.result._text==='fail'&&(elt.justification&&elt.justification.length===0)}).length!==0
+            //     }else{
+            //         return elt.testrun.result._text==='fail'&&(elt.testrun.justification&&elt.testrun.justification.length===0)
+            //     }
+            // }).length
+
+            this.metrics.Fail = testCases.filter(testcase=>{
+                return this.getTestCaseResult(testcase)==='FAIL'
             }).length
-            this.metrics.Fail_Justified = testcasesTested.filter(elt=>{
-                if(elt.testrun.length){
-                    return elt.testrun.filter(elt=>{elt.result._text==='fail'&&(elt.justification&&elt.justification.length!==0)}).length!==0
-                }else{
-                    return elt.testrun.result._text==='fail'&&(elt.testrun.justification&&elt.testrun.justification.length!==0)
-                }
+
+            this.metrics.Fail_Justified = testcasesTested.filter(testcase=>{
+                return this.getTestCaseResult(testcase)==='FAIL'
             }).length
-            this.metrics.ProcessError = testCases.filter(elt=>{
-                if(elt.testrun.length){
-                    return elt.testrun.filter(elt=>{elt.result._text==='processError'&&(elt.justification&&elt.justification.length===0)}).length!==0
-                }else{
-                    return elt.testrun.result._text==='processError'&&(elt.testrun.justification&&elt.testrun.justification.length===0)
-                }
+
+            this.metrics.ProcessError = testCases.filter(testcase=>{
+                return this.getTestCaseResult(testcase)==='FAIL'
             }).length
             // this.metrics.NotPassed =
             // this.metrics.NotPassed_Justified =
@@ -141,28 +189,28 @@ export default {
         }
         else if(this.Type==='testrun'){
             var testRuns = this.Todraw
-            var testRunsTested = testRuns.filter(elt=>{
-                return elt.result
+            var testRunsTested = testRuns.filter(testrun=>{
+                return 'result' in testrun
             })
 
-            var testRunsPassed = testRunsTested.filter(elt=>{
-                return (elt.result._text.includes('ok')||elt.result._text.includes('N/A'))
+            var testRunsPassed = testRunsTested.filter(testrun=>{
+                return this.getTestRunResult(testrun).includes('OK')
             })
 
             this.metrics.Total = testRuns.length
             this.metrics.Tested = testRunsTested.length
             this.metrics.Passed = testRunsPassed.length
 
-            this.metrics.Ok = testRunsPassed.filter(elt=>{
-              return elt.result._text!=='ok'
+            this.metrics.Ok = testRunsPassed.filter(testrun=>{
+              return this.getTestRunResult(testrun)==='OK'
             }).length
 
-            this.metrics.NA = testRunsTested.filter(elt=>{
-                return elt.result._text==='N/A'
+            this.metrics.NA = testRunsTested.filter(testrun=>{
+                return this.getTestRunResult(testrun).includes('N/A')
                 }).length
 
-            this.metrics.Warn = testRunsTested.filter(elt=>{
-                return elt.result._text==='warn'
+            this.metrics.Warn = testRunsTested.filter(testrun=>{
+                return this.getTestRunResult(testrun)==='WARN'
             }).length
 
             // this.metrics.Warn_Justified = testcasesTested.filter(elt=>{

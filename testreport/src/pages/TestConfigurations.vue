@@ -4,7 +4,7 @@
       <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
        <md-table md-card>
            <md-table-toolbar>
-               <h2>TestConfiguration</h2>
+               <h2>TestConfiguration </h2>
            </md-table-toolbar>
             <md-table-row class="tLegend">
                 <md-table-head>TestConfig</md-table-head>
@@ -27,7 +27,10 @@
                       <md-table>
                         <md-table-row>
                             <md-table-cell>
-                              <span :class="config.Functional.status==='OK'?'symbol_ok':'symbol_fail'"> </span>
+                              <span style="height:15px" :class="config.Functional.status==='OK'?'symbol_ok':'symbol_fail'"> </span>
+                            </md-table-cell>
+                            <md-table-cell>
+                              <metrics-bar :Todraw="getlogbytestconfig(config.name).test_fonctional" :Type="'testrun'" :Name="'Testruns'"></metrics-bar>
                             </md-table-cell>
                         </md-table-row>
                       </md-table>
@@ -38,7 +41,7 @@
                       <md-table>
                         <md-table-row>
                             <md-table-cell>
-                              <span :class="config.Misra.status==='OK'?'symbol_ok':'symbol_fail'"> </span>
+                              <span style="height:15px" :class="config.Misra.status==='OK'?'symbol_ok':'symbol_fail'"> </span>
                             </md-table-cell>
                             <md-table-cell>
                               {{config.Misra.NrOfDeviatedRules}}
@@ -46,7 +49,34 @@
                         </md-table-row>
                       </md-table>
                     </template>
-                  </md-table-cell>              
+                  </md-table-cell> 
+                  <md-table-cell>
+                    <md-table>
+                        <md-table-row v-if="getlogbytestconfig(config.name).test_Coverage.length===0">
+                            <md-table-cell><span>N/A</span></md-table-cell>
+                            <md-table-cell><span>N/A</span></md-table-cell>
+                            <md-table-cell><span>N/A</span></md-table-cell>
+                            <md-table-cell><span>N/A</span></md-table-cell>
+                            <md-table-cell><span>N/A</span></md-table-cell>
+                        </md-table-row>
+                        <md-table-row v-else-if="getlogbytestconfig(config.name).test_Coverage.length===1">
+                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[0]"></show-coverage-data></md-table-cell>
+                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[1]"></show-coverage-data></md-table-cell>
+                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[2]"></show-coverage-data></md-table-cell>
+                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[3]"></show-coverage-data></md-table-cell>
+                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[4]"></show-coverage-data></md-table-cell>
+                        </md-table-row>
+                        <md-table-row v-else>
+                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).FC"></show-coverage-data></md-table-cell>
+                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).DC"></show-coverage-data></md-table-cell>
+                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).SC"></show-coverage-data></md-table-cell>
+                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).CC"></show-coverage-data></md-table-cell>
+                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).BC"></show-coverage-data></md-table-cell>
+                        </md-table-row>
+                      </md-table>
+                  </md-table-cell> 
+                   <md-table-cell></md-table-cell>           
+                   <md-table-cell :style="'background-color:'+(getResultbytesruns(config.testruns)==='FAIL'?'red;':getResultbytesruns(config.testruns)==='WARN'?'yellow;':getResultbytesruns(config.testruns)==='OK'?'#00FF00;':'')">{{getResultbytesruns(config.testruns)}}</md-table-cell>           
                 </md-table-row>
             </template>
 
@@ -72,8 +102,12 @@
 </template>
 <script>
 /* eslint-disable */
+import ShowCoverageData from '../components/templates/ShowCoverageData.vue'
+import MetricsBar from '../components/templates/metricsBar.vue';
 export default {
   components:{
+    MetricsBar,
+    ShowCoverageData
   },
   data() {
     return {
@@ -123,9 +157,23 @@ export default {
         return 'no config corresponding'
       }
     },
+    getTestrunByConfig(config){
+      var testruns = []
+      this.$store.state.testRuns.forEach(testrun=>{
+          if(('config' in testrun._attributes)&&(testrun._attributes.config.includes(config))){
+              testruns.push(testrun)
+          }
+          else if(('parameter' in testrun._attributes)&&(testrun._attributes.parameter.includes(config))){
+            testruns.push(testrun)
+          }
+      })
+
+      return testruns
+    },
     getlogbytestconfig(config){
       var testRunslog = []
       var testRundlog_QAC = []
+      var testRundlog_Runtime = []
       this.$store.state.testRuns.forEach(testrun=>{
           if(('config' in testrun._attributes)&&(testrun._attributes.config.includes(config))){
             if('log' in testrun){
@@ -133,6 +181,9 @@ export default {
             }
             if('log_QACSummary' in testrun){
               testRundlog_QAC.push(testrun)
+            }
+            if('log_RuntimeCoverage' in testrun){
+              testRundlog_Runtime.push(testrun)
             }
           }
           else if(('parameter' in testrun._attributes)&&(testrun._attributes.parameter.includes(config))){
@@ -142,11 +193,15 @@ export default {
             if('log_QACSummary' in testrun){
               testRundlog_QAC.push(testrun)
             }
+            if('log_RuntimeCoverage' in testrun){
+              testRundlog_Runtime.push(testrun)
+            }
           }
       })
       return {
         test_fonctional:testRunslog,
-        test_MISRA:testRundlog_QAC
+        test_MISRA:testRundlog_QAC,
+        test_Coverage:testRundlog_Runtime
       }
     },
     getsimpleResult(result){
@@ -220,7 +275,86 @@ export default {
             }
         }
       }
-    }
+    },
+    getDataCoverage(config){
+      var testruns = this.getlogbytestconfig(config).test_Coverage
+
+      if(testruns.length===0){
+        return 'N/A'
+      }
+      else if(testruns.length===1){
+        return this.getCoverage(testruns[0].log_RuntimeCoverage.summary)
+      }else{
+        var DataListCoverage = []
+        var DataCoverage = {
+          FC:[],
+          DC:[],
+          SC:[],
+          CC:[],
+          BC:[]
+        }
+        testruns.forEach(testrun=>{
+          if('summary' in testrun.log_RuntimeCoverage){
+            DataListCoverage.push(this.getCoverage(testrun.log_RuntimeCoverage.summary))
+          }
+        })
+        DataListCoverage.forEach(data=>{
+          DataCoverage.FC.push(data[0])
+          DataCoverage.DC.push(data[1])
+          DataCoverage.SC.push(data[2])
+          DataCoverage.CC.push(data[3])
+          DataCoverage.BC.push(data[4])
+        })
+
+        return DataCoverage
+      }
+    },
+    getCoverage(summary){
+        var coverages =[
+            {
+                type : 'FC',
+                count : summary.modFctCnt?summary.modFctCnt._text:'N/A',
+                covered : summary.modFctCovered?summary.modFctCovered._text:'N/A',
+                accepted : summary.modFctCoveredJust?summary.modFctCoveredJust._text:'N/A',
+                percentage : summary.cov_fct?summary.cov_fct._text:'N/A',
+                percentageJustified : summary.covJust_fct?summary.covJust_fct._text:'N/A',
+            },
+            {
+                type : 'DC',
+                count : summary.modDecCnt?summary.modDecCnt._text:'N/A',
+                covered : summary.modDecCovered?summary.modDecCovered._text:'N/A',
+                accepted : summary.modDecCoveredJust?summary.modDecCoveredJust._text:'N/A',
+                percentage : summary.dec_fct?summary.dec_fct._text:'N/A',
+                percentageJustified : summary.decJust_fct?summary.decJust_fct._text:'N/A',
+            },
+            {
+                type : 'SC',
+                count : summary.stmtCnt?summary.stmtCnt._text:'N/A',
+                covered : summary.stmtCovered?summary.stmtCovered._text:'N/A',
+                accepted : summary.stmtCoveredJust?summary.stmtCoveredJust._text:'N/A',
+                percentage : summary.stmt_fct?summary.stmt_fct._text:'N/A',
+                percentageJustified : summary.stmtJust_fct?summary.stmtJust_fct._text:'N/A',
+            },
+            {
+                type : 'CC',
+                count : summary.callsCnt?summary.callsCnt._text:'N/A',
+                covered : summary.callsCovered?summary.callsCovered._text:'N/A',
+                accepted : summary.callsCoveredJust?summary.callsCoveredJust._text:'N/A',
+                percentage : summary.callcov_fct?summary.callcov_fct._text:'N/A',
+                percentageJustified : summary.callcovJust_fct?summary.callcovJust_fct._text:'N/A',
+            },
+            {
+                type : 'BC',
+                count : summary.decisionCnt?summary.decisionCnt._text:'N/A',
+                covered : summary.decisionCovered?summary.decisionCovered._text:'N/A',
+                accepted : summary.decisionCoveredJust?summary.decisionCoveredJust._text:'N/A',
+                percentage : summary.decisionCnt?(summary.decisionCnt._text==='N/A'?'N/A':(summary.decisionCovered._text?(parseInt(summary.decisionCovered._text)*100/summary.decisionCnt._text):'N/A')):'N/A',
+                percentageJustified : summary.decisionCnt?(summary.decisionCnt._text==='N/A'?'N/A':(summary.decisionCoveredJust._text?(parseInt(summary.decisionCoveredJust._text)*100/summary.decisionCnt._text):'N/A')):'N/A',
+            }
+        ]
+
+        return coverages
+    },
   },
   mounted(){
     var configNames=[...this.$store.state.testConfigs]
@@ -286,8 +420,8 @@ export default {
         NrOfDeviatedRules : rules.length
       }
 
-    //  config.testruns = [...this.getlogbytestconfig(name).test_MISRA,...this.getlogbytestconfig(name).test_functional]
-
+      config.testruns = this.getTestrunByConfig(name)
+      console.log('this testconfigs result',this.getResultbytesruns(config.testruns))
       this.testconfigs.push(config)
     })
 

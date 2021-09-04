@@ -90,56 +90,6 @@
                 <md-table-cell style="width:33%;">PTH</md-table-cell>
                 <md-table-cell style="width:34%;">PTH</md-table-cell>
               </md-table-row>
-              <md-table-row >
-                <md-table-cell style="width:33%;">Overall_FC</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row>
-              <md-table-row >
-                <md-table-cell style="width:33%;">Overall_SC</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row>
-              <md-table-row >
-                <md-table-cell style="width:33%;">Overall_BC</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row>
-              <md-table-row >
-                <md-table-cell style="width:33%;">Overall_DC</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row>
-              <md-table-row >
-                <md-table-cell style="width:33%;">Overall_CC</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row>
-              <md-table-row >
-                <md-table-cell style="width:33%;">FC_Component</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row>
-              <md-table-row >
-                <md-table-cell style="width:33%;">SC_Component</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row>
-              <md-table-row >
-                <md-table-cell style="width:33%;">CC_Component</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row>
-              <md-table-row >
-                <md-table-cell style="width:33%;">DC_Component</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row>
-              <md-table-row >
-                <md-table-cell style="width:33%;">BC_Component</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row>
             </md-table>
           </md-card-content>
         </md-card>

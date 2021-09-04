@@ -1,17 +1,22 @@
 <template>
-    <span v-if="coverage.percentageJustified==='N/A'"> <!-- TBD -->
-    N/A
-    </span>
-    <div v-else>
-    <template v-for="(cov,key) in coverage">
+    <div v-if="Array.isArray(coverage)">
         <PercentageBar
+        v-for="(cov,key) in coverage"
         :subBar1Value="cov.percentageJustified"
         :subBar2Class="cov.percentage"
-        :tooltip="getCoverageToolTip(coverage)"
-        :key="key"
-        />
-    </template>
+        :tooltip="getCoverageToolTip(cov)"
+        :key="key"/>
     </div>
+    <span v-else-if="coverage.percentageJustified==='N/A'"> <!-- TBD -->
+    N/A
+    </span>
+    <PercentageBar
+    :subBar1Value="coverage.percentageJustified"
+    :subBar2Class="coverage.percentage"
+    :tooltip="getCoverageToolTip(coverage)"
+    :key="key"
+    v-else
+    />
 </template>
 <script>
 import PercentageBar from './PercentageBar.vue'
