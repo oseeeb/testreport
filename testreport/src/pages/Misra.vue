@@ -91,7 +91,7 @@
                             {{item.justification.text?item.justification.text._text:'n/a'}}
                         </span>
                     </md-table-cell>
-                    <md-table-cell>0</md-table-cell>
+                    <md-table-cell>{{getQAC_LogMessage_ById(item._attributes.msgId).length}}</md-table-cell>
                 </md-table-row>
             </md-table>
         </div> 
@@ -114,15 +114,12 @@
                     <md-table-cell v-if="'message' in item">
                         <template v-if="Array.isArray(item.message)">
                             <template v-for="(itex,kex) in item.message">
-                                <span :key="kex" v-if="getjustificationCount(itex)===0">
+                                <span :key="kex" v-if="!itex.justification">
                                     <span v-if="itex._attributes.file==='multi-homed'||itex._attributes.file==='cma'"></span>
                                     <span style="background-color:yellow;" v-else>Unjustified occurrences of msg {{item._attributes.msgId}}</span>
                                 </span>
                                 <template v-else-if="Array.isArray(itex.justification)">
                                     <span v-for="(itey,kem) in itex.justification" :key="kem">{{itey.text._text}},</span>
-                                </template>
-                                <template v-else>
-                                    <span :key="kex">{{itex.justification.text._text}}</span>
                                 </template>
                             </template>
                         </template>
@@ -165,7 +162,6 @@ export default {
           var rules = []
           this.TestRuns_QACSummary.forEach(elt=>{
               if('log_QACSummary' in elt){
-                  console.log('log_QAC', elt)
                   elt.log_QACSummary.mcm.map(elmt=>{
                       var obj = {}
                       obj=elmt
@@ -372,6 +368,23 @@ export default {
               }
           })
           return AffectedTestruns
+      },
+      getQAC_LogMessage_ById(id){
+          var QAC_logMessage = []
+          this.TestRuns_QACSummary.forEach(testrun=>{
+              if('log_build' in testrun){
+                  if(testrun.log_build._attributes.type==='QAC'){
+                      if(Array.isArray(testrun.log_build.message)){
+                        QAC_logMessage.push(...testrun.log_build.message.filter(msg=>{return msg._attributes.number===id}))
+                      }else{
+                          if(testrun.log_build.message._attributes.number===id){
+                              QAC_logMessage.push(testrun.log_build.message)
+                          }
+                      }
+                  }
+              }
+          })
+          return QAC_logMessage
       }
 
   },
