@@ -22,12 +22,12 @@
               default:'MetricBarLime'
           },
           subBar1Value:{
-              type:Number,
-              default:100
+              type:[String,Number],
+              default:"100"
           },
           subBar2Value:{
-              type:Number,
-              default:100
+              type:[String,Number],
+              default:"100"
           },
           tooltip:{
               type:String,

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span>{{Todraw.length+' '+Name}}</span><br/>
+        <span v-show="label">{{Todraw.length+' '+Name}}</span><br/>
         <div class="result-diag" :data-tooltip="result.text">
             <div class="flex" :style="'width:'+result.ok+'%;heigth:100%;background-color:#00FF00'"></div>
             <div class="flex" :style="'width:'+result.fail+'%;heigth:100%;background-color:red'"></div>
@@ -24,6 +24,10 @@ export default {
         Type:{
             type:String,
             default:''
+        },
+        label:{
+            type:Boolean,
+            default:true
         }
     },
     data(){
@@ -101,20 +105,26 @@ export default {
             console.log('testcases',this.Todraw)
             var testCases = this.Todraw
             var testcasesTested = testCases.filter(testcase=>{
-                if(Array.isArray(testcase.testrun)){
-                    return testcase.testrun.filter(testrun=>{
-                        if(Array.isArray(testrun.result)){
-                            return testrun.result.filter(result=>{ return result._text!==''}).length>0
-                        }else{
-                            return testrun.result._text!==''
+                if('testrun' in testcase){
+                    if(Array.isArray(testcase.testrun)){
+                        return testcase.testrun.filter(testrun=>{
+                            if('result' in testrun){
+                                if(Array.isArray(testrun.result)){
+                                return testrun.result.filter(result=>{ return result._text!==''}).length>0
+                                }else{
+                                    return testrun.result._text!==''
+                                }
+                            }
+                        }).length>0
+                    }else{
+                        if('result' in testcase.testrun){
+                            if(Array.isArray(testcase.testrun.result)){
+                                return testcase.testrun.result.filter(result=>{ return result._text!==''}).length>0
+                            }else{
+                                return testcase.testrun.result._text!==''
+                            }
                         }
-                    }).length>0
-                }else{
-                    if(Array.isArray(testcase.testrun.result)){
-                            return testcase.testrun.result.filter(result=>{ return result._text!==''}).length>0
-                        }else{
-                            return testcase.testrun.result._text!==''
-                        }
+                    }
                 }
             })
             
@@ -213,6 +223,10 @@ export default {
                 return this.getTestRunResult(testrun)==='WARN'
             }).length
 
+            this.metrics.Fail = testRunsTested.filter(testrun=>{
+                return this.getTestRunResult(testrun)==='FAIL'
+            }).length
+
             // this.metrics.Warn_Justified = testcasesTested.filter(elt=>{
             //     if(elt.testrun.length){
             //         return elt.testrun.filter(elt=>{elt.result._text==='warn'&&(elt.justification&&elt.justification.length!==0)}).length!==0
@@ -269,7 +283,7 @@ export default {
 
   [data-tooltip] {
     position: relative;
-    z-index: 9999;
+    z-index: 9999999999999;
     cursor: default;
   }
   [data-tooltip]:before,

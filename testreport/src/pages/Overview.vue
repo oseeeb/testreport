@@ -13,7 +13,7 @@
         </md-table>
       </div>  
       <div class="md-layout-item md-xlarge-size-25  md-large-size-25 md-medium-size-25 md-small-size-50 md-xsmall-size-100">
-        <md-card :class="Result_OverallResult?'md-success':'md-accent'" md-with-hover>
+        <md-card :class="Result_OverallResult?'md-primary':'md-accent'" :md-theme="Result_OverallResult?'sucess-card':''" md-with-hover>
           <md-ripple>
             <md-card-header>
               <div class="md-title">Test Result</div>
@@ -260,7 +260,7 @@ export default {
       });  
     }
   },
-  mounted(){
+  beforeMount(){
   var testrunwithInfo = []
   this.$store.state.testRuns.forEach(element => {
     if(element._attributes&&element._attributes.executor){
@@ -356,7 +356,9 @@ export default {
     if(elemt['testrun']){
       testruns.push(...Object.values(elemt.testrun))
       testruns=testruns.filter(elt=>{
-        return elt.result._text!=='ok'&&elt.result._text!=='N/A'
+        if('result' in elt){
+          return elt.result._text!=='ok'&&elt.result._text!=='N/A'
+        }
       })
       if(testruns.lenght===0){
         this.TestCases_ThisCycle_Passed.push(elemt)
@@ -369,7 +371,9 @@ export default {
     if(elemnt['testrun']){
       testruns.push(...Object.values(elemnt.testrun))
       testruns=testruns.filter(elt=>{
-        return (elt.result._text!=='ok'&&elt.result._text!=='N/A')&&(elt.justification&&elt.justification.length!==0)
+        if('result' in elt){
+          return (elt.result._text!=='ok'&&elt.result._text!=='N/A')&&(elt.justification&&elt.justification.length!==0)
+        }
       })
       if(testruns.lenght!==0){
         this.TestCases_ThisCycle_NotPassed_Justified.push(elemnt)
@@ -396,7 +400,9 @@ export default {
   this.TestRuns_QACSummary.forEach(elt=>{
     if(elt.log_build.message&&Array.isArray(elt.log_build.message)){
       var msg = elt.log_build.message.filter(elt=>{
-        return elt.result._text!=='info'
+        if('result' in elt){
+          return elt.result._text!=='info'
+        }
       })
       if(msg.length!==0){
         test.push(elt)

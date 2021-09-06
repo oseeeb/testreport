@@ -11,10 +11,9 @@
     N/A
     </span>
     <PercentageBar
-    :subBar1Value="coverage.percentageJustified"
-    :subBar2Class="coverage.percentage"
+    :subBar1Value="''+coverage.percentageJustified"
+    :subBar2Class="''+coverage.percentage"
     :tooltip="getCoverageToolTip(coverage)"
-    :key="key"
     v-else
     />
 </template>

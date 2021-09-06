@@ -76,7 +76,7 @@ export default {
     padding: 0 15px !important;
   }
   .md-table-cell {
-    height: 0 !important;
+    height: 40px !important;
     line-height: 5px !important;
   }
   .md-card-header{

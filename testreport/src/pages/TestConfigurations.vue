@@ -12,7 +12,6 @@
                 <md-table-head>Functional</md-table-head>
                 <md-table-head>MISRA</md-table-head>
                 <md-table-head>Coverage(C/DC)</md-table-head>
-                <md-table-head>Overall</md-table-head>
                 <md-table-head>Result</md-table-head>
             </md-table-row>
             <template v-for="(path,key) in paths">
@@ -30,7 +29,9 @@
                               <span style="height:15px" :class="config.Functional.status==='OK'?'symbol_ok':'symbol_fail'"> </span>
                             </md-table-cell>
                             <md-table-cell>
-                              <metrics-bar :Todraw="getlogbytestconfig(config.name).test_fonctional" :Type="'testrun'" :Name="'Testruns'"></metrics-bar>
+                              <div style="height:15px;width:75px">
+                                <metrics-bar :label="false" :Todraw="getlogbytestconfig(config.name).test_fonctional" :Type="'testrun'" :Name="'Testruns'"></metrics-bar>
+                              </div>
                             </md-table-cell>
                         </md-table-row>
                       </md-table>
@@ -74,8 +75,7 @@
                             <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).BC"></show-coverage-data></md-table-cell>
                         </md-table-row>
                       </md-table>
-                  </md-table-cell> 
-                   <md-table-cell></md-table-cell>           
+                  </md-table-cell>         
                    <md-table-cell :style="'background-color:'+(getResultbytesruns(config.testruns)==='FAIL'?'red;':getResultbytesruns(config.testruns)==='WARN'?'yellow;':getResultbytesruns(config.testruns)==='OK'?'#00FF00;':'')">{{getResultbytesruns(config.testruns)}}</md-table-cell>           
                 </md-table-row>
             </template>

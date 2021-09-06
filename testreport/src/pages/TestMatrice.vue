@@ -11,7 +11,7 @@
                 <md-table-head v-for="(config,kem) in testconfigs" :key="kem">{{config.name}}</md-table-head>
             </md-table-row>
             <md-table-row v-for="(testcase,ken) in $store.state.testCases" :key="ken+$store.state.testCases.length">  
-              <md-table-cell>{{testcase._attributes.id}}</md-table-cell>
+              <md-table-cell md-tooltip="TEEEEEERRRRRRRRRRRRRRRRRRRREEEEEEEEEEEEEEEEEEE">{{testcase._attributes.id}}</md-table-cell>
               <md-table-cell :style="'background-color:'+(getResultConfig(testcase,config)==='FAIL'?'red;':getResultConfig(testcase,config)==='WARN'?'yellow;':getResultConfig(testcase,config)==='OK'?'#00FF00;':'')" v-for="(config,ket) in testconfigs" :key="ket">{{getResultConfig(testcase,config)}}</md-table-cell>                
             </md-table-row>
        </md-table>
@@ -364,5 +364,7 @@ export default {
   .md-title{
     font-size: 0.9em !important;
   }
-  
+  .md-table-head {
+    max-width: 50px !important;
+}
 </style>

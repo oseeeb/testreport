@@ -374,12 +374,14 @@ export default {
           this.TestRuns_QACSummary.forEach(testrun=>{
               if('log_build' in testrun){
                   if(testrun.log_build._attributes.type==='QAC'){
-                      if(Array.isArray(testrun.log_build.message)){
-                        QAC_logMessage.push(...testrun.log_build.message.filter(msg=>{return msg._attributes.number===id}))
-                      }else{
-                          if(testrun.log_build.message._attributes.number===id){
-                              QAC_logMessage.push(testrun.log_build.message)
-                          }
+                      if('message' in testrun.log_build){
+                        if(Array.isArray(testrun.log_build.message)){
+                            QAC_logMessage.push(...testrun.log_build.message.filter(msg=>{return msg._attributes.number===id}))
+                        }else{
+                            if(testrun.log_build.message._attributes.number===id){
+                                QAC_logMessage.push(testrun.log_build.message)
+                            }
+                        }
                       }
                   }
               }
