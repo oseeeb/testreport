@@ -4,84 +4,18 @@
       <div class="md-layout-item md-xlarge-size-100 md-large-size-100 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
        <md-table md-card>
            <md-table-toolbar>
-               <h2>TestConfiguration </h2>
+               <h2>TestConfiguration Matrix</h2>
            </md-table-toolbar>
             <md-table-row class="tLegend">
-                <md-table-head>TestConfig</md-table-head>
-                <md-table-head>SafetyLevel</md-table-head>
-                <md-table-head>Functional</md-table-head>
-                <md-table-head>MISRA</md-table-head>
-                <md-table-head>Coverage(C/DC)</md-table-head>
-                <md-table-head>Overall</md-table-head>
-                <md-table-head>Result</md-table-head>
+                <md-table-head>Testcases</md-table-head>
+                <md-table-head v-for="(config,kem) in testconfigs" :key="kem">{{config.name}}</md-table-head>
             </md-table-row>
-            <template v-for="(path,key) in paths">
-                <md-table-row colspan="7" :key="key">
-                    {{path}}
-                </md-table-row>
-                <md-table-row v-for="(config,kex) in filteredConfigs(path)" :key="(kex+testconfigs.length)">   
-                  <md-table-cell>{{config.configName}}</md-table-cell> 
-                  <md-table-cell>{{getquality(config.name)}}</md-table-cell>  
-                  <md-table-cell>
-                    <template v-if="config.Functional.NrOfTestCases>0">
-                      <md-table>
-                        <md-table-row>
-                            <md-table-cell>
-                              <span style="height:15px" :class="config.Functional.status==='OK'?'symbol_ok':'symbol_fail'"> </span>
-                            </md-table-cell>
-                            <md-table-cell>
-                              <metrics-bar :Todraw="getlogbytestconfig(config.name).test_fonctional" :Type="'testrun'" :Name="'Testruns'"></metrics-bar>
-                            </md-table-cell>
-                        </md-table-row>
-                      </md-table>
-                    </template>
-                  </md-table-cell> 
-                  <md-table-cell>
-                    <template v-if="config.Misra.NrOfDeviatedRules>0">
-                      <md-table>
-                        <md-table-row>
-                            <md-table-cell>
-                              <span style="height:15px" :class="config.Misra.status==='OK'?'symbol_ok':'symbol_fail'"> </span>
-                            </md-table-cell>
-                            <md-table-cell>
-                              {{config.Misra.NrOfDeviatedRules}}
-                            </md-table-cell>
-                        </md-table-row>
-                      </md-table>
-                    </template>
-                  </md-table-cell> 
-                  <md-table-cell>
-                    <md-table>
-                        <md-table-row v-if="getlogbytestconfig(config.name).test_Coverage.length===0">
-                            <md-table-cell><span>N/A</span></md-table-cell>
-                            <md-table-cell><span>N/A</span></md-table-cell>
-                            <md-table-cell><span>N/A</span></md-table-cell>
-                            <md-table-cell><span>N/A</span></md-table-cell>
-                            <md-table-cell><span>N/A</span></md-table-cell>
-                        </md-table-row>
-                        <md-table-row v-else-if="getlogbytestconfig(config.name).test_Coverage.length===1">
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[0]"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[1]"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[2]"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[3]"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[4]"></show-coverage-data></md-table-cell>
-                        </md-table-row>
-                        <md-table-row v-else>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).FC"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).DC"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).SC"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).CC"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).BC"></show-coverage-data></md-table-cell>
-                        </md-table-row>
-                      </md-table>
-                  </md-table-cell> 
-                   <md-table-cell></md-table-cell>           
-                   <md-table-cell :style="'background-color:'+(getResultbytesruns(config.testruns)==='FAIL'?'red;':getResultbytesruns(config.testruns)==='WARN'?'yellow;':getResultbytesruns(config.testruns)==='OK'?'#00FF00;':'')">{{getResultbytesruns(config.testruns)}}</md-table-cell>           
-                </md-table-row>
-            </template>
-
+            <md-table-row v-for="(testcase,ken) in $store.state.testCases" :key="ken+$store.state.testCases.length">  
+              <md-table-cell>{{testcase._attributes.id}}</md-table-cell>
+              <md-table-cell :style="'background-color:'+(getResultConfig(testcase,config)==='FAIL'?'red;':getResultConfig(testcase,config)==='WARN'?'yellow;':getResultConfig(testcase,config)==='OK'?'#00FF00;':'')" v-for="(config,ket) in testconfigs" :key="ket">{{getResultConfig(testcase,config)}}</md-table-cell>                
+            </md-table-row>
        </md-table>
-      </div> 
+      </div>
     </div>
   </div>
 </template>

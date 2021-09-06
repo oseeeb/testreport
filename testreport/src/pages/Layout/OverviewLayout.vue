@@ -26,6 +26,10 @@
         <md-icon>build</md-icon>
         <p>Test Configurations</p>
       </sidebar-link>
+      <sidebar-link to="/test_matrice">
+        <md-icon>build</md-icon>
+        <p>Test Matrice</p>
+      </sidebar-link>
       <sidebar-link to="/misra">
         <md-icon>business</md-icon>
         <p>MISRA</p>

@@ -5,6 +5,7 @@ import TestCases from "@/pages/TestCases.vue";
 import TestElements from "@/pages/TestElements.vue";
 import TestCasesJustifications from "@/pages/TestCasesJustifications.vue";
 import TestConfigurations from "@/pages/TestConfigurations.vue";
+import TestMatrice from "@/pages/TestMatrice";
 import Misra from "@/pages/Misra.vue";
 import CodeMetric from "@/pages/CodeMetric.vue";
 import RuntimeCoverage from "@/pages/RuntimeCoverage.vue";
@@ -40,6 +41,11 @@ const routes = [
         path: "test_configurations",
         name: "TestConfigurations",
         component: TestConfigurations
+      },
+      {
+        path: "test_matrice",
+        name: "Test Matrice",
+        component: TestMatrice
       },
       {
         path: "misra",

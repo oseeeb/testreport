@@ -22,13 +22,13 @@
                                     <md-table-head>Name</md-table-head>
                                     <md-table-head>Result</md-table-head>
                                 </md-table-row>
-                                <template v-for="(item,key) in testgroup.testcase" >
-                                    <md-table-row data-toggle="collapse" :data-target="'#'+(item._attributes?item._attributes.id:'no-id')" :data-parent="'#'+sharename" :key="(item._attributes?item._attributes.id:'no-id')+key" class="view" :ref="item._attributes.id">
+                                <template v-for="(item,kel) in testgroup.testcase" >
+                                    <md-table-row :key="kel"  role="button" data-bs-toggle="collapse" :data-bs-target="'#'+(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" aria-expanded="false" :aria-controls="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'">
                                         <md-table-cell><span :data-tooltip="item.description?item.description._cdata:'no-description'">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
                                         <md-table-cell>{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
                                         <md-table-cell :style="'text-align:center;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(item)}}</md-table-cell>
                                     </md-table-row>
-                                    <md-table-row :id="item._attributes?item._attributes.id:'no-id'"  :key="'collapse'+(item._attributes?item._attributes.id:'no-id')+key">
+                                    <md-table-row :id="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" class="collapse" :key="kel">
                                         <div v-if="Array.isArray(item.testrun)">       
                                             <md-table>
                                                <md-table-row v-for="(itex,kex) in item.testrun" :key="kex">
@@ -60,12 +60,12 @@
                                     <md-table-head style="width:25%;">Name</md-table-head>
                                     <md-table-head>Result</md-table-head>
                                 </md-table-row>
-                                <md-table-row  @click="expand" class="view">
+                                <md-table-row  role="button" data-bs-toggle="collapse" :data-bs-target="'#'+(testgroup.testcase._attributes?testgroup.testcase._attributes.name.replace(/ /g,''):'no-id')+'_config'" aria-expanded="false" :aria-controls="(testgroup.testcase._attributes?testgroup.testcase._attributes.name.replace(/ /g,''):'no-id')+'_config'">
                                     <md-table-cell style="width:25%;"><span :data-tooltip="testgroup.testcase.description?testgroup.testcase.description._cdata:'no-description'">{{ testgroup.testcase._attributes?testgroup.testcase._attributes.id:'no-id' }}</span></md-table-cell>
                                     <md-table-cell style="width:50%;">{{ testgroup.testcase._attributes?testgroup.testcase._attributes.name:'no-name'}}</md-table-cell>
                                     <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(testgroup.testcase)==='FAIL'?'red;':(getTestCaseResult(testgroup.testcase)==='WARN'?'yellow':(getTestGroupResult(testgroup)==='OK'?'#00FF00;':'')))">{{ getTestCaseResult(testgroup.testcase)}}</md-table-cell>
                                 </md-table-row>
-                                <md-table-row class="fold">
+                                <md-table-row :id="(testgroup.testcase._attributes?testgroup.testcase._attributes.name.replace(/ /g,''):'no-id')+'_config'" class="collapse">
                                     <div v-if="Array.isArray(testgroup.testcase.testrun)">       
                                         <md-table>
                                             <md-table-row v-for="(itex,kex) in testgroup.testcase.testrun" :key="kex">
@@ -115,12 +115,12 @@
                                     <md-table-head>Result</md-table-head>
                                 </md-table-row>
                                 <template v-for="(item,key) in testgroupInit.testcase">
-                                    <md-table-row  @click="expand" :key="(item._attributes?item._attributes.id:'no-id')+key" class="view" :ref="item._attributes.id">
+                                    <md-table-row :key="key" role="button" data-bs-toggle="collapse" :data-bs-target="'#'+(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" aria-expanded="false" :aria-controls="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'">
                                         <md-table-cell><span :data-tooltip="item.description?item.description._cdata:'no-description'">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
                                         <md-table-cell>{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
                                         <md-table-cell :style="'text-align:center;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(item)}}</md-table-cell>
                                     </md-table-row>
-                                    <md-table-row :key="'collapse'+(item._attributes?item._attributes.id:'no-id')+key" class="fold">
+                                    <md-table-row :id="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" class="collapse" :key="key">
                                         <div v-if="Array.isArray(item.testrun)">       
                                             <md-table>
                                                <md-table-row v-for="(itex,kex) in item.testrun" :key="kex">
@@ -152,13 +152,12 @@
                                     <md-table-head style="width:25%;">Name</md-table-head>
                                     <md-table-head>Result</md-table-head>
                                 </md-table-row>
-                                <md-table-row  @click="expand" class="view">
+                                <md-table-row role="button" data-bs-toggle="collapse" :data-bs-target="'#'+(testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.name.replace(/ /g,''):'no-id')+'_config'" aria-expanded="false" :aria-controls="(testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.name.replace(/ /g,''):'no-id')+'_config'">
                                     <md-table-cell style="width:25%;"><span :data-tooltip="testgroupInit.testcase.description?testgroupInit.testcase.description._cdata:'no-description'">{{ testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.id:'no-id' }}</span></md-table-cell>
                                     <md-table-cell style="width:50%;">{{ testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.name:'no-name'}}</md-table-cell>
                                     <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(testgroupInit.testcase)==='FAIL'?'red;':(getTestCaseResult(testgroupInit.testcase)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(testgroupInit.testcase)}}</md-table-cell>
                                 </md-table-row>
-                                
-                                    <md-table-row class="fold">
+                                <md-table-row :id="(testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.name.replace(/ /g,''):'no-id')+'_config'" class="collapse">
                                         <div v-if="Array.isArray(testgroupInit.testcase.testrun)">       
                                             <md-table>
                                                <md-table-row v-for="(itex,kex) in testgroupInit.testcase.testrun" :key="kex">
@@ -374,6 +373,9 @@ export default {
 }
 </script>
 <style scoped>
+.md-table-row[aria-expanded=true]{
+    background-color:gray;
+}
 .accordion-button{
     padding:0rem 0 0 1.25rem !important;
 }
@@ -408,55 +410,5 @@ transform: rotate(-180deg);
     transition: -webkit-transform .2s ease-in-out;
     transition: transform .2s ease-in-out;
     transition: transform .2s ease-in-out, -webkit-transform .2s ease-in-out;
-}
-</style>
-<style lang="scss" scoped>
-table {
-  width: 100%;
-  th { text-align: left; border-bottom: 1px solid #ccc;}
-  th, td { padding: .4em; }
-}
-
-// fold table 
-table{
-  > tbody {
-    // view segment
-    > tr.view {
-      td, th {cursor: pointer;}
-      td:first-child, 
-      th:first-child { 
-        position: relative;
-        padding-left:20px;
-        &:before {
-          position: absolute;
-          top:50%; left:5px;
-          width: 9px; height: 16px;
-          margin-top: -8px;
-          font: 16px fontawesome;
-          color: #999;
-          content: "\f0d7";
-          transition: all .3s ease;
-        }
-      }
-      &:nth-child(4n-1) { background: #eee; }
-      &:hover { background: #000; }
-      &.open {
-        background: tomato;
-        color: white;
-        td:first-child, th:first-child {
-          &:before {
-            transform: rotate(-180deg);
-            color: #333;
-          }
-        }
-      }
-    }
-  
-    // fold segment
-    // > tr.fold {
-    //   display: none;
-    //   &.open { display:table-row; }
-    // }
-  }
 }
 </style>
