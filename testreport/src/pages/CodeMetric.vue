@@ -54,29 +54,29 @@
                 </md-table-toolbar>
                 <md-table-row>
                     <md-table-cell>Metrics Abreviations</md-table-cell>
-                    <md-table-cell>BME</md-table-cell>
-                    <md-table-cell>BMO</md-table-cell>
-                    <md-table-cell>BMS</md-table-cell>
-                    <md-table-cell>BUG</md-table-cell>
-                    <md-table-cell>1..20</md-table-cell>
-                    <md-table-cell>DEV</md-table-cell>
-                    <md-table-cell>DIF</md-table-cell>
-                    <md-table-cell>ECT</md-table-cell>
-                    <md-table-cell>EFF</md-table-cell>
-                    <md-table-cell>FCO</md-table-cell>
-                    <md-table-cell>FNC</md-table-cell>
-                    <md-table-cell>HAL</md-table-cell>
-                    <md-table-cell>M20</md-table-cell>
-                    <md-table-cell>M21</md-table-cell>
-                    <md-table-cell>M22</md-table-cell>
-                    <md-table-cell>M28</md-table-cell>
-                    <md-table-cell>M33</md-table-cell>
-                    <md-table-cell>OPN</md-table-cell>
-                    <md-table-cell>OPT</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'COCOMO embedded programmer months'" >BME</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >BMO</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >BMS</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >BUG</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'comment to code ratio'" >CDN</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >DEV</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'rogram difficulty'" >DIF</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >ECT</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >EFF</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >FCO</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of function definitions'" >FNC</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >HAL</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >M20</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >M21</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of statements'" >M22</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of non-header comments'" >M28</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >M33</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >OPN</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'Teste \n a la lign'" >OPT</md-table-cell>
                 </md-table-row>
                 <md-table-row>
                     <md-table-cell>Metrics Abreviations</md-table-cell>
-                    <md-table-cell>BME</md-table-cell>
+                    <md-table-cell><span data-tooltip="test">BME</span></md-table-cell>
                     <md-table-cell>BMO</md-table-cell>
                     <md-table-cell>BMS</md-table-cell>
                     <md-table-cell>BUG</md-table-cell>
@@ -160,26 +160,26 @@
                 </md-table-row>
                 <md-table-row>
                     <md-table-cell>Metrics Abreviations</md-table-cell>
-                    <md-table-cell>PTH</md-table-cell>
-                    <md-table-cell>CYC</md-table-cell>
-                    <md-table-cell>CAL</md-table-cell>
-                    <md-table-cell>PAR</md-table-cell>
-                    <md-table-cell>MIF</md-table-cell>
-                    <md-table-cell>BAK</md-table-cell>
-                    <md-table-cell>GTO</md-table-cell>
-                    <md-table-cell>M19</md-table-cell>
-                    <md-table-cell>RET</md-table-cell>
-                    <md-table-cell>ST3</md-table-cell>
-                    <md-table-cell>AV1</md-table-cell>
-                    <md-table-cell>KNT</md-table-cell>
-                    <md-table-cell>LCT</md-table-cell>
-                    <md-table-cell>LIN</md-table-cell>
-                    <md-table-cell>M07</md-table-cell>
-                    <md-table-cell>M29</md-table-cell>
-                    <md-table-cell>SUB</md-table-cell>
-                    <md-table-cell>UNR</md-table-cell>
-                    <md-table-cell>UNV</md-table-cell>
-                    <md-table-cell>XLN</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'estimated static path count (1..80)'" >PTH</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'cyclomatic complexity (1..10)'" >CYC</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of distinct function calls (0..7)'" >CAL</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of function parameters (0..5)'" >PAR</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'maximum nesting of contro! structures (0..4)'" >MIF</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of backward jumps (0)'" >BAK</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of GOTOs (0) {decomposition threshold: 6)'" >GTO</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of exit points (0..1)'" >M19</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of function return points (0..1)'" >RET</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of statements in function (variant 3) (1..50)'" >ST3</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'average size of function statements'" >AV1</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'knot count'" >KNT</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of local variables declared'" >LCT</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of maintainable lines of code'" >LIN</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'essential cyclomatic complexity'" >MOQ7</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of functions calling this function'" >M29</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of function calls'" >SUB</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of unreachable statements'" >UNR</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of unused and non-reused variables'" >UNV</md-table-cell>
+                    <md-table-cell  data-toggle="tooltip" :title="'number of executable lines'" >XLN</md-table-cell>
                 </md-table-row>
                 <md-table-row>
                     <md-table-cell>Allowed Range</md-table-cell>
@@ -485,5 +485,52 @@ export default {
   .conf-block .flex{
       padding: 15px;
   }
+  [data-tooltip] {
+    position: relative;
+    z-index: 9999999999999;
+    cursor: default;
+  }
+  [data-tooltip]:before,
+  [data-tooltip]:after {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  }
+
+          /* Position tooltip above the element */
+  [data-tooltip]:before {
+    position: absolute;
+    bottom: 150%;
+    left: 50%;
+    margin-bottom: 5px;
+    margin-left: -5px;
+    padding: 7px;
+    width: 150px;
+    min-width:50px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius:    3px;
+    border-radius:         3px;
+    background-color: #181818;
+    color: rgb(255, 255, 255);
+    content: attr(data-tooltip);
+    text-align: left;
+    white-space: normal;
+    font-size: 10pt;
+    line-height: 1.2;
+  }
+  [data-tooltip]:after {
+    position: absolute;
+    bottom: 150%;
+    left: 50%;
+    width: 0;
+    border-top: 5px solid #ffffff;
+    border-top: 5px solid rgba(255, 255, 255, 0.98);
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
+    content: " ";
+    font-size: 0;
+    line-height: 0;
+  }
+
   
 </style>

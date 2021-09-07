@@ -21,7 +21,7 @@
                     </div>
                 </md-table-cell>
                 <md-table-cell></md-table-cell>
-                <md-table-cell :style="'background-color:'+(item._attributes.swcp&&item._attributes.swcp==='yes'?'#00FF00;':'red;')">{{item._attributes.swcp&&item._attributes.swcp.includes('yes')?'ok':'warn'}}</md-table-cell>
+                <md-table-cell :style="'text-align:center;background-color:'+(item._attributes.swcp&&item._attributes.swcp==='yes'?'#00FF00;':'yellow;')">{{item._attributes.swcp&&item._attributes.swcp.includes('yes')?'ok':'warn'}}</md-table-cell>
                 <md-table-cell>
                     <p>{{item._attributes&&item._attributes.date?item._attributes.date:''}}</p>
                     <p>{{item._attributes&&item._attributes.executor?item._attributes.executor:''}}</p>
@@ -47,8 +47,9 @@ export default {
     padding: 0 15px !important;
   }
   .md-table-cell {
-    height: 0 !important;
+    height: fit-content !important;
     line-height: 5px !important;
+    padding: 10px 5px;
   }
   .md-card-header{
     padding: 5px !important;

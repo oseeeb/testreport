@@ -1,5 +1,5 @@
 <template>
-<div class="MetricBarBase" :data-tooltip="tooltip">
+<div class="MetricBarBase" data-toggle="tooltip" :title="tooltip">
     <div :class="percentageBarClass" style="position: relative;z-index: 0;">
         <div :class="subBar1Class" :style="'position: absolute;z-index: 1;width: '+subBar1Value+'%'"></div>
         <div :class="subBar2Class" :style="'position: absolute;z-index: 2;width: '+subBar2Value+'%'"></div>
@@ -11,7 +11,7 @@
       props:{
           percentageBarClass:{
               type:String,
-              default:'MetricBarRed'
+              default:'MetricBarBase'
           },
           subBar1Class:{
               type:String,
