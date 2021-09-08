@@ -10,7 +10,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import jquery from 'vue-jquery'
 
 
-Vue.use(jquery)
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 // router setup
