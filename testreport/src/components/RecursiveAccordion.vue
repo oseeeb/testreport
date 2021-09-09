@@ -35,7 +35,7 @@
                                                     <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
                                                     <md-table-cell>{{itex._attributes.date}}</md-table-cell>
                                                     <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
-                                                    <md-table-cell :style="'background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
+                                                    <md-table-cell :style="'text-align:center;background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
                                                 </md-table-row>
                                             </md-table>
                                         </div>
@@ -45,7 +45,7 @@
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.parameter}}</md-table-cell>
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.date}}</md-table-cell>
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.executor}}</md-table-cell>
-                                                    <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(item.testrun)}}</md-table-cell>
+                                                    <md-table-cell :style="'text-align:center;width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(item.testrun)}}</md-table-cell>
                                                 </md-table-row>
                                             </md-table>
                                         </div>
@@ -72,7 +72,7 @@
                                                 <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
                                                 <md-table-cell>{{itex._attributes.date}}</md-table-cell>
                                                 <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
-                                                <md-table-cell :style="'background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
+                                                <md-table-cell :style="'text-align:center;background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
                                             </md-table-row>
                                         </md-table>
                                     </div>
@@ -82,7 +82,7 @@
                                                 <md-table-cell style="width:20%;">{{testgroup.testcase.testrun._attributes.parameter}}</md-table-cell>
                                                 <md-table-cell style="width:20%;">{{testgroup.testcase.testrun._attributes.date}}</md-table-cell>
                                                 <md-table-cell style="width:20%;">{{testgroup.testcase.testrun._attributes.executor}}</md-table-cell>
-                                                <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(testgroup.testcase.testrun)==='FAIL'?'red;':(getTestRunResult(testgroup.testcase.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(testgroup.testcase.testrun)}}</md-table-cell>
+                                                <md-table-cell :style="'text-align:center;width:20%;background-color:'+(getTestRunResult(testgroup.testcase.testrun)==='FAIL'?'red;':(getTestRunResult(testgroup.testcase.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(testgroup.testcase.testrun)}}</md-table-cell>
                                             </md-table-row>
                                         </md-table>
                                     </div>
@@ -127,7 +127,7 @@
                                                     <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
                                                     <md-table-cell>{{itex._attributes.date}}</md-table-cell>
                                                     <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
-                                                    <md-table-cell :style="'background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
+                                                    <md-table-cell :style="'text-align:center;background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
                                                 </md-table-row>
                                             </md-table>
                                         </div>
@@ -137,7 +137,7 @@
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.parameter}}</md-table-cell>
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.date}}</md-table-cell>
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.executor}}</md-table-cell>
-                                                    <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(item.testrun)}}</md-table-cell>
+                                                    <md-table-cell :style="'text-align:center;width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(item.testrun)}}</md-table-cell>
                                                 </md-table-row>
                                             </md-table>
                                         </div>

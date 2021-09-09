@@ -67,28 +67,34 @@
             <span class="symbol_ok"></span> <span>Runtime Coverage (Unit Test)</span><br/>
             <md-table>
               <md-table-row >
+                <md-table-head style="width:33%;">Name</md-table-head>
+                <md-table-head style="width:33%;">Value</md-table-head>
+                <md-table-head style="width:34%;">MeasuredValue</md-table-head>
+              </md-table-row>
+              <md-table-row >
                 <md-table-cell style="width:33%;">FC</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
-              </md-table-row><md-table-row >
+                <md-table-cell style="width:33%;">{{GetMinMaxInfo(covInfoPercent,'fctCover')}}</md-table-cell>
+                <md-table-cell style="width:34%;">{{GetMinMaxInfo(covInfoPercent,'fctCoverUnjust')}}</md-table-cell>
+              </md-table-row>
+              <md-table-row >
                 <md-table-cell style="width:33%;">SC</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
+                <md-table-cell style="width:33%;">{{GetMinMaxInfo(covInfoPercent,'stmtCover')}}</md-table-cell>
+                <md-table-cell style="width:34%;">{{GetMinMaxInfo(covInfoPercent,'stmtCoverUnjust')}}</md-table-cell>
               </md-table-row>
               <md-table-row >
                 <md-table-cell style="width:33%;">BC</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
+                <md-table-cell style="width:33%;">{{GetMinMaxInfo(covInfoPercent,'branchCover')}}</md-table-cell>
+                <md-table-cell style="width:34%;">{{GetMinMaxInfo(covInfoPercent,'branchCoverUnjust')}}</md-table-cell>
               </md-table-row>
               <md-table-row >
                 <md-table-cell style="width:33%;">DC</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
+                <md-table-cell style="width:33%;">{{GetMinMaxInfo(covInfoPercent,'decCover')}}</md-table-cell>
+                <md-table-cell style="width:34%;">{{GetMinMaxInfo(covInfoPercent,'decCoverUnjust')}}</md-table-cell>
               </md-table-row>
               <md-table-row >
                 <md-table-cell style="width:33%;">CC</md-table-cell>
-                <md-table-cell style="width:33%;">PTH</md-table-cell>
-                <md-table-cell style="width:34%;">PTH</md-table-cell>
+                <md-table-cell style="width:33%;">{{GetMinMaxInfo(covInfoPercent,'callCover')}}</md-table-cell>
+                <md-table-cell style="width:34%;">{{GetMinMaxInfo(covInfoPercent,'callCoverUnjust')}}</md-table-cell>
               </md-table-row>
             </md-table>
           </md-card-content>
@@ -174,27 +180,27 @@
            <md-table>
               <md-table-row >
                 <md-table-cell style="width:50%;">PTH</md-table-cell>
-                <md-table-cell style="width:50%;">PTH</md-table-cell>
+                <md-table-cell style="width:50%;">{{GetMinMaxInfo(fctMetrics,'PTH')}}</md-table-cell>
               </md-table-row>
               <md-table-row >
                 <md-table-cell style="width:50%;">CYC</md-table-cell>
-                <md-table-cell style="width:50%;">PTH</md-table-cell>
+                <md-table-cell style="width:50%;">{{GetMinMaxInfo(fctMetrics,'CYC')}}</md-table-cell>
               </md-table-row>
               <md-table-row >
                 <md-table-cell style="width:50%;">CAL</md-table-cell>
-                <md-table-cell style="width:50%;">PTH</md-table-cell>
+                <md-table-cell style="width:50%;">{{GetMinMaxInfo(fctMetrics,'CAL')}}</md-table-cell>
               </md-table-row>
               <md-table-row >
                 <md-table-cell style="width:50%;">PAR</md-table-cell>
-                <md-table-cell style="width:50%;">PTH</md-table-cell>
+                <md-table-cell style="width:50%;">{{GetMinMaxInfo(fctMetrics,'PAR')}}</md-table-cell>
               </md-table-row>
               <md-table-row >
                 <md-table-cell style="width:50%;">MIF</md-table-cell>
-                <md-table-cell style="width:50%;">PTH</md-table-cell>
+                <md-table-cell style="width:50%;">{{GetMinMaxInfo(fctMetrics,'MIF')}}</md-table-cell>
               </md-table-row>
               <md-table-row >
                 <md-table-cell style="width:50%;">LOC</md-table-cell>
-                <md-table-cell style="width:50%;">PTH</md-table-cell>
+                <md-table-cell style="width:50%;">{{GetSumInfo(fileMetrics,'TPP')}}</md-table-cell>
               </md-table-row>
             </md-table>
           </md-card-content>
@@ -234,7 +240,17 @@ export default {
       TestCases_ThisCycle_NotPassed_Justified:[],
       NrOf_TestCases_Planned_ThisCycle:0,
       NrOf_TestCases_Planned_ThisCycle_Passed:0,
-      NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified:0
+      NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified:0,
+      RuntimeCoverages01:[],
+      RuntimeCoverages02:[],
+      covInfoPercent:[],
+      covInfoPercentOverall:[],
+      covInfoPercentComponent:[],
+      log_QACMetrics:[],
+      log_BauhausMetrics:[],
+      fileMetrics:[],
+      fctMetrics:[],
+      classMetrics:[],
     };
   },
   computed:{
@@ -242,9 +258,6 @@ export default {
       var Result_TestPlanStatus = this.plannedTestRun.lenght !== 0
       var Result_TestPlanCoverage = this.NrOf_TestCases_Planned_ThisCycle===this.plannedTestCase.length
       var Result_TestPlanTestResult = this.NrOf_TestCases_Planned_ThisCycle===(this.NrOf_TestCases_Planned_ThisCycle_Passed+this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified)
-      
-      console.log('NrOf_TestCases_Planned_ThisCycle',this.NrOf_TestCases_Planned_ThisCycle)
-      console.log('plannedTestCase',this.plannedTestCase.length)
       return Result_TestPlanStatus&&Result_TestPlanCoverage&&Result_TestPlanTestResult;
     }
   },
@@ -258,6 +271,270 @@ export default {
           array.push(...element)
         }
       });  
+    },
+    retrieveCoverage(testruns){
+      testruns.forEach(testrun=>{
+        if('log_FunctionCoverage' in testrun){
+          if(Array.isArray(testrun.log_FunctionCoverage)){
+            
+            this.RuntimeCoverages01.push(...testrun.log_FunctionCoverage.map(log=>{
+              var obj = {}
+              obj = log
+              obj.parameter = testrun._attributes.parameter
+              return obj
+            }))
+          }
+          else{
+            var obj = {}
+              obj = testrun.log_FunctionCoverage
+              obj.parameter = testrun._attributes.parameter
+            this.RuntimeCoverages01.push(obj)
+          }
+        }
+        if('log_QACMetrics' in testrun){
+           if(Array.isArray(testrun.log_QACMetrics)){
+            
+            this.log_QACMetrics.push(...testrun.log_QACMetrics.map(log=>{
+              var obj = {}
+              obj = log
+              obj.parameter = testrun._attributes.parameter
+              return obj
+            }))
+          }
+          else{
+            var obj = {}
+              obj = testrun.log_QACMetrics
+              obj.parameter = testrun._attributes.parameter
+            this.log_QACMetrics.push(obj)
+          }
+        }
+        if('log_BauhausMetrics' in testrun){
+           if(Array.isArray(testrun.log_BauhausMetrics)){
+            
+            this.log_BauhausMetrics.push(...testrun.log_BauhausMetrics.map(log=>{
+              var obj = {}
+              obj = log
+              obj.parameter = testrun._attributes.parameter
+              return obj
+            }))
+          }
+          else{
+            var obj = {}
+              obj = testrun.log_BauhausMetrics
+              obj.parameter = testrun._attributes.parameter
+            this.log_BauhausMetrics.push(obj)
+          }
+        }
+
+        if(this.log_QACMetrics.length!==0){
+          this.log_QACMetrics.forEach(log=>{
+            if('function' in log){
+              if(Array.isArray(log.function)){
+                this.fctMetrics.push(...log.function)
+              }else{
+                this.fctMetrics.push(log.function)
+              }
+            }
+            if('file' in log){
+              if(Array.isArray(log.file)){
+                this.fileMetrics.push(...log.file)
+              }else{
+                this.fileMetrics.push(log.file)
+              }
+            }
+          })
+        }else{
+          this.log_BauhausMetrics.forEach(log=>{
+            if('file' in log){
+              if(Array.isArray(log.file)){
+                log.file.forEach(file=>{
+                  if('class' in file ){
+                    if(Array.isArray(file.class)){
+                      this.classMetrics.push(...file.class)
+                    }else{
+                      this.classMetrics.push(file.class)
+                    }
+                  }
+                })
+              }else{
+                if('class' in log.file ){
+                    if(Array.isArray(log.file.class)){
+                      this.classMetrics.push(...log.file.class)
+                    }else{
+                      this.classMetrics.push(log.file.class)
+                    }
+                  }
+              }
+            }
+          })
+        }
+        
+        if('log_RuntimeCoverage' in testrun){
+                  if(Array.isArray(testrun.log_RuntimeCoverage)){
+                    
+                    this.RuntimeCoverages02.push(...testrun.log_RuntimeCoverage.map(log=>{
+                      var obj = {}
+                      obj = log
+                      obj.parameter = testrun._attributes.parameter
+                      return obj
+                    }))
+                  }
+                  else{
+                    var obj = {}
+                      obj = testrun.log_RuntimeCoverage
+                      obj.parameter = testrun._attributes.parameter
+                    this.RuntimeCoverages02.push(obj)
+                  }
+          }
+
+
+        if(this.RuntimeCoverages01.length!==0){
+          this.RuntimeCoverages01.forEach(runtime=>{
+            var convInfo = {}
+            if(!('testlevel' in runtime._attributes)&&!(runtime.parameter.includes('OverallCoverage'))){
+               convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
+               convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
+               convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+               convInfo.decCoverUnjust = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+               
+            }
+            if(convInfo.fctCover){
+              this.covInfoPercent.push(convInfo)
+            }
+          })
+        }
+        if(this.RuntimeCoverages02.length!==0){
+          this.RuntimeCoverages02.forEach(runtime=>{
+            var convInfo = {}
+            if(!('testlevel' in runtime._attributes)&&!(runtime.parameter.includes('OverallCoverage'))){
+               convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
+               convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
+               convInfo.decCover = Math.floor(parseInt(runtime.summary.modDecCoveredJust._text)*100/parseInt(runtime.summary.modDecCnt._text))
+               convInfo.decCoverUnjust = Math.floor(parseInt(runtime.summary.modDecCovered._text)*100/parseInt(runtime.summary.modDecCnt._text))
+               convInfo.stmtCover = Math.floor(parseInt(runtime.summary.stmtCoveredJust._text)*100/parseInt(runtime.summary.stmtCnt._text))
+               convInfo.stmtCoverUnjust = Math.floor(parseInt(runtime.summary.stmtCovered._text)*100/parseInt(runtime.summary.stmtCnt._text))
+               convInfo.branchCover = runtime.summary.decisionCoveredJust?Math.floor(parseInt(runtime.summary.decisionCoveredJust._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+               convInfo.branchCoverUnjust = runtime.summary.decisionCovered?Math.floor(parseInt(runtime.summary.decisionCovered._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+            }
+            if(convInfo.fctCover){
+              this.covInfoPercent.push(convInfo)
+            }
+          })
+        }
+        if(this.RuntimeCoverages01.length!==0){
+          this.RuntimeCoverages01.forEach(runtime=>{
+            var convInfo = {}
+            if(runtime.parameter.includes('OverallCoverage')){
+               convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
+               convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
+               convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+               convInfo.decCoverUnjust = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+               
+            }
+            if(convInfo.fctCover){
+              this.covInfoPercentOverall.push(convInfo)
+            }
+          })
+        }
+        if(this.RuntimeCoverages02.length!==0){
+          this.RuntimeCoverages02.forEach(runtime=>{
+            var convInfo = {}
+            if(runtime.parameter.includes('OverallCoverage')){
+               convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
+               convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
+               convInfo.decCover = Math.floor(parseInt(runtime.summary.modDecCoveredJust._text)*100/parseInt(runtime.summary.modDecCnt._text))
+               convInfo.decCoverUnjust = Math.floor(parseInt(runtime.summary.modDecCovered._text)*100/parseInt(runtime.summary.modDecCnt._text))
+               convInfo.stmtCover = Math.floor(parseInt(runtime.summary.stmtCoveredJust._text)*100/parseInt(runtime.summary.stmtCnt._text))
+               convInfo.stmtCoverUnjust = Math.floor(parseInt(runtime.summary.stmtCovered._text)*100/parseInt(runtime.summary.stmtCnt._text))
+               convInfo.branchCover = runtime.summary.decisionCoveredJust?Math.floor(parseInt(runtime.summary.decisionCoveredJust._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+               convInfo.branchCoverUnjust = runtime.summary.decisionCovered?Math.floor(parseInt(runtime.summary.decisionCovered._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+            }
+            if(convInfo.fctCover){
+              this.covInfoPercentOverall.push(convInfo)
+            }
+          })
+        }
+        if(this.RuntimeCoverages01.length!==0){
+          this.RuntimeCoverages01.forEach(runtime=>{
+            var convInfo = {}
+            if(('testlevel' in runtime._attributes&&runtime._attributes.testlevel==='component')&&!(runtime.parameter.includes('OverallCoverage'))){
+               convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
+               convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+               
+            }
+            if(convInfo.fctCover){
+              this.covInfoPercent.push(convInfo)
+            }
+          })
+        }
+        if(this.RuntimeCoverages02.length!==0){
+          this.RuntimeCoverages02.forEach(runtime=>{
+            var convInfo = {}
+            if(('testlevel' in runtime._attributes&&runtime._attributes.testlevel==='component')&&!(runtime.parameter.includes('OverallCoverage'))){
+               convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
+               convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
+               convInfo.callCover = Math.floor(parseInt(runtime.summary.callsCoveredJust._text)*100/parseInt(runtime.summary.callsCnt._text))
+               convInfo.callCoverUnjust = Math.floor(parseInt(runtime.summary.callsCovered._text)*100/parseInt(runtime.summary.callsCnt._text)) 
+             }
+            if(convInfo.fctCover){
+              this.covInfoPercentComponent.push(convInfo)
+            }
+          })
+        }
+
+      })
+    },
+    filters(bigdata,criteria){
+          var datas = []
+          if(Array.isArray(bigdata)){
+            bigdata.forEach(elt=>{
+                if((criteria in elt)&&elt[criteria]!=='NaN'){
+                    if(typeof elt[criteria]==='object'&&'_text' in elt[criteria]){
+                      datas.push(elt[criteria]._text)
+                    }
+                    else{
+                      datas.push(elt[criteria])
+                    }
+                }
+            })
+          }
+          
+      
+          return datas
+    },
+    GetMinMaxInfo(datas,criteria){
+      var path = this.filters(datas,criteria)
+      var result = {
+          min:0,
+          max:0,
+      }
+      path.map(elt=>{
+          return parseFloat(elt)
+      })
+
+      path.sort((a,b)=>{return a-b})
+
+      result.min = path[0]
+      result.max = path[path.length-1]
+      var display = ''
+      if(result.min+''==='NaN'||result.min===undefined){
+        display='NaN'
+      }
+      else if(result.min===result.max){
+        display = result.min+''
+      }else{
+        display = result.min+'...'+result.max
+      }
+      return display
+      
+    },
+    GetSumInfo(datas,criteria){
+      var path = this.filters(datas,criteria)
+      
+      console.log('criteria',path)
+      return path.reduce((acc,curr)=>{
+        return parseInt(acc)+parseInt(curr)
+      })
     }
   },
   beforeMount(){
@@ -294,6 +571,11 @@ export default {
       value:''
     },
   ]
+
+  
+  this.retrieveCoverage(this.$store.state.testRuns)
+  console.log('log_BauhausMetrics',this.log_BauhausMetrics)
+    console.log('log_QACMetrics',this.log_QACMetrics)
 
   this.$store.state.testCases.forEach(element=>{
     if(element._attributes&&element._attributes.ExecPlan==='x'){
@@ -385,8 +667,6 @@ export default {
     return elemt._attributes.ExecPlan==='x'
   }).length
 
-  console.log('test with result',this.TestCases_WithResult)
-
   this.NrOf_TestCases_Planned_ThisCycle_Passed =  this.TestCases_ThisCycle_Passed.filter(elemt=>{
     return elemt._attributes.ExecPlan==='x'
   }).length
@@ -430,7 +710,6 @@ export default {
     }
   })
 
-  console.log('testRuns_QACSummary', this.TestRuns_QACSummary)
   }
 };
 </script>

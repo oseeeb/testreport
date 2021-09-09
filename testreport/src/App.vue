@@ -19,7 +19,7 @@ export default {
       msg:'',
       testCases:[],
       testRuns:[],
-      testConfigs:[]
+      testConfigs:[],
     }
   },
   methods:{
@@ -107,7 +107,7 @@ export default {
       })
 
       this.testConfigs = [...(new Set(this.testConfigs))]
-    }
+    },
   },
   mounted(){
     this.msg = 'Getting Data...'
@@ -117,7 +117,6 @@ export default {
       var options = {ignoreComment: true, alwaysChildren: true, compact: true};
       //convertion de xml en json avec xml2json
       var res = converter.xml2js(result.data, options);
-      console.log('result analyse',res)
       //sauvegarde du resultat convertit  
       this.$store.dispatch('testdata',res)
   
@@ -132,9 +131,6 @@ export default {
       this.msg = 'Retrieving TestConfigs...'
       this.findTestConfig(this.testRuns)
       this.$store.dispatch('testConfigs',this.testConfigs)
-      
-      console.log('testConfigs',this.testConfigs)
-      
       this.loading = false;
     })
   }

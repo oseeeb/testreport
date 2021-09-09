@@ -101,8 +101,6 @@ export default {
     },
     mounted(){
         if(this.Type==='testcase'){
-            console.log('name',this.name)
-            console.log('testcases',this.Todraw)
             var testCases = this.Todraw
             var testcasesTested = testCases.filter(testcase=>{
                 if('testrun' in testcase){
@@ -132,7 +130,6 @@ export default {
                 return this.getTestCaseResult(testcase).includes('OK')
             })
 
-            console.log('testcasetest',testcasesPassed)
             this.metrics.Total = testCases.length
             this.metrics.Tested = testcasesTested.length
             this.metrics.Passed = testcasesPassed.length
