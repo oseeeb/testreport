@@ -49,6 +49,9 @@ export default {
             else if(result.includes('WARN')){
                 return 'WARN'
             }
+            else if(result.includes('processError')){
+                return 'PROCESSERROR'
+            }
             else if(result.includes('OK.N/A')){
                 return 'OK.N/A'
             }
@@ -65,6 +68,9 @@ export default {
             }
             else if(result.includes('N/A')){
                 return 'OK.N/A'
+            }
+            else if(result.toLowerCase().includes('processerror')){
+                return 'processError'
             }
             else{
                 return 'OK'
@@ -97,6 +103,18 @@ export default {
                     return this.getsimpleResult(result)
                 }
             }
+        },
+        testcaseIsJustified(testcase){
+            var testrunsJust = []
+            if('testrun' in testcase){
+                if(Array.isArray(testcase.testrun)){
+                    testrunsJust = testcase.testrun.filter(testrun=>{
+                        return 'justification' in testrun
+                    })
+                }
+            }
+
+            return testrunsJust.length===0?false:true
         }
     },
     mounted(){
@@ -144,47 +162,28 @@ export default {
                 return this.getTestCaseResult(testcase)==='WARN'
             }).length
             this.metrics.Warn_Justified = testcasesTested.filter(testcase=>{
-                return this.getTestCaseResult(testcase)==='WARN'
+                return this.getTestCaseResult(testcase)==='WARN' && this.testcaseIsJustified(testcase)
             }).length
-
-            // this.metrics.Fail = testCases.filter(elt=>{
-            //     if(elt.testrun.length){
-            //         return elt.testrun.filter(elt=>{elt.result._text==='fail'&&(elt.justification&&elt.justification.length===0)}).length!==0
-            //     }else{
-            //         return elt.testrun.result._text==='fail'&&(elt.testrun.justification&&elt.testrun.justification.length===0)
-            //     }
-            // }).length
 
             this.metrics.Fail = testCases.filter(testcase=>{
                 return this.getTestCaseResult(testcase)==='FAIL'
             }).length
 
             this.metrics.Fail_Justified = testcasesTested.filter(testcase=>{
-                return this.getTestCaseResult(testcase)==='FAIL'
+                return this.getTestCaseResult(testcase)==='FAIL'&& this.testcaseIsJustified(testcase)
             }).length
 
             this.metrics.ProcessError = testCases.filter(testcase=>{
-                return this.getTestCaseResult(testcase)==='FAIL'
+                return this.getTestCaseResult(testcase)==='PROCESSERROR'
+            }).length
+
+            this.metrics.ProcessError_Justified = testCases.filter(testcase=>{
+                return this.getTestCaseResult(testcase)==='PROCESSERROR' && this.testcaseIsJustified(testcase)
             }).length
             // this.metrics.NotPassed =
             // this.metrics.NotPassed_Justified =
             // this.metrics.Accepted =
 
-            // var totalTestcases = testCases.length
-            // testCases.map(elt=>{
-            //     var obj = elt;
-            //     if(elt.testrun.length){
-            //         var totalTestRun = elt.testrun.length
-            //         var result_ok = elt.testrun.filter(elt=>{return elt.result._text.includes('ok')})
-                    
-            //         obj.result = result_ok.length===totalTestRun?'passed':'fail'
-            //     }else{
-            //         obj.result = elt.testrun.result._text==='ok'||elt.testrun.result._text===''?'passed':'fail'
-            //     }
-
-            //     return obj
-            // })
-            // console.log('testcases from metrics',testCases)
             this.result.ok = this.metrics.Passed*100/this.metrics.Total
 
             this.result.fail = this.metrics.Fail*100/this.metrics.Total
@@ -194,7 +193,11 @@ export default {
             this.result.text += this.metrics.Ok+'*ok \n'
             this.result.text += this.metrics.NA!==0?this.metrics.NA+'*N/A \n':''
             this.result.text += this.metrics.Warn!==0?this.metrics.Warn+'*warn \n':''
+            this.result.text += this.metrics.Warn_Justified!==0?this.metrics.Warn_Justified+'*warn Justified\n':''
             this.result.text += this.metrics.Fail!==0?this.metrics.Fail+'*fail \n':''
+            this.result.text += this.metrics.Fail_Justified!==0?this.metrics.Fail_Justified+'*fail Justified \n':''
+            this.result.text += this.metrics.ProcessError!==0?this.metrics.ProcessError+'*processError \n':''
+            this.result.text += this.metrics.ProcessError_Justified!==0?this.metrics.ProcessError_Justified+'*ProcessError Justified \n':''
         }
         else if(this.Type==='testrun'){
             var testRuns = this.Todraw
@@ -226,34 +229,23 @@ export default {
                 return this.getTestRunResult(testrun)==='FAIL'
             }).length
 
-            // this.metrics.Warn_Justified = testcasesTested.filter(elt=>{
-            //     if(elt.testrun.length){
-            //         return elt.testrun.filter(elt=>{elt.result._text==='warn'&&(elt.justification&&elt.justification.length!==0)}).length!==0
-            //     }else{
-            //         return elt.testrun.result._text==='warn'&&(elt.testrun.justification&&elt.testrun.justification.length!==0)
-            //     }
-            // }).length
-            // this.metrics.Fail = testCases.filter(elt=>{
-            //     if(elt.testrun.length){
-            //         return elt.testrun.filter(elt=>{elt.result._text==='fail'&&(elt.justification&&elt.justification.length===0)}).length!==0
-            //     }else{
-            //         return elt.testrun.result._text==='fail'&&(elt.testrun.justification&&elt.testrun.justification.length===0)
-            //     }
-            // }).length
-            // this.metrics.Fail_Justified = testcasesTested.filter(elt=>{
-            //     if(elt.testrun.length){
-            //         return elt.testrun.filter(elt=>{elt.result._text==='fail'&&(elt.justification&&elt.justification.length!==0)}).length!==0
-            //     }else{
-            //         return elt.testrun.result._text==='fail'&&(elt.testrun.justification&&elt.testrun.justification.length!==0)
-            //     }
-            // }).length
-            // this.metrics.ProcessError = testCases.filter(elt=>{
-            //     if(elt.testrun.length){
-            //         return elt.testrun.filter(elt=>{elt.result._text==='processError'&&(elt.justification&&elt.justification.length===0)}).length!==0
-            //     }else{
-            //         return elt.testrun.result._text==='processError'&&(elt.testrun.justification&&elt.testrun.justification.length===0)
-            //     }
-            // }).length
+            this.metrics.Warn_Justified = testRunsTested.filter(testrun=>{
+                return this.getTestRunResult(testrun)==='WARN'&&'justification' in testrun
+            }).length
+
+           
+            this.metrics.Fail_Justified = testRunsTested.filter(testrun=>{
+                 return this.getTestRunResult(testrun)==='FAIL'&&'justification' in testrun
+            }).length
+
+            this.metrics.ProcessError = testRunsTested.filter(testrun=>{
+                 return this.getTestRunResult(testrun)==='PROCESSERROR'
+            }).length
+
+            this.metrics.ProcessError_Justified = testRunsTested.filter(testrun=>{
+                 return this.getTestRunResult(testrun)==='PROCESSERROR'&&'justification' in testrun
+            }).length
+
             // this.metrics.NotPassed =
             // this.metrics.NotPassed_Justified =
             // this.metrics.Accepted =
@@ -268,7 +260,11 @@ export default {
             this.result.text += this.metrics.Ok+'*ok \n'
             this.result.text += this.metrics.NA!==0?this.metrics.NA+'*N/A \n':''
             this.result.text += this.metrics.Warn!==0?this.metrics.Warn+'*warn \n':''
+            this.result.text += this.metrics.Warn_Justified!==0?this.metrics.Warn_Justified+'*warn Justified\n':''
             this.result.text += this.metrics.Fail!==0?this.metrics.Fail+'*fail \n':''
+            this.result.text += this.metrics.Fail_Justified!==0?this.metrics.Fail_Justified+'*fail Justified \n':''
+            this.result.text += this.metrics.ProcessError!==0?this.metrics.ProcessError+'*processError \n':''
+            this.result.text += this.metrics.ProcessError_Justified!==0?this.metrics.ProcessError_Justified+'*ProcessError Justified \n':''
         }
     }
 }
