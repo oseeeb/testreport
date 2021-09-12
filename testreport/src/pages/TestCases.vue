@@ -7,7 +7,9 @@
           <md-select v-model="filter" name="filterTestCase" id="testcase">
             <md-option value="desactivate">Reset</md-option>
             <md-option value="FAIL">FAIL</md-option>
+            <md-option value="FAIL*">FAIL*</md-option>
             <md-option value="WARN">WARN</md-option>
+            <md-option value="WARN*">WARN*</md-option>
           </md-select>
         </md-field>
       </div>

@@ -132,7 +132,7 @@
                                 <span v-for="(itey,kem) in item.message.justification" :key="kem">{{itey.text._text}},</span>
                             </template>
                             <template v-else>
-                                <span>{{item.message.justification.text._text}}</span>
+                                <span>{{item.message.justification.text?item.message.justification.text._text:''}}</span>
                             </template>
                         </template>
                     </md-table-cell>

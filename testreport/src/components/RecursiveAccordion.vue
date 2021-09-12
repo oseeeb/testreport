@@ -4,12 +4,12 @@
             v-for="(testgroup,key) in testgroupInit" :key="key"
         >
             <h2 class="accordion-header" :id="'flush-heading'+key">
-              <button :class="'accordion-button collapsed d-flex justify-content-between '+getTestGroupResult(testgroup)+'-result'" type="button"  data-bs-toggle="collapse" :data-bs-target="'#flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')+'-'+key" aria-expanded="true" :aria-controls="'flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')+'-'+key">
+              <button :class="'accordion-button collapsed d-flex justify-content-between '+getTestGroupResult(testgroup)+'-result'" type="button"  data-bs-toggle="collapse" :data-bs-target="'#flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'_'):'no-name')+'_'+key" aria-expanded="true" :aria-controls="'flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')+'-'+key">
                 <div class="p-2 bd-highlight">{{(testgroup._attributes?testgroup._attributes.name:'no-name')}}</div> 
                 <div class="p-2 bd-highlight" :style="'background-color:'+(getTestGroupResult(testgroup)==='FAIL'?'red;':(getTestGroupResult(testgroup)==='WARN'?'yellow;':(getTestGroupResult(testgroup)==='OK'?'#00FF00;':'')))">{{getTestGroupResult(testgroup)}}</div>
               </button>
             </h2>
-            <div :id="'flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')+'-'+key" :class="'accordion-collapse collapse '+getTestGroupResult(testgroup)+'-collapse'" aria-labelledby="flush-headingOne" :data-bs-parent="'accordionFlush-'+sharename+'-'+level">
+            <div :id="'flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'_'):'no-name')+'_'+key" :class="'accordion-collapse collapse '+getTestGroupResult(testgroup)+'-collapse'" aria-labelledby="flush-headingOne" :data-bs-parent="'accordionFlush-'+sharename+'-'+level">
               <div class="accordion-body">
                     <div v-if="testgroup.testgroup">
                         <recursive-accordion :filter="filter" :testgroupInit="Array.isArray(testgroup.testgroup)?Object.values(testgroup.testgroup):testgroup.testgroup" :sharename="(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')" :level="level+1"></recursive-accordion>
@@ -214,25 +214,48 @@ export default {
     },
     methods:{
         getsimpleResult(result){
-            if(result.includes('FAIL')){
+            if(result.includes('FAIL*')){
+                return 'FAIL*'
+            }
+            else if(result.includes('FAIL')){
                 return 'FAIL'
+            }
+            else if(result.includes('WARN*')){
+                return 'WARN*'
             }
             else if(result.includes('WARN')){
                 return 'WARN'
+            }
+            else if(result.includes('processError')){
+                return 'PROCESSERROR'
+            }
+            else if(result.includes('OK.N/A')){
+                return 'OK'
             }
             else if(result.includes('OK')){
                 return 'OK'
             }
         },
-        getResult(result){
+        getResult(result,isJustified){
             if(result.includes('fail')){
-                return 'FAIL'
+                if(isJustified){
+                    return 'FAIL*'
+                }else{
+                    return 'FAIL'
+                }
             }
             else if(result.includes('warn')){
-                return 'WARN'
+                if(isJustified){
+                    return 'WARN*'
+                }else{
+                    return 'WARN'
+                }
             }
             else if(result.includes('N/A')){
-                return 'OK'
+                return 'OK.N/A'
+            }
+            else if(result.toLowerCase().includes('processerror')){
+                return 'processError'
             }
             else{
                 return 'OK'
@@ -240,13 +263,14 @@ export default {
         },
         getTestRunResult(testrun){
             if(testrun.result){
+                var isJustified = 'justification' in testrun
                 if('_text' in testrun.result){
-                        return this.getResult(testrun.result._text)
+                        return this.getResult(testrun.result._text,isJustified)
                 }
                 else{
                     var result = []
                     testrun.result.forEach(elt=>{
-                    result.push(this.getResult(elt._text))
+                    result.push(this.getResult(elt._text,isJustified))
                     })
                     return this.getsimpleResult(result)
                 }
@@ -329,6 +353,17 @@ export default {
 
                     this.handleCollapseIn(eltsResult,eltsCollapse)
                     break;
+                case 'WARN*':
+                    var defaultResult = document.getElementsByClassName('accordion-button')
+                    var defaultCollapse = document.getElementsByClassName('accordion-collapse')
+
+                    this.handleCollapseOut(defaultResult,defaultCollapse)
+
+                    var eltsResult = document.getElementsByClassName('WARN*-result')
+                    var eltsCollapse = document.getElementsByClassName('WARN*-collapse')
+
+                    this.handleCollapseIn(eltsResult,eltsCollapse)
+                    break;
                 case 'FAIL':
                     var defaultResult = document.getElementsByClassName('accordion-button')
                     var defaultCollapse = document.getElementsByClassName('accordion-collapse')
@@ -337,6 +372,17 @@ export default {
 
                     var eltsResult = document.getElementsByClassName('FAIL-result')
                     var eltsCollapse = document.getElementsByClassName('FAIL-collapse')
+
+                    this.handleCollapseIn(eltsResult,eltsCollapse)
+                    break;
+                case 'FAIL*':
+                    var defaultResult = document.getElementsByClassName('accordion-button')
+                    var defaultCollapse = document.getElementsByClassName('accordion-collapse')
+
+                    this.handleCollapseOut(defaultResult,defaultCollapse)
+
+                    var eltsResult = document.getElementsByClassName('FAIL*-result')
+                    var eltsCollapse = document.getElementsByClassName('FAIL*-collapse')
 
                     this.handleCollapseIn(eltsResult,eltsCollapse)
                     break;

@@ -1,5 +1,6 @@
 <template>
-  <div class="content">
+  <preloader v-if="loading" :message="msg"/>
+  <div class="content" v-else>
     <div class="md-layout md-gutter md-alignment-center">
       <div class="md-layout-item md-xlarge-size-75 md-large-size-75 md-medium-size-75 md-small-size-50 md-xsmall-size-100">
         <md-table v-model="infoReport" md-card>
@@ -214,13 +215,17 @@
 /* eslint-disable */
 import MetricsBar from '../components/templates/metricsBar.vue';
 import OutputConfDevInfo from '../components/templates/outputConfigDeviationInfo.vue'
+import preloader from '../components/preloader.vue'
 export default {
   components:{
     OutputConfDevInfo,
     MetricsBar,
+    preloader
   },
   data() {
     return {
+      loading:true,
+      msg:'loading vue',
       infoReport:[],
       plannedTestCase:[],
       unplannedTestCase:[],
@@ -537,7 +542,7 @@ export default {
       })
     }
   },
-  beforeMount(){
+  mounted(){
   var testrunwithInfo = []
   this.$store.state.testRuns.forEach(element => {
     if(element._attributes&&element._attributes.executor){
@@ -709,8 +714,8 @@ export default {
       this.TestRuns_BuildVisual.push(element);
     }
   })
-
-  }
+  this.loading = false
+  },
 };
 </script>
 <style scoped>
