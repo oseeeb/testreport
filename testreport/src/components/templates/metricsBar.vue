@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span v-show="label">{{metrics.Tested===metrics.Total?metrics.Total:(metrics.Tested+'/'+metrics.Total)+' '+Name}}</span><br/>
+        <span v-show="label">{{metrics.Tested===metrics.Total?metrics.Total:(metrics.Tested+'/'+metrics.Total)}} {{Name}}</span><br/>
         <div class="result-diag" data-toggle="tooltip" :title="result.text">
             <div class="flex" :style="'width:'+result.ok+'%;heigth:100%;background-color:#00FF00'"></div>
             <div class="flex" :style="'width:'+result.justified+'%;heigth:100%;background-color:green'"></div>
@@ -116,7 +116,20 @@ export default {
             }
 
             return testrunsJust.length===0?false:true
-        }
+        },
+        getTestrunByConfig(config){
+            var testruns = []
+            this.$store.state.testRuns.forEach(testrun=>{
+                if(('config' in testrun._attributes)&&(testrun._attributes.config.includes(config))){
+                    testruns.push(testrun)
+                }
+                else if(('parameter' in testrun._attributes)&&(testrun._attributes.parameter.includes(config))){
+                    testruns.push(testrun)
+                }
+            })
+
+            return testruns
+        },
     },
     mounted(){
         if(this.Type==='testcase'){
@@ -252,6 +265,63 @@ export default {
 
             this.metrics.NotPassed = this.metrics.Fail+this.metrics.Warn+this.metrics.ProcessError
             this.metrics.NotPassed_Justified =this.metrics.Fail_Justified+this.metrics.Warn_Justified+this.metrics.ProcessError_Justified
+
+            
+            this.result.ok = this.metrics.Passed*100/this.metrics.Total
+
+            this.result.fail = this.metrics.NotPassed*100/this.metrics.Total
+
+            this.result.justified = this.metrics.NotPassed_Justified*100/this.metrics.Total
+
+            this.result.text = this.metrics.Tested+'/'+this.metrics.Total+' tested\n'
+            this.result.text += this.metrics.Passed+' passed\n'
+            this.result.text += this.metrics.Ok+'*ok \n'
+            this.result.text += this.metrics.NA!==0?this.metrics.NA+'*N/A \n':''
+            this.result.text += this.metrics.Warn!==0?this.metrics.Warn+'*warn \n':''
+            this.result.text += this.metrics.Warn_Justified!==0?this.metrics.Warn_Justified+'*warn Justified\n':''
+            this.result.text += this.metrics.Fail!==0?this.metrics.Fail+'*fail \n':''
+            this.result.text += this.metrics.Fail_Justified!==0?this.metrics.Fail_Justified+'*fail Justified \n':''
+            this.result.text += this.metrics.ProcessError!==0?this.metrics.ProcessError+'*processError \n':''
+            this.result.text += this.metrics.ProcessError_Justified!==0?this.metrics.ProcessError_Justified+'*ProcessError Justified \n':''
+        }
+        else if(this.Type==='testconfig'){
+            console.log('this.Todraw',this.Todraw)
+            var Configs = this.Todraw
+            var testconfigs = []
+            
+            Configs.forEach(config=>{
+                var configuration = {}
+                configuration.name = config
+                configuration.testruns = this.getTestrunByConfig(config)
+                testconfigs.push(configuration)
+            })
+
+            var testConfigTested = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&testrun.result._text!=='NT' }).length>0})
+
+            var testConfigPassed = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun).includes('OK')}).length===config.testruns.filter(testrun=>{return 'result' in testrun}).length})
+
+            this.metrics.Total = testconfigs.length
+            this.metrics.Tested = testConfigTested.length
+            this.metrics.Passed = testConfigPassed.length
+
+            this.metrics.Ok = testConfigPassed.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='OK'})}).length
+
+            this.metrics.NA = testConfigPassed.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun).includes('N/A')})}).length
+
+            this.metrics.Warn = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='WARN'})}).length
+
+            this.metrics.Fail = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='FAIL'})}).length
+
+
+            this.metrics.Warn_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='WARN'&&'justification' in testrun})}).length
+            this.metrics.Fail_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='FAIL'&&'justification' in testrun})}).length
+
+
+            this.metrics.ProcessError = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='PROCESSERROR'})}).length
+
+           
+            this.metrics.NotPassed = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)!=='OK'&&!this.getTestRunResult(testrun).includes('N/A')&&!('justification' in testrun)}).length>0}).length
+            this.metrics.NotPassed_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)!=='OK'&&!this.getTestRunResult(testrun).includes('N/A')&&!('justification' in testrun)}).length>0}).length
 
             
             this.result.ok = this.metrics.Passed*100/this.metrics.Total

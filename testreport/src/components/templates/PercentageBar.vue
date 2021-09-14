@@ -1,8 +1,8 @@
 <template>
 <div class="MetricBarBase" data-toggle="tooltip" :title="tooltip">
     <div :class="percentageBarClass" style="position: relative;z-index: 0;">
-        <div :class="subBar1Class" :style="'position: absolute;z-index: 1;width: '+subBar1Value+'%'"></div>
-        <div :class="subBar2Class" :style="'position: absolute;z-index: 2;width: '+subBar2Value+'%'"></div>
+        <div :class="subBar1Class" :style="'heigth:100%;width:'+subBar1Value+'%'"></div>
+        <div :class="subBar2Class" :style="'heigth:100%;width:'+subBar2Value+'%'"></div>
     </div>
 </div>
 </template>
@@ -33,6 +33,10 @@
               type:String,
               default:''
           }
+      },
+      methods(){
+          console.log('subBar1Value',subBar1Value)
+          console.log('subBar2Value',subBar2Value)
       }
   }
 </script>

@@ -34,16 +34,16 @@
                     <h1 class="md-title">Overview of tested configurations({{TestRuns_QACSummary.length}})</h1>
                 </md-table-toolbar>
                 <md-table-row>
-                    <md-table-head style="width:20%;">Configuration reference</md-table-head>
-                    <md-table-head style="width:20%;">Date</md-table-head>
-                    <md-table-head style="width:20%;">Tester</md-table-head>
-                    <md-table-head style="width:20%;">Result</md-table-head>
+                    <md-table-head>Configuration reference</md-table-head>
+                    <md-table-head>Date</md-table-head>
+                    <md-table-head>Tester</md-table-head>
+                    <md-table-head style="width:3%;text-align:center;">Result</md-table-head>
                 </md-table-row>
                 <md-table-row v-for="(item,key) in TestRuns_QACSummary" :key="key">
-                    <md-table-cell>{{item._attributes.parameter}}</md-table-cell>
+                    <md-table-cell>{{getConfig(item._attributes.parameter)!==null?getConfig(item._attributes.parameter)[1]:''}}</md-table-cell>
                     <md-table-cell>{{item._attributes.date}}</md-table-cell>
                     <md-table-cell>{{item._attributes.executor}}</md-table-cell>
-                    <md-table-cell>{{item.result._text}}</md-table-cell>
+                    <md-table-cell :style="'text-align:center;background-color:'+(getTestRunResult(item)==='FAIL*'||getTestRunResult(item)==='WARN*'||getTestRunResult(item)==='PROCESSERROR*'?'green':(getTestRunResult(item)==='FAIL'?'red;':(getTestRunResult(item)==='WARN'?'yellow':'#00FF00;')))">{{getTestRunResult(item)}}</md-table-cell>
                 </md-table-row>
             </md-table>
         </div> 
@@ -206,16 +206,16 @@
                 </md-table-row>
                 <md-table-row>
                     <md-table-cell>Mesured Values</md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'PTH'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'CYC'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'CAL'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'PAR'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'MIF'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'BAK'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'GTO'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'M19'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'RET'),1,20)"></md-table-cell>
-                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'ST3'),1,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'PTH'),1,80,80)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'CYC'),1,10,20)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'CAL'),0,7)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'PAR'),0,5)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'MIF'),0,4,6)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'BAK'),0,0)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'GTO'),0,0)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'M19'),0,1)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'RET'),0,1)"></md-table-cell>
+                    <md-table-cell v-html="GetMinMaxInfo(filters(functions,'ST3'),1,50)"></md-table-cell>
                     <md-table-cell v-html="GetMinMaxInfo(filters(functions,'AV1'),1,20)"></md-table-cell>
                     <md-table-cell v-html="GetMinMaxInfo(filters(functions,'KNT'),1,20)"></md-table-cell>
                     <md-table-cell v-html="GetMinMaxInfo(filters(functions,'LCT'),1,20)"></md-table-cell>
@@ -256,28 +256,28 @@
                 <template v-for="(item,key) in condFunct">
                     <md-table-row :key="key">
                         <md-table-cell>{{item.name}}</md-table-cell>
-                        <md-table-cell>{{item.PTH?(item.PTH.min===item.PTH.max?item.PTH.min:item.PTH.min+'...'+item.PTH.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.CYC?(item.CYC.min===item.CYC.max?item.CYC.min:item.CYC.min+'...'+item.CYC.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.CAL?(item.CAL.min===item.CAL.max?item.CAL.min:item.CAL.min+'...'+item.CAL.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.PAR?(item.PAR.min===item.PAR.max?item.PAR.min:item.PAR.min+'...'+item.PAR.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.MIF?(item.MIF.min===item.MIF.max?item.MIF.min:item.MIF.min+'...'+item.MIF.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.BAK?(item.BAK.min===item.BAK.max?item.BAK.min:item.BAK.min+'...'+item.BAK.max):'n/a'}}</md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.PTH.max>80?'#33BCFF':(item.PTH.max>80?'#CCEEFF':''))" >{{item.PTH?(item.PTH.min===item.PTH.max?item.PTH.min:item.PTH.min+'...'+item.PTH.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.CYC.max>20?'#33BCFF':(item.CYC.max>10?'#CCEEFF':''))" >{{item.CYC?(item.CYC.min===item.CYC.max?item.CYC.min:item.CYC.min+'...'+item.CYC.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.CAL.max>10000000?'#33BCFF':(item.CAL.max>7?'#CCEEFF':''))" >{{item.CAL?(item.CAL.min===item.CAL.max?item.CAL.min:item.CAL.min+'...'+item.CAL.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.PAR.max>10000000?'#33BCFF':(item.PAR.max>5?'#CCEEFF':''))" >{{item.PAR?(item.PAR.min===item.PAR.max?item.PAR.min:item.PAR.min+'...'+item.PAR.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.MIF.max>6?'#33BCFF':(item.MIF.max>4?'#CCEEFF':''))" >{{item.MIF?(item.MIF.min===item.MIF.max?item.MIF.min:item.MIF.min+'...'+item.MIF.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.BAK.max>100?'#33BCFF':(item.BAK.max>0?'#CCEEFF':''))" >{{item.BAK?(item.BAK.min===item.BAK.max?item.BAK.min:item.BAK.min+'...'+item.BAK.max):'n/a'}}</span></md-table-cell>
 
-                        <md-table-cell>{{item.GTO?(item.GTO.min===item.GTO.max?item.GTO.min:item.GTO.min+'...'+item.GTO.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.M19?(item.M19.min===item.M19.max?item.M19.min:item.M19.min+'...'+item.M19.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.RET?(item.RET.min===item.RET.max?item.RET.min:item.RET.min+'...'+item.RET.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.ST3?(item.ST3.min===item.ST3.max?item.ST3.min:item.ST3.min+'...'+item.ST3.max):'n/a'}}</md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.GTO.max>0?'#33BCFF':(item.GTO.max>0?'#CCEEFF':''))" >{{item.GTO?(item.GTO.min===item.GTO.max?item.GTO.min:item.GTO.min+'...'+item.GTO.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.M19.max>10?'#33BCFF':(item.M19.max>1?'#CCEEFF':''))" >{{item.M19?(item.M19.min===item.M19.max?item.M19.min:item.M19.min+'...'+item.M19.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.RET.max>10000000?'#33BCFF':(item.RET.max>1?'#CCEEFF':''))" >{{item.RET?(item.RET.min===item.RET.max?item.RET.min:item.RET.min+'...'+item.RET.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.ST3.max>10000000?'#33BCFF':(item.ST3.max>50?'#CCEEFF':''))" >{{item.ST3?(item.ST3.min===item.ST3.max?item.ST3.min:item.ST3.min+'...'+item.ST3.max):'n/a'}}</span></md-table-cell>
 
-                        <md-table-cell>{{item.AV1?(item.AV1.min===item.AV1.max?item.AV1.min:item.AV1.min+'...'+item.AV1.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.KNT?(item.KNT.min===item.KNT.max?item.KNT.min:item.KNT.min+'...'+item.KNT.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.LCT?(item.LCT.min===item.LCT.max?item.LCT.min:item.LCT.min+'...'+item.LCT.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.LIN?(item.LIN.min===item.LIN.max?item.LIN.min:item.LIN.min+'...'+item.LIN.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.M07?(item.M07.min===item.M07.max?item.M07.min:item.M07.min+'...'+item.M07.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.M29?(item.M29.min===item.M29.max?item.M29.min:item.M29.min+'...'+item.M29.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.SUB?(item.SUB.min===item.SUB.max?item.SUB.min:item.SUB.min+'...'+item.SUB.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.UNR?(item.UNR.min===item.UNR.max?item.UNR.min:item.UNR.min+'...'+item.UNR.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.UNV?(item.UNV.min===item.UNV.max?item.UNV.min:item.UNV.min+'...'+item.UNV.max):'n/a'}}</md-table-cell>
-                        <md-table-cell>{{item.XLN?(item.XLN.min===item.XLN.max?item.XLN.min:item.XLN.min+'...'+item.XLN.max):'n/a'}}</md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.AV1.max>10000000?'#33BCFF':(item.AV1.max>1000000?'#CCEEFF':''))" >{{item.AV1?(item.AV1.min===item.AV1.max?item.AV1.min:item.AV1.min+'...'+item.AV1.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.KNT.max>10000000?'#33BCFF':(item.KNT.max>1000000?'#CCEEFF':''))" >{{item.KNT?(item.KNT.min===item.KNT.max?item.KNT.min:item.KNT.min+'...'+item.KNT.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.LCT.max>10000000?'#33BCFF':(item.LCT.max>1000000?'#CCEEFF':''))" >{{item.LCT?(item.LCT.min===item.LCT.max?item.LCT.min:item.LCT.min+'...'+item.LCT.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.LIN.max>10000000?'#33BCFF':(item.LIN.max>1000000?'#CCEEFF':''))" >{{item.LIN?(item.LIN.min===item.LIN.max?item.LIN.min:item.LIN.min+'...'+item.LIN.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.M07.max>10000000?'#33BCFF':(item.M07.max>1000000?'#CCEEFF':''))" >{{item.M07?(item.M07.min===item.M07.max?item.M07.min:item.M07.min+'...'+item.M07.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.M29.max>10000000?'#33BCFF':(item.M29.max>1000000?'#CCEEFF':''))" >{{item.M29?(item.M29.min===item.M29.max?item.M29.min:item.M29.min+'...'+item.M29.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.SUB.max>10000000?'#33BCFF':(item.SUB.max>1000000?'#CCEEFF':''))" >{{item.SUB?(item.SUB.min===item.SUB.max?item.SUB.min:item.SUB.min+'...'+item.SUB.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.UNR.max>10000000?'#33BCFF':(item.UNR.max>1000000?'#CCEEFF':''))" >{{item.UNR?(item.UNR.min===item.UNR.max?item.UNR.min:item.UNR.min+'...'+item.UNR.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.UNV.max>10000000?'#33BCFF':(item.UNV.max>1000000?'#CCEEFF':''))" >{{item.UNV?(item.UNV.min===item.UNV.max?item.UNV.min:item.UNV.min+'...'+item.UNV.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.XLN.max>10000000?'#33BCFF':(item.XLN.max>1000000?'#CCEEFF':''))" >{{item.XLN?(item.XLN.min===item.XLN.max?item.XLN.min:item.XLN.min+'...'+item.XLN.max):'n/a'}}</span></md-table-cell>
                     </md-table-row>
                 </template>
             </md-table>
@@ -304,169 +304,221 @@ export default {
       
     },
   methods:{
-      getResultCompliance(){
-          this.$store.state.testCases.forEach(elt=>{
-              if('testrun' in elt){
-                  if(Array.isArray(elt.testrun)){
-                      elt.testrun.forEach(testrun=>{
-                          if('log_QACSummary' in testrun){
-                              this.TestRuns_QACSummary.push(testrun)
-                          }
-                      })
-                  }else{
-                    if('log_QACSummary' in elt.testrun){
-                            this.TestRuns_QACSummary.push(elt.testrun)
+    getResultCompliance(){
+        this.$store.state.testCases.forEach(elt=>{
+            if('testrun' in elt){
+                if(Array.isArray(elt.testrun)){
+                    elt.testrun.forEach(testrun=>{
+                        if('log_QACSummary' in testrun){
+                            this.TestRuns_QACSummary.push(testrun)
                         }
-                  }
-              }
-          })
+                    })
+                }else{
+                if('log_QACSummary' in elt.testrun){
+                        this.TestRuns_QACSummary.push(elt.testrun)
+                    }
+                }
+            }
+        })
 
-          this.TestRuns_QACSummary.forEach(elt=>{
-              if('log_QACMetrics' in elt){
-                  if(Array.isArray(elt.log_QACMetrics)){
-                      this.log_QACMetrics.push(...elt.log_QACMetrics)
-                  }else{
-                      this.log_QACMetrics.push(elt.log_QACMetrics)
-                  }
-              }
-          })
+        this.TestRuns_QACSummary.forEach(elt=>{
+            if('log_QACMetrics' in elt){
+                if(Array.isArray(elt.log_QACMetrics)){
+                    this.log_QACMetrics.push(...elt.log_QACMetrics)
+                }else{
+                    this.log_QACMetrics.push(elt.log_QACMetrics)
+                }
+            }
+        })
 
-          this.log_QACMetrics.forEach(elt=>{
-              if('file' in elt){
-                  if(Array.isArray(elt.file)){
-                      this.files.push(...elt.file)
-                  }else{
-                      this.files.push(elt.file)
-                  }
-              }
+        this.log_QACMetrics.forEach(elt=>{
+            if('file' in elt){
+                if(Array.isArray(elt.file)){
+                    this.files.push(...elt.file)
+                }else{
+                    this.files.push(elt.file)
+                }
+            }
 
-              if('function' in elt){
-                  if(Array.isArray(elt.function)){
-                      this.functions.push(...elt.function)
-                  }else{
-                      this.functions.push(elt.function)
-                  }
-              }
-          })
+            if('function' in elt){
+                if(Array.isArray(elt.function)){
+                    this.functions.push(...elt.function)
+                }else{
+                    this.functions.push(elt.function)
+                }
+            }
+        })
 
-          console.log('log functions',this.functions)
+        console.log('log functions',this.functions)
+
+    },
+    filters(bigdata,criteria){
+        var datas = []
+        if(Array.isArray(bigdata)){
+        bigdata.forEach(elt=>{
+            if(criteria in elt){
+                datas.push(elt[criteria]._text)
+            }
+        })
+        }
+        return datas
+    },
+    filters2(){
+
+        this.files.forEach(elt=>{
+            var resultSingleFilter = this.condFiles.filter(ely=>{return ely.name===elt._attributes.name}).length===0
+            var criterias = Object.keys(elt)
     
-      },
-      filters(bigdata,criteria){
-          var datas = []
-          if(Array.isArray(bigdata)){
-            bigdata.forEach(elt=>{
-                if(criteria in elt){
-                    datas.push(elt[criteria]._text)
+            if(resultSingleFilter){
+                var obj = {}
+                criterias.forEach(criteria=>{
+                obj[criteria] = {
+                    min:parseFloat(elt[criteria]._text),
+                    max:parseFloat(elt[criteria]._text)
+                }
+                })
+                obj.name = elt._attributes.name
+                this.condFiles.push(obj)
+                
+            }
+            else{
+            var file = this.condFiles.find(eltt=>{return eltt.name===elt._attributes.name})
+            criterias.forEach(criteria=>{
+                if(file[criteria].min > parseFloat(elt[criteria]._text)) {
+                    file[criteria].min = parseFloat(elt[criteria]._text)
+                }
+                if(file[criteria].max < parseFloat(elt[criteria]._text)){
+                    file[criteria].max = parseFloat(elt[criteria]._text)
                 }
             })
-          }
-          return datas
-      },
-      filters2(){
+            }
+        })
+    },
+    filters3(){
 
-          this.files.forEach(elt=>{
-              var resultSingleFilter = this.condFiles.filter(ely=>{return ely.name===elt._attributes.name}).length===0
-              var criterias = Object.keys(elt)
-        
-              if(resultSingleFilter){
-                  var obj = {}
-                  criterias.forEach(criteria=>{
-                    obj[criteria] = {
-                        min:parseFloat(elt[criteria]._text),
-                        max:parseFloat(elt[criteria]._text)
-                    }
-                  })
-                    obj.name = elt._attributes.name
-                  this.condFiles.push(obj)
-                  
-              }
-              else{
-                var file = this.condFiles.find(eltt=>{return eltt.name===elt._attributes.name})
+        this.functions.forEach(elt=>{
+            var resultSingleFilter = this.condFunct.filter(ely=>{return ely.name===elt._attributes.name}).length===0
+            var criterias = Object.keys(elt)
+    
+            if(resultSingleFilter){
+                var obj = {}
                 criterias.forEach(criteria=>{
-                    if(file[criteria].min > parseFloat(elt[criteria]._text)) {
-                        file[criteria].min = parseFloat(elt[criteria]._text)
-                    }
-                    if(file[criteria].max < parseFloat(elt[criteria]._text)){
-                        file[criteria].max = parseFloat(elt[criteria]._text)
-                    }
+                obj[criteria] = {
+                    min:parseFloat(elt[criteria]._text),
+                    max:parseFloat(elt[criteria]._text)
+                }
                 })
-              }
-          })
-      },
-      filters3(){
+                obj.name = elt._attributes.name
+                this.condFunct.push(obj)
+                
+            }
+            else{
+            var func = this.condFunct.find(eltt=>{return eltt.name===elt._attributes.name})
+            criterias.forEach(criteria=>{
+                if(func[criteria].min > parseFloat(elt[criteria]._text)) {
+                    func[criteria].min = parseFloat(elt[criteria]._text)
+                }
+                if(func[criteria].max < parseFloat(elt[criteria]._text)){
+                    func[criteria].max = parseFloat(elt[criteria]._text)
+                }
+            })
+            }
+        })
+    },
+    GetMinMaxInfo(path,RangeMin=0,RangeMax=1000000000,RangeMaxMax=1000000000,RangeMinCheck='LessThan'){
+        if(path.length>0){
+            var result = {
+                min:0,
+                max:0,
+            }
+            path.map(elt=>{
+                return parseFloat(elt)
+            })
 
-          this.functions.forEach(elt=>{
-              var resultSingleFilter = this.condFunct.filter(ely=>{return ely.name===elt._attributes.name}).length===0
-              var criterias = Object.keys(elt)
-        
-              if(resultSingleFilter){
-                  var obj = {}
-                  criterias.forEach(criteria=>{
-                    obj[criteria] = {
-                        min:parseFloat(elt[criteria]._text),
-                        max:parseFloat(elt[criteria]._text)
-                    }
-                  })
-                    obj.name = elt._attributes.name
-                  this.condFunct.push(obj)
-                  
-              }
-              else{
-                var func = this.condFunct.find(eltt=>{return eltt.name===elt._attributes.name})
-                criterias.forEach(criteria=>{
-                    if(func[criteria].min > parseFloat(elt[criteria]._text)) {
-                        func[criteria].min = parseFloat(elt[criteria]._text)
-                    }
-                    if(func[criteria].max < parseFloat(elt[criteria]._text)){
-                        func[criteria].max = parseFloat(elt[criteria]._text)
-                    }
+            path.sort((a,b)=>{return a-b})
+
+            result.min = path[0]
+            result.max = path[path.length-1]
+
+            var display = ''
+            var bgcolor = ''
+
+            if((RangeMinCheck === 'LessThan')&&(result.min < RangeMin)){
+                bgcolor = '#CCEEFF'
+            }
+            if((RangeMinCheck === 'LessThanOrEqual')&&(result.min <= RangeMin)){
+                bgcolor = '#CCEEFF'
+            }
+            if(result.max > RangeMax){
+                bgcolor = '#CCEEFF'
+            }
+            if(result.max > RangeMaxMax){
+                bgcolor = '#33BCFF'
+            }
+            
+
+            if(result.min===result.max){
+                display = `<span style="background-color:${bgcolor}">${result.min}</span>`
+            }
+            else{
+                display = `<span style="background-color:${bgcolor}">${result.min} ... ${result.max}</span>`
+            }
+
+            return display
+
+        }
+    },
+    getConfig(parameter){
+        return parameter.match(new RegExp("config=(.*)"))
+    },
+    getsimpleResult(result){
+        if(result.includes('FAIL')){
+            return 'FAIL'
+        }
+        else if(result.includes('WARN')){
+            return 'WARN'
+        }
+        else if(result.includes('processError')){
+            return 'PROCESSERROR'
+        }
+        else if(result.includes('OK.N/A')){
+            return 'OK.N/A'
+        }
+        else if(result.includes('OK')){
+            return 'OK'
+        }
+    },
+    getResult(result){
+        if(result.includes('fail')){
+            return 'FAIL'
+        }
+        else if(result.includes('warn')){
+            return 'WARN'
+        }
+        else if(result.includes('N/A')){
+            return 'OK.N/A'
+        }
+        else if(result.toLowerCase().includes('processerror')){
+            return 'processError'
+        }
+        else{
+            return 'OK'
+        }
+    },
+    getTestRunResult(testrun){
+        if(testrun.result){
+            if('_text' in testrun.result){
+                    return this.getResult(testrun.result._text)
+            }
+            else{
+                var result = []
+                testrun.result.forEach(elt=>{
+                result.push(this.getResult(elt._text))
                 })
-              }
-          })
-      },
-      GetMinMaxInfo(path,RangeMin=0,RangeMax=1000000000,RangeMaxMax=1000000000,RangeMinCheck='LessThan'){
-          if(path.length>0){
-              var result = {
-                  min:0,
-                  max:0,
-              }
-              path.map(elt=>{
-                  return parseFloat(elt)
-              })
-
-              path.sort((a,b)=>{return a-b})
-
-              result.min = path[0]
-              result.max = path[path.length-1]
-
-              var display = ''
-              var bgcolor = ''
-
-              if((RangeMinCheck === 'LessThan')&&(result.min < RangeMin)){
-                  bgcolor = '#CCEEFF'
-              }
-              if((RangeMinCheck === 'LessThanOrEqual')&&(result.min <= RangeMin)){
-                  bgcolor = '#CCEEFF'
-              }
-              if(result.max > RangeMaxMax){
-                  bgcolor = '#33BCFF'
-              }
-              if(result.max > RangeMax){
-                  bgcolor = '#CCEEFF'
-              }
-
-              if(result.min===result.max){
-                  display = `<span style="background-color:${bgcolor}">${result.min}</span>`
-              }
-              else{
-                  display = `<span style="background-color:${bgcolor}">${result.min} ... ${result.max}</span>`
-              }
-
-              return display
-
-          }
-      }
+                return this.getsimpleResult(result)
+            }
+        }
+    },
 
   },
   mounted(){

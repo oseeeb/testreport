@@ -14,13 +14,13 @@
         </md-table>
       </div>  
       <div class="md-layout-item md-xlarge-size-25  md-large-size-25 md-medium-size-25 md-small-size-50 md-xsmall-size-100">
-        <md-card :class="Result_OverallResult?'md-primary':'md-accent'" :md-theme="Result_OverallResult?'sucess-card':''" md-with-hover>
+        <md-card :style="'text-align:center;background-color:'+(Result_OverallResult?'#00FF00':'red')" md-with-hover>
           <md-ripple>
             <md-card-header>
               <div class="md-title">Test Result</div>
             </md-card-header>
             <md-card-content>
-              <span style="">{{Result_OverallResult?'OK':'FAIL'}}</span>
+              <span style="font-weight:bold;text-color:white;font-size:1.5em;">{{Result_OverallResult?'OK':'FAIL'}}</span>
             </md-card-content>
           </md-ripple>
         </md-card>
@@ -119,8 +119,8 @@
           <md-card-header>
             <div class="md-title">Test Configuration</div>
           </md-card-header>
-          <md-card-content>
-            <span>{{$store.state.testConfigs.length}} TestConfigs</span> 
+          <md-card-content> 
+            <metrics-bar :Todraw="$store.state.testConfigs" :Type="'testconfig'" :Name="'TestConfigs'"></metrics-bar>
           </md-card-content>
         </md-card>
         <md-card >
@@ -338,164 +338,161 @@ export default {
             this.log_BauhausMetrics.push(obj)
           }
         }
-
-        if(this.log_QACMetrics.length!==0){
-          this.log_QACMetrics.forEach(log=>{
-            if('function' in log){
-              if(Array.isArray(log.function)){
-                this.fctMetrics.push(...log.function)
-              }else{
-                this.fctMetrics.push(log.function)
-              }
-            }
-            if('file' in log){
-              if(Array.isArray(log.file)){
-                this.fileMetrics.push(...log.file)
-              }else{
-                this.fileMetrics.push(log.file)
-              }
-            }
-          })
-        }else{
-          this.log_BauhausMetrics.forEach(log=>{
-            if('file' in log){
-              if(Array.isArray(log.file)){
-                log.file.forEach(file=>{
-                  if('class' in file ){
-                    if(Array.isArray(file.class)){
-                      this.classMetrics.push(...file.class)
-                    }else{
-                      this.classMetrics.push(file.class)
-                    }
-                  }
-                })
-              }else{
-                if('class' in log.file ){
-                    if(Array.isArray(log.file.class)){
-                      this.classMetrics.push(...log.file.class)
-                    }else{
-                      this.classMetrics.push(log.file.class)
-                    }
-                  }
-              }
-            }
-          })
-        }
-        
         if('log_RuntimeCoverage' in testrun){
-                  if(Array.isArray(testrun.log_RuntimeCoverage)){
-                    
-                    this.RuntimeCoverages02.push(...testrun.log_RuntimeCoverage.map(log=>{
-                      var obj = {}
-                      obj = log
-                      obj.parameter = testrun._attributes.parameter
-                      return obj
-                    }))
-                  }
-                  else{
-                    var obj = {}
-                      obj = testrun.log_RuntimeCoverage
-                      obj.parameter = testrun._attributes.parameter
-                    this.RuntimeCoverages02.push(obj)
-                  }
+          if(Array.isArray(testrun.log_RuntimeCoverage)){
+            
+            this.RuntimeCoverages02.push(...testrun.log_RuntimeCoverage.map(log=>{
+              var obj = {}
+              obj = log
+              obj.parameter = testrun._attributes.parameter
+              return obj
+            }))
           }
-
-
-        if(this.RuntimeCoverages01.length!==0){
-          this.RuntimeCoverages01.forEach(runtime=>{
-            var convInfo = {}
-            if(!('testlevel' in runtime._attributes)&&!(runtime.parameter.includes('OverallCoverage'))){
-               convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
-               convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
-               convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
-               convInfo.decCoverUnjust = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
-               
-            }
-            if(convInfo.fctCover){
-              this.covInfoPercent.push(convInfo)
-            }
-          })
+          else{
+            var obj = {}
+              obj = testrun.log_RuntimeCoverage
+              obj.parameter = testrun._attributes.parameter
+            this.RuntimeCoverages02.push(obj)
+          }
         }
-        if(this.RuntimeCoverages02.length!==0){
-          this.RuntimeCoverages02.forEach(runtime=>{
-            var convInfo = {}
-            if(!('testlevel' in runtime._attributes)&&!(runtime.parameter.includes('OverallCoverage'))){
-               convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
-               convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
-               convInfo.decCover = Math.floor(parseInt(runtime.summary.modDecCoveredJust._text)*100/parseInt(runtime.summary.modDecCnt._text))
-               convInfo.decCoverUnjust = Math.floor(parseInt(runtime.summary.modDecCovered._text)*100/parseInt(runtime.summary.modDecCnt._text))
-               convInfo.stmtCover = Math.floor(parseInt(runtime.summary.stmtCoveredJust._text)*100/parseInt(runtime.summary.stmtCnt._text))
-               convInfo.stmtCoverUnjust = Math.floor(parseInt(runtime.summary.stmtCovered._text)*100/parseInt(runtime.summary.stmtCnt._text))
-               convInfo.branchCover = runtime.summary.decisionCoveredJust?Math.floor(parseInt(runtime.summary.decisionCoveredJust._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
-               convInfo.branchCoverUnjust = runtime.summary.decisionCovered?Math.floor(parseInt(runtime.summary.decisionCovered._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
-            }
-            if(convInfo.fctCover){
-              this.covInfoPercent.push(convInfo)
-            }
-          })
-        }
-        if(this.RuntimeCoverages01.length!==0){
-          this.RuntimeCoverages01.forEach(runtime=>{
-            var convInfo = {}
-            if(runtime.parameter.includes('OverallCoverage')){
-               convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
-               convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
-               convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
-               convInfo.decCoverUnjust = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
-               
-            }
-            if(convInfo.fctCover){
-              this.covInfoPercentOverall.push(convInfo)
-            }
-          })
-        }
-        if(this.RuntimeCoverages02.length!==0){
-          this.RuntimeCoverages02.forEach(runtime=>{
-            var convInfo = {}
-            if(runtime.parameter.includes('OverallCoverage')){
-               convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
-               convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
-               convInfo.decCover = Math.floor(parseInt(runtime.summary.modDecCoveredJust._text)*100/parseInt(runtime.summary.modDecCnt._text))
-               convInfo.decCoverUnjust = Math.floor(parseInt(runtime.summary.modDecCovered._text)*100/parseInt(runtime.summary.modDecCnt._text))
-               convInfo.stmtCover = Math.floor(parseInt(runtime.summary.stmtCoveredJust._text)*100/parseInt(runtime.summary.stmtCnt._text))
-               convInfo.stmtCoverUnjust = Math.floor(parseInt(runtime.summary.stmtCovered._text)*100/parseInt(runtime.summary.stmtCnt._text))
-               convInfo.branchCover = runtime.summary.decisionCoveredJust?Math.floor(parseInt(runtime.summary.decisionCoveredJust._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
-               convInfo.branchCoverUnjust = runtime.summary.decisionCovered?Math.floor(parseInt(runtime.summary.decisionCovered._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
-            }
-            if(convInfo.fctCover){
-              this.covInfoPercentOverall.push(convInfo)
-            }
-          })
-        }
-        if(this.RuntimeCoverages01.length!==0){
-          this.RuntimeCoverages01.forEach(runtime=>{
-            var convInfo = {}
-            if(('testlevel' in runtime._attributes&&runtime._attributes.testlevel==='component')&&!(runtime.parameter.includes('OverallCoverage'))){
-               convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
-               convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
-               
-            }
-            if(convInfo.fctCover){
-              this.covInfoPercent.push(convInfo)
-            }
-          })
-        }
-        if(this.RuntimeCoverages02.length!==0){
-          this.RuntimeCoverages02.forEach(runtime=>{
-            var convInfo = {}
-            if(('testlevel' in runtime._attributes&&runtime._attributes.testlevel==='component')&&!(runtime.parameter.includes('OverallCoverage'))){
-               convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
-               convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
-               convInfo.callCover = Math.floor(parseInt(runtime.summary.callsCoveredJust._text)*100/parseInt(runtime.summary.callsCnt._text))
-               convInfo.callCoverUnjust = Math.floor(parseInt(runtime.summary.callsCovered._text)*100/parseInt(runtime.summary.callsCnt._text)) 
-             }
-            if(convInfo.fctCover){
-              this.covInfoPercentComponent.push(convInfo)
-            }
-          })
-        }
-
       })
+
+      if(this.log_QACMetrics.length!==0){
+        this.log_QACMetrics.forEach(log=>{
+          if('function' in log){
+            if(Array.isArray(log.function)){
+              this.fctMetrics.push(...log.function)
+            }else{
+              this.fctMetrics.push(log.function)
+            }
+          }
+        })
+        if('file' in this.log_QACMetrics[0]){
+            if(Array.isArray(this.log_QACMetrics[0].file)){
+              this.fileMetrics.push(...this.log_QACMetrics[0].file)
+            }else{
+              this.fileMetrics.push(this.log_QACMetrics[0].file)
+            }
+          }
+      }else{
+        this.log_BauhausMetrics.forEach(log=>{
+          if('file' in log){
+            if(Array.isArray(log.file)){
+              log.file.forEach(file=>{
+                if('class' in file ){
+                  if(Array.isArray(file.class)){
+                    this.classMetrics.push(...file.class)
+                  }else{
+                    this.classMetrics.push(file.class)
+                  }
+                }
+              })
+            }else{
+              if('class' in log.file ){
+                  if(Array.isArray(log.file.class)){
+                    this.classMetrics.push(...log.file.class)
+                  }else{
+                    this.classMetrics.push(log.file.class)
+                  }
+                }
+            }
+          }
+        })
+      }
+
+      if(this.RuntimeCoverages01.length!==0){
+        this.RuntimeCoverages01.forEach(runtime=>{
+          var convInfo = {}
+          if(!('testlevel' in runtime._attributes)&&!(runtime.parameter.includes('OverallCoverage'))){
+              convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
+              convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
+              convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+              convInfo.decCoverUnjust = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+              
+          }
+          if(convInfo.fctCover){
+            this.covInfoPercent.push(convInfo)
+          }
+        })
+      }
+      if(this.RuntimeCoverages02.length!==0){
+        this.RuntimeCoverages02.forEach(runtime=>{
+          var convInfo = {}
+          if(!('testlevel' in runtime._attributes)&&!(runtime.parameter.includes('OverallCoverage'))){
+              convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
+              convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
+              convInfo.decCover = Math.floor(parseInt(runtime.summary.modDecCoveredJust._text)*100/parseInt(runtime.summary.modDecCnt._text))
+              convInfo.decCoverUnjust = Math.floor(parseInt(runtime.summary.modDecCovered._text)*100/parseInt(runtime.summary.modDecCnt._text))
+              convInfo.stmtCover = Math.floor(parseInt(runtime.summary.stmtCoveredJust._text)*100/parseInt(runtime.summary.stmtCnt._text))
+              convInfo.stmtCoverUnjust = Math.floor(parseInt(runtime.summary.stmtCovered._text)*100/parseInt(runtime.summary.stmtCnt._text))
+              convInfo.branchCover = runtime.summary.decisionCoveredJust?Math.floor(parseInt(runtime.summary.decisionCoveredJust._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+              convInfo.branchCoverUnjust = runtime.summary.decisionCovered?Math.floor(parseInt(runtime.summary.decisionCovered._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+          }
+          if(convInfo.fctCover){
+            this.covInfoPercent.push(convInfo)
+          }
+        })
+      }
+      if(this.RuntimeCoverages01.length!==0){
+        this.RuntimeCoverages01.forEach(runtime=>{
+          var convInfo = {}
+          if(runtime.parameter.includes('OverallCoverage')){
+              convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
+              convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
+              convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+              convInfo.decCoverUnjust = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+              
+          }
+          if(convInfo.fctCover){
+            this.covInfoPercentOverall.push(convInfo)
+          }
+        })
+      }
+      if(this.RuntimeCoverages02.length!==0){
+        this.RuntimeCoverages02.forEach(runtime=>{
+          var convInfo = {}
+          if(runtime.parameter.includes('OverallCoverage')){
+              convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
+              convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
+              convInfo.decCover = Math.floor(parseInt(runtime.summary.modDecCoveredJust._text)*100/parseInt(runtime.summary.modDecCnt._text))
+              convInfo.decCoverUnjust = Math.floor(parseInt(runtime.summary.modDecCovered._text)*100/parseInt(runtime.summary.modDecCnt._text))
+              convInfo.stmtCover = Math.floor(parseInt(runtime.summary.stmtCoveredJust._text)*100/parseInt(runtime.summary.stmtCnt._text))
+              convInfo.stmtCoverUnjust = Math.floor(parseInt(runtime.summary.stmtCovered._text)*100/parseInt(runtime.summary.stmtCnt._text))
+              convInfo.branchCover = runtime.summary.decisionCoveredJust?Math.floor(parseInt(runtime.summary.decisionCoveredJust._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+              convInfo.branchCoverUnjust = runtime.summary.decisionCovered?Math.floor(parseInt(runtime.summary.decisionCovered._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+          }
+          if(convInfo.fctCover){
+            this.covInfoPercentOverall.push(convInfo)
+          }
+        })
+      }
+      if(this.RuntimeCoverages01.length!==0){
+        this.RuntimeCoverages01.forEach(runtime=>{
+          var convInfo = {}
+          if(('testlevel' in runtime._attributes&&runtime._attributes.testlevel==='component')&&!(runtime.parameter.includes('OverallCoverage'))){
+              convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
+              convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+              
+          }
+          if(convInfo.fctCover){
+            this.covInfoPercent.push(convInfo)
+          }
+        })
+      }
+      if(this.RuntimeCoverages02.length!==0){
+        this.RuntimeCoverages02.forEach(runtime=>{
+          var convInfo = {}
+          if(('testlevel' in runtime._attributes&&runtime._attributes.testlevel==='component')&&!(runtime.parameter.includes('OverallCoverage'))){
+              convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
+              convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
+              convInfo.callCover = Math.floor(parseInt(runtime.summary.callsCoveredJust._text)*100/parseInt(runtime.summary.callsCnt._text))
+              convInfo.callCoverUnjust = Math.floor(parseInt(runtime.summary.callsCovered._text)*100/parseInt(runtime.summary.callsCnt._text)) 
+            }
+          if(convInfo.fctCover){
+            this.covInfoPercentComponent.push(convInfo)
+          }
+        })
+      }
     },
     filters(bigdata,criteria){
           var datas = []
@@ -699,20 +696,24 @@ export default {
   
   this.TestCases_Accepted = this.TestCases_WithResult.filter(testcase=>{return this.getTestCaseResult(testcase).includes('OK')})
 
-  console.log('TestCases_Accepted',this.TestCases_Accepted)
-  this.TestCases_WithResult.forEach(elemt=>{
+
+  var test = []
+  this.TestCases_WithResult.forEach(testcase=>{
     var testruns = []
-    if(Array.isArray(elemt['testrun'])){
-      testruns.push(...elemt.testrun)
-      testruns=testruns.filter(elt=>{
-        return elt._attributes.execCnt!==0
-      })
-      if(testruns.lenght!==0){
-        this.TestCases_ThisCycle.push(elemt)
+    if('testrun' in testcase){
+      if(Array.isArray(testcase.testrun)){
+        testruns.push(...testcase.testrun.filter(testrun=>{return '_attributes' in testrun && 'execCnt' in testrun._attributes && parseInt(testrun._attributes.execCnt)!==0}))
+      }else{
+        if('_attributes' in testcase.testrun && 'execCnt' in testcase.testrun._attributes && parseInt(testcase.testrun._attributes.execCnt)!==0){
+           testruns.push(testcase.testrun)
+        }
       }
     }
+    if(testruns.length!==0){
+        this.TestCases_ThisCycle.push(testcase)
+    }
   })
-
+  console.log('TestCases_ThisCycle',this.TestCases_ThisCycle)
    this.TestCases_ThisCycle.forEach(elemt=>{
     var testruns = []
     if(elemt['testrun']){

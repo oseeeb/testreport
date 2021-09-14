@@ -46,15 +46,12 @@ export default {
     },
     methods:{
         getCoverageToolTip(coverage){
-            var result = coverage.count+'/'+coverage.covered+' covered ('+coverage.percentage+'%)\n'
-            result+=coverage.accepted+'/'+coverage.covered+' accepted ('+coverage.percentage+'%)\n'
-            result+=(coverage.accepted-coverage.count)+' uncovered'
+            var result = coverage.covered+'/'+coverage.count+' covered ('+coverage.percentage+'%)\n'
+            result+=coverage.accepted+'/'+coverage.count+' accepted ('+coverage.percentage+'%)\n'
+            result+=(coverage.count-coverage.covered)+' uncovered'
 
             return result
         },
     },
-    mounted(){
-        console.log(this.coverage.percentageJustified)
-    }
 }
 </script>
