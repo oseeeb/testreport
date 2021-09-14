@@ -1,12 +1,12 @@
 <template>
     <div v-if="Array.isArray(testgroupInit)" class="accordion accordion-flush" :id="'accordionFlush-'+sharename+'-'+level">
         <div class="accordion-item"
-            v-for="(testgroup,key) in testgroupInit" :key="key"
+            v-for="(testgroup,key) in testgroupInit" :key="level+''+key"
         >
             <h2 class="accordion-header" :id="'flush-heading'+key">
               <button :class="'accordion-button collapsed d-flex justify-content-between '+getTestGroupResult(testgroup)+'-result'" type="button"  data-bs-toggle="collapse" :data-bs-target="'#flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'_'):'no-name')+'_'+key" aria-expanded="true" :aria-controls="'flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'-'):'no-name')+'-'+key">
                 <div class="p-2 bd-highlight">{{(testgroup._attributes?testgroup._attributes.name:'no-name')}}</div> 
-                <div class="p-2 bd-highlight" :style="'background-color:'+(getTestGroupResult(testgroup)==='FAIL'?'red;':(getTestGroupResult(testgroup)==='WARN'?'yellow;':(getTestGroupResult(testgroup)==='OK'?'#00FF00;':'')))">{{getTestGroupResult(testgroup)}}</div>
+                <div class="p-2 bd-highlight" :style="'background-color:'+(getTestGroupResult(testgroup)==='WARN*'||getTestGroupResult(testgroup)==='FAIL*'||getTestGroupResult(testgroup)==='PROCESSERROR*'?'green':(getTestGroupResult(testgroup)==='FAIL'||getTestGroupResult(testgroup)==='PROCESSERROR'?'red;':(getTestGroupResult(testgroup)==='WARN'?'yellow;':(getTestGroupResult(testgroup)==='OK'?'#00FF00;':''))))">{{getTestGroupResult(testgroup)}}</div>
               </button>
             </h2>
             <div :id="'flush-collapse'+(testgroup._attributes?testgroup._attributes.name.replace(/ /g,'_'):'no-name')+'_'+key" :class="'accordion-collapse collapse '+getTestGroupResult(testgroup)+'-collapse'" aria-labelledby="flush-headingOne" :data-bs-parent="'accordionFlush-'+sharename+'-'+level">
@@ -23,19 +23,19 @@
                                     <md-table-head>Result</md-table-head>
                                 </md-table-row>
                                 <template v-for="(item,kel) in testgroup.testcase" >
-                                    <md-table-row :key="kel"  role="button" data-bs-toggle="collapse" :data-bs-target="'#'+(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" aria-expanded="false" :aria-controls="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'">
+                                    <md-table-row :key="level+''+key+''+kel"  role="button" data-bs-toggle="collapse" :data-bs-target="'#'+(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" aria-expanded="false" :aria-controls="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'">
                                         <md-table-cell><span :data-tooltip="item.description?item.description._cdata:'no-description'">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
                                         <md-table-cell>{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
-                                        <md-table-cell :style="'text-align:center;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(item)}}</md-table-cell>
+                                        <md-table-cell :style="'text-align:center;background-color:'+(getTestCaseResult(item)==='FAIL*'||getTestCaseResult(item)==='WARN*'||getTestCaseResult(item)==='PROCESSERROR*'?'green':(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;')))">{{ getTestCaseResult(item)}}</md-table-cell>
                                     </md-table-row>
-                                    <md-table-row :id="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" class="collapse" :key="kel">
+                                    <md-table-row :id="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" class="collapse" :key="level+''+key+''+kel">
                                         <div v-if="Array.isArray(item.testrun)">       
                                             <md-table>
-                                               <md-table-row v-for="(itex,kex) in item.testrun" :key="kex">
+                                               <md-table-row v-for="(itex,kex) in item.testrun" :key="level+''+key+''+kel+''+kex">
                                                     <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
                                                     <md-table-cell>{{itex._attributes.date}}</md-table-cell>
                                                     <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
-                                                    <md-table-cell :style="'text-align:center;background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
+                                                    <md-table-cell :style="'text-align:center;background-color:'+(getTestRunResult(itex)==='FAIL*'||getTestRunResult(itex)==='WARN*'||getTestRunResult(itex)==='PROCESSERROR*'?'green':(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;')))">{{getTestRunResult(itex)}}</md-table-cell>
                                                 </md-table-row>
                                             </md-table>
                                         </div>
@@ -45,7 +45,7 @@
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.parameter}}</md-table-cell>
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.date}}</md-table-cell>
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.executor}}</md-table-cell>
-                                                    <md-table-cell :style="'text-align:center;width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(item.testrun)}}</md-table-cell>
+                                                    <md-table-cell :style="'text-align:center;width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL*'||getTestRunResult(item.testrun)==='WARN*'||getTestRunResult(item.testrun)==='PROCESSERROR*'?'green':(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;')))">{{getTestRunResult(item.testrun)}}</md-table-cell>
                                                 </md-table-row>
                                             </md-table>
                                         </div>
@@ -68,11 +68,11 @@
                                 <md-table-row :id="(testgroup.testcase._attributes?testgroup.testcase._attributes.name.replace(/ /g,''):'no-id')+'_config'" class="collapse">
                                     <div v-if="Array.isArray(testgroup.testcase.testrun)">       
                                         <md-table>
-                                            <md-table-row v-for="(itex,kex) in testgroup.testcase.testrun" :key="kex">
+                                            <md-table-row v-for="(itex,kex) in testgroup.testcase.testrun" :key="level+''+key+''+kex">
                                                 <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
                                                 <md-table-cell>{{itex._attributes.date}}</md-table-cell>
                                                 <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
-                                                <md-table-cell :style="'text-align:center;background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
+                                                    <md-table-cell :style="'text-align:center;background-color:'+(getTestRunResult(itex)==='FAIL*'||getTestRunResult(itex)==='WARN*'||getTestRunResult(itex)==='PROCESSERROR*'?'green':(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;')))">{{getTestRunResult(itex)}}</md-table-cell>
                                             </md-table-row>
                                         </md-table>
                                     </div>
@@ -82,7 +82,7 @@
                                                 <md-table-cell style="width:20%;">{{testgroup.testcase.testrun._attributes.parameter}}</md-table-cell>
                                                 <md-table-cell style="width:20%;">{{testgroup.testcase.testrun._attributes.date}}</md-table-cell>
                                                 <md-table-cell style="width:20%;">{{testgroup.testcase.testrun._attributes.executor}}</md-table-cell>
-                                                <md-table-cell :style="'text-align:center;width:20%;background-color:'+(getTestRunResult(testgroup.testcase.testrun)==='FAIL'?'red;':(getTestRunResult(testgroup.testcase.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(testgroup.testcase.testrun)}}</md-table-cell>
+                                                <md-table-cell :style="'text-align:center;width:20%;background-color:'+(getTestRunResult(testgroup.testcase.testrun)==='FAIL*'||getTestRunResult(testgroup.testcase.testrun)==='WARN*'||getTestRunResult(testgroup.testcase.testrun)==='PROCESSERROR*'?'green':(getTestRunResult(testgroup.testcase.testrun)==='FAIL'?'red;':(getTestRunResult(testgroup.testcase.testrun)==='WARN'?'yellow':'#00FF00;')))">{{getTestRunResult(testgroup.testcase.testrun)}}</md-table-cell>
                                             </md-table-row>
                                         </md-table>
                                     </div>
@@ -97,8 +97,9 @@
     <div v-else class="accordion accordion-flush" :id="'accordionFlush-'+sharename+'-'+level">
         <div class="accordion-item">
             <h2 class="accordion-header" :id="'flush-heading'+level">
-              <button :class="'accordion-button collapsed d-flex justify-content-between '+getTestGroupResult(testgroupInit)+'-result'" :style="'background-color:'+(getTestGroupResult(testgroupInit)==='FAIL'?'red;':(getTestGroupResult(testgroupInit)==='WARN'?'yellow':'#00FF00;'))" type="button" data-bs-toggle="collapse" :data-bs-target="'#flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level" aria-expanded="true" :aria-controls="'flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level">
-                {{(testgroupInit._attributes?testgroupInit._attributes.name:'no-name')}} | {{getTestGroupResult(testgroupInit)}}
+              <button :class="'accordion-button collapsed d-flex justify-content-between '+getTestGroupResult(testgroupInit)+'-result'"  type="button" data-bs-toggle="collapse" :data-bs-target="'#flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level" aria-expanded="true" :aria-controls="'flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level">
+                 <div class="p-2 bd-highlight">{{(testgroupInit._attributes?testgroupInit._attributes.name:'no-name')}}</div> 
+                <div class="p-2 bd-highlight" :style="'background-color:'+(getTestGroupResult(testgroupInit).includes('*')?'green':(getTestGroupResult(testgroupInit)==='FAIL'?'red;':(getTestGroupResult(testgroupInit)==='WARN'?'yellow':'#00FF00;')))">{{getTestGroupResult(testgroup)}}</div>
               </button>
             </h2>
             <div :id="'flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level" :class="'accordion-collapse collapse '+getTestGroupResult(testgroupInit)+'-collapse'" aria-labelledby="flush-headingOne" :data-bs-parent="'accordionFlush-'+sharename+'-'+level">
@@ -115,19 +116,19 @@
                                     <md-table-head>Result</md-table-head>
                                 </md-table-row>
                                 <template v-for="(item,key) in testgroupInit.testcase">
-                                    <md-table-row :key="key" role="button" data-bs-toggle="collapse" :data-bs-target="'#'+(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" aria-expanded="false" :aria-controls="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'">
+                                    <md-table-row :key="level+''+key" role="button" data-bs-toggle="collapse" :data-bs-target="'#'+(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" aria-expanded="false" :aria-controls="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'">
                                         <md-table-cell><span :data-tooltip="item.description?item.description._cdata:'no-description'">{{ item._attributes?item._attributes.id:'no-id' }}</span></md-table-cell>
                                         <md-table-cell>{{ item._attributes?item._attributes.name:'no-name'}}</md-table-cell>
-                                        <md-table-cell :style="'text-align:center;background-color:'+(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(item)}}</md-table-cell>
+                                        <md-table-cell :style="'text-align:center;background-color:'+(getTestCaseResult(item)==='FAIL*'||getTestCaseResult(item)==='WARN*'||getTestCaseResult(item)==='PROCESSERROR*'?'green':(getTestCaseResult(item)==='FAIL'?'red;':(getTestCaseResult(item)==='WARN'?'yellow':'#00FF00;')))">{{ getTestCaseResult(item)}}</md-table-cell>
                                     </md-table-row>
-                                    <md-table-row :id="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" class="collapse" :key="key">
+                                    <md-table-row :id="(item._attributes?item._attributes.name.replace(/ /g,''):'no-id')+'_config'" class="collapse" :key="level+''+key+'-2'">
                                         <div v-if="Array.isArray(item.testrun)">       
                                             <md-table>
-                                               <md-table-row v-for="(itex,kex) in item.testrun" :key="kex">
+                                               <md-table-row v-for="(itex,kex) in item.testrun" :key="level+''+key+''+kex">
                                                     <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
                                                     <md-table-cell>{{itex._attributes.date}}</md-table-cell>
                                                     <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
-                                                    <md-table-cell :style="'text-align:center;background-color:'+(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(itex)}}</md-table-cell>
+                                                    <md-table-cell :style="'text-align:center;background-color:'+(getTestRunResult(itex)==='FAIL*'||getTestRunResult(itex)==='WARN*'||getTestRunResult(itex)==='PROCESSERROR*'?'green':(getTestRunResult(itex)==='FAIL'?'red;':(getTestRunResult(itex)==='WARN'?'yellow':'#00FF00;')))">{{getTestRunResult(itex)}}</md-table-cell>
                                                 </md-table-row>
                                             </md-table>
                                         </div>
@@ -137,7 +138,7 @@
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.parameter}}</md-table-cell>
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.date}}</md-table-cell>
                                                     <md-table-cell style="width:20%;">{{item.testrun._attributes.executor}}</md-table-cell>
-                                                    <md-table-cell :style="'text-align:center;width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(item.testrun)}}</md-table-cell>
+                                                    <md-table-cell :style="'text-align:center;width:20%;background-color:'+(getTestRunResult(item.testrun)==='FAIL*'||getTestRunResult(item.testrun)==='WARN*'||getTestRunResult(item.testrun)==='PROCESSERROR*'?'green':(getTestRunResult(item.testrun)==='FAIL'?'red;':(getTestRunResult(item.testrun)==='WARN'?'yellow':'#00FF00;')))">{{getTestRunResult(item.testrun)}}</md-table-cell>
                                                 </md-table-row>
                                             </md-table>
                                         </div>
@@ -155,12 +156,12 @@
                                 <md-table-row role="button" data-bs-toggle="collapse" :data-bs-target="'#'+(testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.name.replace(/ /g,''):'no-id')+'_config'" aria-expanded="false" :aria-controls="(testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.name.replace(/ /g,''):'no-id')+'_config'">
                                     <md-table-cell style="width:25%;"><span :data-tooltip="testgroupInit.testcase.description?testgroupInit.testcase.description._cdata:'no-description'">{{ testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.id:'no-id' }}</span></md-table-cell>
                                     <md-table-cell style="width:50%;">{{ testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.name:'no-name'}}</md-table-cell>
-                                    <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(testgroupInit.testcase)==='FAIL'?'red;':(getTestCaseResult(testgroupInit.testcase)==='WARN'?'yellow':'#00FF00;'))">{{ getTestCaseResult(testgroupInit.testcase)}}</md-table-cell>
+                                    <md-table-cell :style="'text-align:center;width:25%;background-color:'+(getTestCaseResult(testgroupInit.testcase)==='FAIL*'||getTestCaseResult(testgroupInit.testcase)==='WARN*'||getTestCaseResult(testgroupInit.testcase)==='PROCESSERROR*'?'green':(getTestCaseResult(testgroupInit.testcase)==='FAIL'?'red;':(getTestCaseResult(testgroupInit.testcase)==='WARN'?'yellow':'#00FF00;')))">{{ getTestCaseResult(testgroupInit.testcase)}}</md-table-cell>
                                 </md-table-row>
                                 <md-table-row :id="(testgroupInit.testcase._attributes?testgroupInit.testcase._attributes.name.replace(/ /g,''):'no-id')+'_config'" class="collapse">
                                         <div v-if="Array.isArray(testgroupInit.testcase.testrun)">       
                                             <md-table>
-                                               <md-table-row v-for="(itex,kex) in testgroupInit.testcase.testrun" :key="kex">
+                                               <md-table-row v-for="(itex,kex) in testgroupInit.testcase.testrun" :key="level+''+key+''+kex">
                                                     <md-table-cell>{{itex._attributes.parameter}}</md-table-cell>
                                                     <md-table-cell>{{itex._attributes.date}}</md-table-cell>
                                                     <md-table-cell>{{itex._attributes.executor}}</md-table-cell>
@@ -174,7 +175,7 @@
                                                     <md-table-cell style="width:20%;">{{testgroupInit.testcase.testrun._attributes.parameter}}</md-table-cell>
                                                     <md-table-cell style="width:20%;">{{testgroupInit.testcase.testrun._attributes.date}}</md-table-cell>
                                                     <md-table-cell style="width:20%;">{{testgroupInit.testcase.testrun._attributes.executor}}</md-table-cell>
-                                                    <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(testgroupInit.testcase.testrun)==='FAIL'?'red;':(getTestRunResult(testgroupInit.testcase.testrun)==='WARN'?'yellow':'#00FF00;'))">{{getTestRunResult(testgroupInit.testcase.testrun)}}</md-table-cell>
+                                                    <md-table-cell :style="'width:20%;background-color:'+(getTestRunResult(testgroupInit.testcase.testrun)==='FAIL*'||getTestRunResult(testgroupInit.testcase.testrun)==='WARN*'||getTestRunResult(testgroupInit.testcase.testrun)==='PROCESSERROR*'?'green':(getTestRunResult(testgroupInit.testcase.testrun)==='FAIL'?'red;':(getTestRunResult(testgroupInit.testcase.testrun)==='WARN'?'yellow':'#00FF00;')))">{{getTestRunResult(testgroupInit.testcase.testrun)}}</md-table-cell>
                                                 </md-table-row>
                                             </md-table>
                                         </div>

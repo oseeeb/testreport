@@ -22,7 +22,8 @@
                   <md-table-cell>{{config.configName}}</md-table-cell> 
                   <md-table-cell>{{getquality(config.name)}}</md-table-cell>  
                   <md-table-cell>
-                    <template v-if="config.Functional.NrOfTestCases>0">
+                    <metrics-bar v-if="config.Functional.NrOfTestCases>0" :label="false" :Todraw="getlogbytestconfig(config.name).test_fonctional" :Type="'testrun'" :Name="'Testruns'"></metrics-bar>
+                    <!-- <template v-if="config.Functional.NrOfTestCases>0">
                       <md-table>
                         <md-table-row>
                             <md-table-cell>
@@ -35,7 +36,7 @@
                             </md-table-cell>
                         </md-table-row>
                       </md-table>
-                    </template>
+                    </template> -->
                   </md-table-cell> 
                   <md-table-cell>
                     <template v-if="config.Misra.NrOfDeviatedRules>0">

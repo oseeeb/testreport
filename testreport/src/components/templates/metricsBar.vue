@@ -3,6 +3,7 @@
         <span v-show="label">{{Todraw.length+' '+Name}}</span><br/>
         <div class="result-diag" data-toggle="tooltip" :title="result.text">
             <div class="flex" :style="'width:'+result.ok+'%;heigth:100%;background-color:#00FF00'"></div>
+            <div class="flex" :style="'width:'+result.justified+'%;heigth:100%;background-color:green'"></div>
             <div class="flex" :style="'width:'+result.fail+'%;heigth:100%;background-color:red'"></div>
             <div class="flex" :style="'width:'+result.warn+'%;heigth:100%;background-color:yellow'"></div>
         </div>
@@ -181,13 +182,16 @@ export default {
                 return this.getTestCaseResult(testcase)==='PROCESSERROR' && this.testcaseIsJustified(testcase)
             }).length
 
-             this.metrics.NotPassed = this.metrics.Tested - this.metrics.Passed
-            // this.metrics.NotPassed_Justified =
-            // this.metrics.Accepted =
+            // this.metrics.NotPassed = this.metrics.Tested - this.metrics.Passed
+            this.metrics.NotPassed = this.metrics.Fail+this.metrics.Warn+this.metrics.ProcessError
+            this.metrics.NotPassed_Justified =this.metrics.Fail_Justified+this.metrics.Warn_Justified+this.metrics.ProcessError_Justified
 
+            
             this.result.ok = this.metrics.Passed*100/this.metrics.Total
 
-            this.result.fail = this.metrics.Fail*100/this.metrics.Total
+            this.result.fail = (this.metrics.NotPassed-this.metrics.NotPassed_Justified)*100/this.metrics.Total
+
+            this.result.justified = this.metrics.NotPassed_Justified*100/this.metrics.Total
 
             this.result.text = this.metrics.Tested+'/'+this.metrics.Total+' tested\n'
             this.result.text += this.metrics.Passed+' passed\n'
@@ -246,14 +250,15 @@ export default {
                  return this.getTestRunResult(testrun)==='PROCESSERROR'&&'justification' in testrun
             }).length
 
-            // this.metrics.NotPassed =
-            // this.metrics.NotPassed_Justified =
-            // this.metrics.Accepted =
+            this.metrics.NotPassed = this.metrics.Fail+this.metrics.Warn+this.metrics.ProcessError
+            this.metrics.NotPassed_Justified =this.metrics.Fail_Justified+this.metrics.Warn_Justified+this.metrics.ProcessError_Justified
 
             
             this.result.ok = this.metrics.Passed*100/this.metrics.Total
 
-            this.result.fail = this.metrics.Fail*100/this.metrics.Total
+            this.result.fail = this.metrics.NotPassed*100/this.metrics.Total
+
+            this.result.justified = this.metrics.NotPassed_Justified*100/this.metrics.Total
 
             this.result.text = this.metrics.Tested+'/'+this.metrics.Total+' tested\n'
             this.result.text += this.metrics.Passed+' passed\n'
@@ -275,7 +280,7 @@ export default {
     flex-direction: row;
     width:100%;
     height: 5px;
-    background: rgb(110, 110, 110);
+    background: rgb(168, 166, 166);
   }
 
 </style>

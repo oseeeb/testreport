@@ -33,6 +33,9 @@
             <div class="md-title">Test Plan</div>
           </md-card-header>
           <md-card-content>
+              <p><span style="height:15px" :class="plannedTestCase.length>0?'symbol_ok':'symbol_fail'"> </span> <span>Tests are planned</span></p>
+              <p><span style="height:15px" :class="plannedTestCase.length===NrOf_TestCases_Planned_ThisCycle?'symbol_ok':'symbol_fail'"> </span> <span>all planned testcases executed</span></p>
+              <p><span style="height:15px" :class="NrOf_TestCases_Planned_ThisCycle===NrOf_TestCases_Planned_ThisCycle_Accepted?'symbol_ok':'symbol_fail'"> </span> <span>all planned and executed testcases accepted</span></p>
               <metrics-bar :Todraw="plannedTestCase" :Type="'testcase'" :Name="'Testcase'"></metrics-bar>
               <metrics-bar :Todraw="plannedTestRun" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
               <metrics-bar :Todraw="unplannedTestCase" :Type="'testcase'" :Name="'Unplanned TestCase'"></metrics-bar>
@@ -244,6 +247,7 @@ export default {
       TestCases_ThisCycle_Passed:[],
       TestCases_ThisCycle_NotPassed_Justified:[],
       NrOf_TestCases_Planned_ThisCycle:0,
+      NrOf_TestCases_Planned_ThisCycle_Accepted:0,
       NrOf_TestCases_Planned_ThisCycle_Passed:0,
       NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified:0,
       RuntimeCoverages01:[],
@@ -679,7 +683,8 @@ export default {
   this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified = this.TestCases_ThisCycle_NotPassed_Justified.filter(elemt=>{
     return elemt._attributes.ExecPlan==='x'
   }).length
-
+  
+  this.NrOf_TestCases_Planned_ThisCycle_Accepted = this.NrOf_TestCases_Planned_ThisCycle_Passed + this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified
   // console.log('This cycle tes',this.TestRuns_QACSummary)
   var test = []
   this.TestRuns_QACSummary.forEach(elt=>{
