@@ -58,6 +58,8 @@
           </md-card-header>
 
           <md-card-content>
+              <p><span style="height:15px" :class="$store.state.testCases.length===TestCases_WithResult.length?'symbol_ok':'symbol_fail'"> </span> <span>all testcases executed</span></p>
+              <p><span style="height:15px" :class="TestCases_Accepted.length===TestCases_WithResult.length?'symbol_ok':'symbol_fail'"> </span> <span>all executed testcases accepted</span></p>
               <metrics-bar :Todraw="$store.state.testCases" :Type="'testcase'" :Name="'TestCases'"></metrics-bar>
               <metrics-bar :Todraw="$store.state.testRuns" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
           </md-card-content>
@@ -243,10 +245,12 @@ export default {
       TestRuns_BuildVisual:[],
       TestRuns_PPCoverage:[],
       TestCases_WithResult:[],
+      TestCases_Accepted:[],
       TestCases_ThisCycle:[],
       TestCases_ThisCycle_Passed:[],
       TestCases_ThisCycle_NotPassed_Justified:[],
       NrOf_TestCases_Planned_ThisCycle:0,
+      NrOf_TestCases_Accepted:0,
       NrOf_TestCases_Planned_ThisCycle_Accepted:0,
       NrOf_TestCases_Planned_ThisCycle_Passed:0,
       NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified:0,
@@ -540,10 +544,72 @@ export default {
     GetSumInfo(datas,criteria){
       var path = this.filters(datas,criteria)
       
-      console.log('criteria',path)
+
       return path.reduce((acc,curr)=>{
         return parseInt(acc)+parseInt(curr)
       })
+    },
+    getsimpleResult(result){
+            if(result.includes('FAIL')){
+                return 'FAIL'
+            }
+            else if(result.includes('WARN')){
+                return 'WARN'
+            }
+            else if(result.includes('processError')){
+                return 'PROCESSERROR'
+            }
+            else if(result.includes('OK.N/A')){
+                return 'OK.N/A'
+            }
+            else if(result.includes('OK')){
+                return 'OK'
+            }
+    },
+    getResult(result){
+        if(result.includes('fail')){
+            return 'FAIL'
+        }
+        else if(result.includes('warn')){
+            return 'WARN'
+        }
+        else if(result.includes('N/A')){
+            return 'OK.N/A'
+        }
+        else if(result.toLowerCase().includes('processerror')){
+            return 'processError'
+        }
+        else{
+            return 'OK'
+        }
+    },
+    getTestRunResult(testrun){
+        if(testrun.result){
+            if('_text' in testrun.result){
+                    return this.getResult(testrun.result._text)
+            }
+            else{
+                var result = []
+                testrun.result.forEach(elt=>{
+                result.push(this.getResult(elt._text))
+                })
+                return this.getsimpleResult(result)
+            }
+        }
+    },
+    getTestCaseResult(testcase){
+        if(testcase.testrun){
+            if('result' in testcase.testrun){
+                return this.getTestRunResult(testcase.testrun)
+            }else{
+                var result = []
+                testcase.testrun.forEach(testrun=>{
+                    result.push(this.getTestRunResult(testrun))
+                })
+
+                return this.getsimpleResult(result)
+            }
+        }
     }
   },
   mounted(){
@@ -583,8 +649,6 @@ export default {
 
   
   this.retrieveCoverage(this.$store.state.testRuns)
-  console.log('log_BauhausMetrics',this.log_BauhausMetrics)
-    console.log('log_QACMetrics',this.log_QACMetrics)
 
   this.$store.state.testCases.forEach(element=>{
     if(element._attributes&&element._attributes.ExecPlan==='x'){
@@ -615,20 +679,27 @@ export default {
     }
   })
 
-  this.$store.state.testCases.forEach(elemt=>{
-    var testruns = []
-    if(elemt['testrun']){
-      testruns.push(...Object.values(elemt.testrun))
-      testruns=testruns.filter(elt=>{
-        return elt.result!==undefined
-      })
-      if(testruns.lenght!==0){
-        this.TestCases_WithResult.push(elemt)
+  this.$store.state.testCases.forEach(testcase=>{
+    if('testrun' in testcase){
+      if(Array.isArray(testcase.testrun)){
+        var testrunWithResult = testcase.testrun.filter(testrun=>{
+          return 'result' in testrun && '_text' in testrun.result
+        }).length
+
+        if(testrunWithResult!=0){
+          this.TestCases_WithResult.push(testcase)
+        }
+      }else{
+        if('result' in testcase.testrun && '_text' in testcase.testrun.result){
+            this.TestCases_WithResult.push(testcase)
+          }
       }
     }
   })
-
   
+  this.TestCases_Accepted = this.TestCases_WithResult.filter(testcase=>{return this.getTestCaseResult(testcase).includes('OK')})
+
+  console.log('TestCases_Accepted',this.TestCases_Accepted)
   this.TestCases_WithResult.forEach(elemt=>{
     var testruns = []
     if(Array.isArray(elemt['testrun'])){
@@ -685,7 +756,7 @@ export default {
   }).length
   
   this.NrOf_TestCases_Planned_ThisCycle_Accepted = this.NrOf_TestCases_Planned_ThisCycle_Passed + this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified
-  // console.log('This cycle tes',this.TestRuns_QACSummary)
+
   var test = []
   this.TestRuns_QACSummary.forEach(elt=>{
     if(elt.log_build.message&&Array.isArray(elt.log_build.message)){

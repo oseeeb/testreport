@@ -360,6 +360,7 @@ export default {
   }
   .md-card-header{
     padding: 5px !important;
+    transform: rotate(90deg)
   }
   .md-title{
     font-size: 0.9em !important;

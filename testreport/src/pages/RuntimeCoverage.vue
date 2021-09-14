@@ -52,7 +52,7 @@
                             <template v-if="quality===getqualityFromString(log.testrunAttr.parameter)">
                                 <md-table-row :key="key">
                                     <md-table-cell colspan="2">
-                                        {{log.testrunAttr.parameter}}
+                                        {{getConfig(log.testrunAttr.parameter)!==null?getConfig(log.testrunAttr.parameter)[1]:''}}
                                         <a :href="log.link?log.link._text:'#'">[Details Report]</a>
                                     </md-table-cell>
                                     <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[0]:[]"></show-coverage-data></md-table-cell>
@@ -320,22 +320,27 @@ export default {
 
     },
     getqualityFromString(parameter){
-        var quality = parameter.match(/.*quality=/)
+        var Matchquality = parameter.match(new RegExp("quality=(.*)"))
+        if(Matchquality===null){
+            return 'QM'
+        }else{
+            var quality = Matchquality[1]
+            if((quality==='')||(quality==='OverallCoverage')){
+            return 'QM'
+            }
+            else if(quality.toLowerCase()==='qm'){
+            return 'QM'
+            }
+            else if(quality.toLowerCase()==='safe'){
+            return 'SAFE'
+            }
+            else{
         
-        if((quality==='')||(quality==='OverallCoverage')||(quality===null)){
-        return 'QM'
+            return quality
+            
+            }
         }
-        else if(quality.toLowerCase()==='qm'){
-        return 'QM'
-        }
-        else if(quality.toLowerCase()==='safe'){
-        return 'SAFE'
-        }
-        else{
-    
-        return quality
         
-        }
 
     },
     getCoverage(summary){
@@ -345,32 +350,32 @@ export default {
                 count : summary.modFctCnt?summary.modFctCnt._text:'N/A',
                 covered : summary.modFctCovered?summary.modFctCovered._text:'N/A',
                 accepted : summary.modFctCoveredJust?summary.modFctCoveredJust._text:'N/A',
-                percentage : summary.cov_fct?summary.cov_fct._text:'N/A',
-                percentageJustified : summary.covJust_fct?summary.covJust_fct._text:'N/A',
+                percentage : summary.cov_fct?parseInt(summary.cov_fct._text):'N/A',
+                percentageJustified : summary.covJust_fct?parseInt(summary.covJust_fct._text):'N/A',
             },
             {
                 type : 'DC',
                 count : summary.modDecCnt?summary.modDecCnt._text:'N/A',
                 covered : summary.modDecCovered?summary.modDecCovered._text:'N/A',
                 accepted : summary.modDecCoveredJust?summary.modDecCoveredJust._text:'N/A',
-                percentage : summary.dec_fct?summary.dec_fct._text:'N/A',
-                percentageJustified : summary.decJust_fct?summary.decJust_fct._text:'N/A',
+                percentage : summary.dec_fct?parseInt(summary.dec_fct._text):'N/A',
+                percentageJustified : summary.decJust_fct?parseInt(summary.decJust_fct._text):'N/A',
             },
             {
                 type : 'SC',
                 count : summary.stmtCnt?summary.stmtCnt._text:'N/A',
                 covered : summary.stmtCovered?summary.stmtCovered._text:'N/A',
                 accepted : summary.stmtCoveredJust?summary.stmtCoveredJust._text:'N/A',
-                percentage : summary.stmt_fct?summary.stmt_fct._text:'N/A',
-                percentageJustified : summary.stmtJust_fct?summary.stmtJust_fct._text:'N/A',
+                percentage : summary.stmt_fct?parseInt(summary.stmt_fct._text):'N/A',
+                percentageJustified : summary.stmtJust_fct?parseInt(summary.stmtJust_fct._text):'N/A',
             },
             {
                 type : 'CC',
                 count : summary.callsCnt?summary.callsCnt._text:'N/A',
                 covered : summary.callsCovered?summary.callsCovered._text:'N/A',
                 accepted : summary.callsCoveredJust?summary.callsCoveredJust._text:'N/A',
-                percentage : summary.callcov_fct?summary.callcov_fct._text:'N/A',
-                percentageJustified : summary.callcovJust_fct?summary.callcovJust_fct._text:'N/A',
+                percentage : summary.callcov_fct?parseInt(summary.callcov_fct._text):'N/A',
+                percentageJustified : summary.callcovJust_fct?parseInt(summary.callcovJust_fct._text):'N/A',
             },
             {
                 type : 'BC',
@@ -412,6 +417,9 @@ export default {
               return display
 
           }
+    },
+    getConfig(parameter){
+        return parameter.match(new RegExp("config=(.*),"))
     },
     filters(bigdata,type,criteria){
         var datas = []

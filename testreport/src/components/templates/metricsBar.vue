@@ -1,6 +1,6 @@
 <template>
     <div>
-        <span v-show="label">{{Todraw.length+' '+Name}}</span><br/>
+        <span v-show="label">{{metrics.Tested===metrics.Total?metrics.Total:(metrics.Tested+'/'+metrics.Total)+' '+Name}}</span><br/>
         <div class="result-diag" data-toggle="tooltip" :title="result.text">
             <div class="flex" :style="'width:'+result.ok+'%;heigth:100%;background-color:#00FF00'"></div>
             <div class="flex" :style="'width:'+result.justified+'%;heigth:100%;background-color:green'"></div>

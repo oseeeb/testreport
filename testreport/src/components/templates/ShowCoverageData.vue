@@ -7,7 +7,7 @@
         :tooltip="getCoverageToolTip(cov)"
         :key="key"/>
     </div>
-    <span v-else-if="coverage.percentageJustified==='N/A'"> <!-- TBD -->
+    <span v-else-if="coverage.percentageJustified==='N/A'||isNaN(coverage.percentageJustified)"> <!-- TBD -->
     N/A
     </span>
     <PercentageBar
@@ -52,6 +52,9 @@ export default {
 
             return result
         },
+    },
+    mounted(){
+        console.log(this.coverage.percentageJustified)
     }
 }
 </script>

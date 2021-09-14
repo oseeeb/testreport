@@ -105,8 +105,8 @@ export default {
           }
         }
       })
-
       this.testConfigs = [...(new Set(this.testConfigs))]
+      console.log('this.testConfigs',this.testConfigs)
     },
   },
   mounted(){
