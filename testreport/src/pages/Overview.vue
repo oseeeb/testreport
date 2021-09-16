@@ -46,8 +46,8 @@
             <div class="md-title">Functional TestCases</div>
           </md-card-header>
           <md-card-content>
-              <metrics-bar :Todraw="plannedTestCase" :Type="'testcase'" :Name="'Testcase'"></metrics-bar>
-              <metrics-bar :Todraw="plannedTestRun" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
+              <metrics-bar :Todraw="functionalTestCases" :Type="'testcase'" :Name="'Testcase'"></metrics-bar>
+              <metrics-bar :Todraw="functionalTestRuns" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>
           </md-card-content>
         </md-card>
       </div>
@@ -234,6 +234,8 @@ export default {
       infoReport:[],
       plannedTestCase:[],
       unplannedTestCase:[],
+      functionalTestCases:[],
+      functionalTestRuns:[],
       plannedTestRun:[],
       unplannedTestRun:[],
       testConfigs:[...this.$store.state.testConfigs],
@@ -268,20 +270,22 @@ export default {
   },
   computed:{
     Result_OverallResult(){
-      var Result_TestPlanStatus = this.plannedTestRun.lenght !== 0
-      var Result_TestPlanCoverage = this.NrOf_TestCases_Planned_ThisCycle===this.plannedTestCase.length
-      var Result_TestPlanTestResult = this.NrOf_TestCases_Planned_ThisCycle===(this.NrOf_TestCases_Planned_ThisCycle_Passed+this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified)
-      return Result_TestPlanStatus&&Result_TestPlanCoverage&&Result_TestPlanTestResult;
+      var Result_TestPlanStatus = this.plannedTestCase.length>0?true:false
+      var Result_TestPlanCoverage = this.NrOf_TestCases_Planned_ThisCycle===this.plannedTestCase.length?true:false
+       var Result_TestPlanTestResult = this.NrOf_TestCases_Planned_ThisCycle===(this.NrOf_TestCases_Planned_ThisCycle_Passed+this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified)?true:false
+      var Result_ExecutedTestCasesTestResult = this.TestCases_WithResult.length===this.TestCases_Accepted.length?true:false
+      return Result_TestPlanStatus&&Result_TestPlanCoverage&&Result_TestPlanTestResult&&Result_ExecutedTestCasesTestResult;
     }
   },
   methods:{
     findTestRun(elt,array){
       elt.forEach(element => {
-        if(element['testrun']){
-          var testrun = Object.values(element.testrun);
-          array.push(...testrun)
-        }else if(Array.isArray(element)){
-          array.push(...element)
+        if('testrun' in element){
+          if(Array.isArray(element.testrun)){
+            array.push(...element.testrun)
+          }else{
+            array.push(element.testrun)
+          }
         }
       });  
     },
@@ -402,97 +406,115 @@ export default {
 
       if(this.RuntimeCoverages01.length!==0){
         this.RuntimeCoverages01.forEach(runtime=>{
-          var convInfo = {}
-          if(!('testlevel' in runtime._attributes)&&!(runtime.parameter.includes('OverallCoverage'))){
-              convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
-              convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
-              convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
-              convInfo.decCoverUnjust = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
+          
+          
+          if(!('_attributes' in runtime && 'testlevel' in runtime._attributes)&&!(runtime.parameter.includes('OverallCoverage'))){
+            if(Array.isArray(runtime.file)){
+              runtime.file.forEach(file=>{
+                var convInfo = {}
+                convInfo.fctCover = file.modFctCovered&&file.modFctCnt?Math.floor(parseInt(file.modFctCovered._text)*100/parseInt(file.modFctCnt._text)):'NaN'
+                convInfo.fctCoverUnjust = file.modFctCovered&&file.modFctCnt?Math.floor(parseInt(file.modFctCovered._text)*100/parseInt(file.modFctCnt._text)):'NaN'
+                convInfo.decCover = file.modDecCovered&&file.modDecCnt?Math.floor(parseInt(file.modDecCovered._text)*100/parseInt(file.modDecCnt._text)):'NaN'
+                convInfo.decCoverUnjust = file.modDecCovered&&file.modDecCnt?Math.floor(parseInt(file.modDecCovered._text)*100/parseInt(file.modDecCnt._text)):'NaN'
+
+                if(convInfo.fctCover){
+                  this.covInfoPercent.push(convInfo)
+                }
+              })
+            }else{
+              var convInfo = {}
+              convInfo.fctCover = runtime.file.modFctCovered&&runtime.file.modFctCnt?Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text)):'NaN'
+              convInfo.fctCoverUnjust = runtime.file.modFctCovered&&runtime.file.modFctCnt?Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text)):'NaN'
+              convInfo.decCover = runtime.file.modDecCovered&&runtime.file.modDecCnt?Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text)):'NaN'
+              convInfo.decCoverUnjust = runtime.file.modDecCovered&&runtime.file.modDecCnt?Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text)):'NaN'
+
               
-          }
-          if(convInfo.fctCover){
-            this.covInfoPercent.push(convInfo)
-          }
-        })
-      }
-      if(this.RuntimeCoverages02.length!==0){
-        this.RuntimeCoverages02.forEach(runtime=>{
-          var convInfo = {}
-          if(!('testlevel' in runtime._attributes)&&!(runtime.parameter.includes('OverallCoverage'))){
-              convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
-              convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
-              convInfo.decCover = Math.floor(parseInt(runtime.summary.modDecCoveredJust._text)*100/parseInt(runtime.summary.modDecCnt._text))
-              convInfo.decCoverUnjust = Math.floor(parseInt(runtime.summary.modDecCovered._text)*100/parseInt(runtime.summary.modDecCnt._text))
-              convInfo.stmtCover = Math.floor(parseInt(runtime.summary.stmtCoveredJust._text)*100/parseInt(runtime.summary.stmtCnt._text))
-              convInfo.stmtCoverUnjust = Math.floor(parseInt(runtime.summary.stmtCovered._text)*100/parseInt(runtime.summary.stmtCnt._text))
-              convInfo.branchCover = runtime.summary.decisionCoveredJust?Math.floor(parseInt(runtime.summary.decisionCoveredJust._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
-              convInfo.branchCoverUnjust = runtime.summary.decisionCovered?Math.floor(parseInt(runtime.summary.decisionCovered._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
-          }
-          if(convInfo.fctCover){
-            this.covInfoPercent.push(convInfo)
-          }
-        })
-      }
-      if(this.RuntimeCoverages01.length!==0){
-        this.RuntimeCoverages01.forEach(runtime=>{
-          var convInfo = {}
-          if(runtime.parameter.includes('OverallCoverage')){
-              convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
-              convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
-              convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
-              convInfo.decCoverUnjust = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
-              
-          }
-          if(convInfo.fctCover){
-            this.covInfoPercentOverall.push(convInfo)
-          }
-        })
-      }
-      if(this.RuntimeCoverages02.length!==0){
-        this.RuntimeCoverages02.forEach(runtime=>{
-          var convInfo = {}
-          if(runtime.parameter.includes('OverallCoverage')){
-              convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
-              convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
-              convInfo.decCover = Math.floor(parseInt(runtime.summary.modDecCoveredJust._text)*100/parseInt(runtime.summary.modDecCnt._text))
-              convInfo.decCoverUnjust = Math.floor(parseInt(runtime.summary.modDecCovered._text)*100/parseInt(runtime.summary.modDecCnt._text))
-              convInfo.stmtCover = Math.floor(parseInt(runtime.summary.stmtCoveredJust._text)*100/parseInt(runtime.summary.stmtCnt._text))
-              convInfo.stmtCoverUnjust = Math.floor(parseInt(runtime.summary.stmtCovered._text)*100/parseInt(runtime.summary.stmtCnt._text))
-              convInfo.branchCover = runtime.summary.decisionCoveredJust?Math.floor(parseInt(runtime.summary.decisionCoveredJust._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
-              convInfo.branchCoverUnjust = runtime.summary.decisionCovered?Math.floor(parseInt(runtime.summary.decisionCovered._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
-          }
-          if(convInfo.fctCover){
-            this.covInfoPercentOverall.push(convInfo)
-          }
-        })
-      }
-      if(this.RuntimeCoverages01.length!==0){
-        this.RuntimeCoverages01.forEach(runtime=>{
-          var convInfo = {}
-          if(('testlevel' in runtime._attributes&&runtime._attributes.testlevel==='component')&&!(runtime.parameter.includes('OverallCoverage'))){
-              convInfo.fctCover = Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text))
-              convInfo.decCover = Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text))
-              
-          }
-          if(convInfo.fctCover){
-            this.covInfoPercent.push(convInfo)
-          }
-        })
-      }
-      if(this.RuntimeCoverages02.length!==0){
-        this.RuntimeCoverages02.forEach(runtime=>{
-          var convInfo = {}
-          if(('testlevel' in runtime._attributes&&runtime._attributes.testlevel==='component')&&!(runtime.parameter.includes('OverallCoverage'))){
-              convInfo.fctCover = Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text))
-              convInfo.fctCoverUnjust = Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text))
-              convInfo.callCover = Math.floor(parseInt(runtime.summary.callsCoveredJust._text)*100/parseInt(runtime.summary.callsCnt._text))
-              convInfo.callCoverUnjust = Math.floor(parseInt(runtime.summary.callsCovered._text)*100/parseInt(runtime.summary.callsCnt._text)) 
+              if(convInfo.fctCover){
+                this.covInfoPercent.push(convInfo)
+              }
             }
-          if(convInfo.fctCover){
-            this.covInfoPercentComponent.push(convInfo)
+              
           }
         })
       }
+      if(this.RuntimeCoverages02.length!==0){
+        this.RuntimeCoverages02.forEach(runtime=>{
+          var convInfo = {}
+          if(!('_attributes' in runtime && 'testlevel' in runtime._attributes)&&!(runtime.parameter.includes('OverallCoverage'))){
+              convInfo.fctCover = runtime.summary.modFctCoveredJust&&runtime.summary.modFctCnt?Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text)):'NaN'
+              convInfo.fctCoverUnjust = runtime.summary.modFctCovered&&runtime.summary.modFctCnt?Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text)):'NaN'
+              convInfo.decCover = runtime.summary.modDecCoveredJust&&runtime.summary.modDecCnt?Math.floor(parseInt(runtime.summary.modDecCoveredJust._text)*100/parseInt(runtime.summary.modDecCnt._text)):'NaN'
+              convInfo.decCoverUnjust = runtime.summary.modDecCovered&&runtime.summary.modDecCnt?Math.floor(parseInt(runtime.summary.modDecCovered._text)*100/parseInt(runtime.summary.modDecCnt._text)):'NaN'
+              convInfo.stmtCover = runtime.summary.stmtCoveredJust&&runtime.summary.stmtCnt?Math.floor(parseInt(runtime.summary.stmtCoveredJust._text)*100/parseInt(runtime.summary.stmtCnt._text)):'NaN'
+              convInfo.stmtCoverUnjust = runtime.summary.stmtCovered&&runtime.summary.stmtCnt?Math.floor(parseInt(runtime.summary.stmtCovered._text)*100/parseInt(runtime.summary.stmtCnt._text)):'NaN'
+              convInfo.branchCover = runtime.summary.decisionCoveredJust?Math.floor(parseInt(runtime.summary.decisionCoveredJust._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+              convInfo.branchCoverUnjust = runtime.summary.decisionCovered?Math.floor(parseInt(runtime.summary.decisionCovered._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+          }
+          if(convInfo.fctCover){
+            this.covInfoPercent.push(convInfo)
+          }
+        })
+      }
+      // if(this.RuntimeCoverages01.length!==0){
+      //   this.RuntimeCoverages01.forEach(runtime=>{
+      //     var convInfo = {}
+      //     if(runtime.parameter.includes('OverallCoverage')){
+      //         convInfo.fctCover = runtime.file.modFctCovered&&runtime.file.modFctCnt?Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text)):'NaN'
+      //         convInfo.fctCoverUnjust = runtime.file.modFctCovered&&runtime.file.modFctCnt?Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text)):'NaN'
+      //         convInfo.decCover = runtime.file.modDecCovered&&runtime.file.modDecCnt?Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text)):'NaN'
+      //         convInfo.decCoverUnjust = runtime.file.modDecCovered&&runtime.file.modDecCnt?Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text)):'NaN'
+              
+      //     }
+      //     if(convInfo.fctCover){
+      //       this.covInfoPercentOverall.push(convInfo)
+      //     }
+      //   })
+      // }
+      // if(this.RuntimeCoverages02.length!==0){
+      //   this.RuntimeCoverages02.forEach(runtime=>{
+      //     var convInfo = {}
+      //     if(runtime.parameter.includes('OverallCoverage')){
+      //         convInfo.fctCover = runtime.summary.modFctCoveredJust&&runtime.summary.modFctCnt?Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text)):'NaN'
+      //         convInfo.fctCoverUnjust = runtime.summary.modFctCovered&&runtime.summary.modFctCnt?Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text)):'NaN'
+      //         convInfo.decCover = runtime.summary.modDecCoveredJust&&runtime.summary.modDecCnt?Math.floor(parseInt(runtime.summary.modDecCoveredJust._text)*100/parseInt(runtime.summary.modDecCnt._text)):'NaN'
+      //         convInfo.decCoverUnjust = runtime.summary.modDecCovered&&runtime.summary.modDecCnt?Math.floor(parseInt(runtime.summary.modDecCovered._text)*100/parseInt(runtime.summary.modDecCnt._text)):'NaN'
+      //         convInfo.stmtCover = runtime.summary.stmtCoveredJust&&runtime.summary.stmtCnt?Math.floor(parseInt(runtime.summary.stmtCoveredJust._text)*100/parseInt(runtime.summary.stmtCnt._text)):'NaN'
+      //         convInfo.stmtCoverUnjust = runtime.summary.stmtCovered&&runtime.summary.stmtCnt?Math.floor(parseInt(runtime.summary.stmtCovered._text)*100/parseInt(runtime.summary.stmtCnt._text)):'NaN'
+      //         convInfo.branchCover =runtime.summary.decisionCoveredJust?Math.floor(parseInt(runtime.summary.decisionCoveredJust._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+      //         convInfo.branchCoverUnjust = runtime.summary.decisionCovered?Math.floor(parseInt(runtime.summary.decisionCovered._text)*100/parseInt(runtime.summary.decisionCnt._text)):'NaN'
+      //     }
+      //     if(convInfo.fctCover){
+      //       this.covInfoPercentOverall.push(convInfo)
+      //     }
+      //   })
+      // }
+      // if(this.RuntimeCoverages01.length!==0){
+      //   this.RuntimeCoverages01.forEach(runtime=>{
+      //     var convInfo = {}
+      //     if(('_attributes' in runtime && 'testlevel' in runtime._attributes&&runtime._attributes.testlevel==='component')&&!(runtime.parameter.includes('OverallCoverage'))){
+      //         convInfo.fctCover =  runtime.file.modFctCovered&&runtime.file.modFctCnt?Math.floor(parseInt(runtime.file.modFctCovered._text)*100/parseInt(runtime.file.modFctCnt._text)):'NaN'
+      //         convInfo.decCover =  runtime.file.modDecCovered&&runtime.file.modDecCnt?Math.floor(parseInt(runtime.file.modDecCovered._text)*100/parseInt(runtime.file.modDecCnt._text)):'NaN'
+              
+      //     }
+      //     if(convInfo.fctCover){
+      //       this.covInfoPercent.push(convInfo)
+      //     }
+      //   })
+      // }
+      // if(this.RuntimeCoverages02.length!==0){
+      //   this.RuntimeCoverages02.forEach(runtime=>{
+      //     var convInfo = {}
+      //     if(('_attributes' in runtime && 'testlevel' in runtime._attributes&&runtime._attributes.testlevel==='component')&&!(runtime.parameter.includes('OverallCoverage'))){
+      //         convInfo.fctCover = runtime.summary.modFctCoveredJust&&runtime.summary.modFctCnt?Math.floor(parseInt(runtime.summary.modFctCoveredJust._text)*100/parseInt(runtime.summary.modFctCnt._text)):'NaN'
+      //         convInfo.fctCoverUnjust = runtime.summary.modFctCovered&&runtime.summary.modFctCnt?Math.floor(parseInt(runtime.summary.modFctCovered._text)*100/parseInt(runtime.summary.modFctCnt._text)):'NaN'
+      //         convInfo.callCover = runtime.summary.callsCoveredJust&&runtime.summary.callsCnt?Math.floor(parseInt(runtime.summary.callsCoveredJust._text)*100/parseInt(runtime.summary.callsCnt._text)):'NaN'
+      //         convInfo.callCoverUnjust = runtime.summary.callsCovered&&runtime.summary.callsCnt?Math.floor(parseInt(runtime.summary.callsCovered._text)*100/parseInt(runtime.summary.callsCnt._text)):'NaN'
+      //       }
+      //     if(convInfo.fctCover){
+      //       this.covInfoPercentComponent.push(convInfo)
+      //     }
+      //   })
+      // }
     },
     filters(bigdata,criteria){
           var datas = []
@@ -547,28 +569,42 @@ export default {
       })
     },
     getsimpleResult(result){
-            if(result.includes('FAIL')){
+      if(result.includes('FAIL*')){
+          return 'FAIL*'
+      }
+      else if(result.includes('FAIL')){
+          return 'FAIL'
+      }
+      else if(result.includes('WARN*')){
+          return 'WARN*'
+      }
+      else if(result.includes('WARN')){
+          return 'WARN'
+      }
+      else if(result.includes('processError')){
+          return 'PROCESSERROR'
+      }
+      else if(result.includes('OK.N/A')){
+          return 'OK'
+      }
+      else if(result.includes('OK')){
+          return 'OK'
+      }
+    },
+    getResult(result,isJustified){
+        if(result.includes('fail')){
+            if(isJustified){
+                return 'FAIL*'
+            }else{
                 return 'FAIL'
             }
-            else if(result.includes('WARN')){
-                return 'WARN'
-            }
-            else if(result.includes('processError')){
-                return 'PROCESSERROR'
-            }
-            else if(result.includes('OK.N/A')){
-                return 'OK.N/A'
-            }
-            else if(result.includes('OK')){
-                return 'OK'
-            }
-    },
-    getResult(result){
-        if(result.includes('fail')){
-            return 'FAIL'
         }
         else if(result.includes('warn')){
-            return 'WARN'
+            if(isJustified){
+                return 'WARN*'
+            }else{
+                return 'WARN'
+            }
         }
         else if(result.includes('N/A')){
             return 'OK.N/A'
@@ -582,13 +618,14 @@ export default {
     },
     getTestRunResult(testrun){
         if(testrun.result){
+            var isJustified = 'justification' in testrun
             if('_text' in testrun.result){
-                    return this.getResult(testrun.result._text)
+                    return this.getResult(testrun.result._text,isJustified)
             }
             else{
                 var result = []
                 testrun.result.forEach(elt=>{
-                result.push(this.getResult(elt._text))
+                result.push(this.getResult(elt._text,isJustified))
                 })
                 return this.getsimpleResult(result)
             }
@@ -600,14 +637,14 @@ export default {
                 return this.getTestRunResult(testcase.testrun)
             }else{
                 var result = []
-                testcase.testrun.forEach(testrun=>{
-                    result.push(this.getTestRunResult(testrun))
+                testcase.testrun.forEach(elt=>{
+                    result.push(this.getTestRunResult(elt))
                 })
 
                 return this.getsimpleResult(result)
             }
         }
-    }
+    },
   },
   mounted(){
   var testrunwithInfo = []
@@ -654,6 +691,25 @@ export default {
       this.unplannedTestCase.push(element)
     }
   })
+  
+   this.$store.state.testCases.forEach(testcase=>{
+     if('testrun' in testcase){
+       if(Array.isArray(testcase.testrun)){
+         var testrunWithLog = testcase.testrun.filter(testrun=>{
+           return 'log' in testrun
+         })
+          if(testrunWithLog.length!==0){
+            this.functionalTestCases.push(testcase)
+            this.functionalTestRuns.push(...testrunWithLog)
+          }
+       }else{
+         if('log' in testcase.testrun){
+          this.functionalTestCases.push(testcase)
+          this.functionalTestRuns.push(testcase.testrun)
+         }
+       }
+     }
+  })
 
   this.findTestRun(this.plannedTestCase,this.plannedTestRun)
   this.findTestRun(this.unplannedTestCase,this.unplannedTestRun)
@@ -680,22 +736,33 @@ export default {
     if('testrun' in testcase){
       if(Array.isArray(testcase.testrun)){
         var testrunWithResult = testcase.testrun.filter(testrun=>{
-          return 'result' in testrun && '_text' in testrun.result
+          if(Array.isArray(testrun.result)){
+            return testrun.result.filter(result=>{return '_text' in result && result._text!==''}).length>0
+          }else{
+            return 'result' in testrun && '_text' in testrun.result
+          } 
         }).length
 
-        if(testrunWithResult!=0){
+        if(testrunWithResult>0){
           this.TestCases_WithResult.push(testcase)
         }
       }else{
-        if('result' in testcase.testrun && '_text' in testcase.testrun.result){
+        if(Array.isArray(testcase.testrun.result)){
+           if(testcase.testrun.result.filter(result=>{return '_text' in result && result._text!==''}).length>0){
+             this.TestCases_WithResult.push(testcase)
+           }
+          }else{
+            if('result' in testcase.testrun && '_text' in testcase.testrun.result){
             this.TestCases_WithResult.push(testcase)
           }
+        }
       }
     }
   })
-  
-  this.TestCases_Accepted = this.TestCases_WithResult.filter(testcase=>{return this.getTestCaseResult(testcase).includes('OK')})
 
+  
+  this.TestCases_Accepted = this.TestCases_WithResult.filter(testcase=>{return this.getTestCaseResult(testcase).includes('OK')||this.getTestCaseResult(testcase)==='FAIL*'||this.getTestCaseResult(testcase)==='WARN*'||this.getTestCaseResult(testcase)==='PROCESSERROR*'})
+  console.log('this.TestCases_Accepted',this.TestCases_Accepted)
 
   var test = []
   this.TestCases_WithResult.forEach(testcase=>{
@@ -773,24 +840,43 @@ export default {
   })
 
   this.configurationCount = test.length
+  console.log('$store.state.testRuns', this.$store.state.testRuns)
+  this.$store.state.testRuns.forEach(testrun => {
+     if('log_build' in testrun ){
+    //   if(Array.isArray(testrun.log_build)){
+    //     var validlogPCLint = testrun.log_build.filter(log=>{
+    //       return '_attributes' in log && 'type' in log._attributes && log._attributes.type==='CheckPClint' 
+    //     }) 
+    //     var validlogBuildEmbeddedCompiler = testrun.log_build.filter(log=>{
+    //       return '_attributes' in log && 'type' in log._attributes && log._attributes.type==='EmbeddedCompiler' && (testrun.testcase_attr.name!=='Build VC8'&&testrun.testcase_attr.name!=='Build VC')
+    //     }) 
+    //     var validlogBuildVisual = testrun.log_build.filter(log=>{
+    //       return '_attributes' in log && 'type' in log._attributes && (log._attributes.type==='Visual' || (testrun.testcase_attr.name==='Build VC8'||testrun.testcase_attr.name==='Build VC'))
+    //     }) 
+    //     if(validlogPCLint.lenght!==0){
+    //       this.TestRuns_PCLint.push(testrun)
+    //     }
+    //     if(validlogBuildEmbeddedCompiler.lenght!==0){
+    //       this.TestRuns_BuildEmbeddedCompiler.push(testrun)
+    //     }
+    //     if(validlogBuildVisual.lenght!==0){
+    //       this.TestRuns_BuildVisual.push(testrun)
+    //     }
 
-  this.$store.state.testRuns.forEach(element => {
-    if(element['log_build']&&element['log_build']._type==='CheckPClint'){
-      this.TestRuns_PCLint.push(element);
+    //   }else{
+        if('_attributes' in testrun.log_build && 'type' in testrun.log_build._attributes && testrun.log_build._attributes.type==='CheckPClint' ){
+          this.TestRuns_PCLint.push(testrun)
+        }
+        if('_attributes' in testrun.log_build && 'type' in testrun.log_build._attributes && testrun.log_build._attributes.type==='EmbeddedCompiler' && (testrun.testcase_attr.name!=='Build VC8'&&testrun.testcase_attr.name!=='Build VC') ){
+          this.TestRuns_BuildEmbeddedCompiler.push(testrun)
+        }
+        if(('_attributes' in testrun.log_build && 'type' in testrun.log_build._attributes && testrun.log_build._attributes.type==='Visual') || testrun.testcase_attr.name==='Build VC8'|| testrun.testcase_attr.name==='Build VC' ){
+          this.TestRuns_BuildVisual.push(testrun)
+        }
+     // }
     }
   })
   
-  this.$store.state.testRuns.forEach(element => {
-    if(element['log_build']&&element['log_build']._type==='EmbeddedCompiler'&&element['testcase_attr'].name==='Build VC8'&&element['testcase_attr'].name==='Build VC'){
-      this.TestRuns_BuildEmbeddedCompiler.push(element);
-    }
-  })
-
-  this.$store.state.testRuns.forEach(element => {
-    if(element['log_build']&&element['log_build']._type==='Visual'&&element['testcase_attr'].name==='Build VC8'&&element['testcase_attr'].name==='Build VC'){
-      this.TestRuns_BuildVisual.push(element);
-    }
-  })
   this.loading = false
   },
 };

@@ -88,23 +88,27 @@ export default {
       
     },
     findTestConfig(testRuns){
+      console.log('testruns for config', testRuns.length)
       testRuns.forEach(testrun=>{
         if('config' in testrun._attributes){
           this.testConfigs.push(testrun._attributes.config)
         }
-        if('parameter' in testrun._attributes){
-          if(testrun._attributes.parameter.match(new RegExp("config=(.*),"))){
+        else if('parameter' in testrun._attributes){
+          if(testrun._attributes.parameter.match(new RegExp("config=(.*)"))){
             var config = testrun._attributes.parameter.match(new RegExp("config=(.*)"))[1];
             if(config.includes(',')){
-              this.testConfigs.push(config.split(',')[0])
+              this.testConfigs.push(config.split(',')[0].trim())
             }
             else{
-              this.testConfigs.push(config)
+              this.testConfigs.push(config.trim())
             }
-            
+          }
+          else{
+            this.testConfigs.push('Overall')
           }
         }
       })
+
       this.testConfigs = [...(new Set(this.testConfigs))]
       console.log('this.testConfigs',this.testConfigs)
     },
