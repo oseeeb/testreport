@@ -780,36 +780,39 @@ export default {
         this.TestCases_ThisCycle.push(testcase)
     }
   })
-  console.log('TestCases_ThisCycle',this.TestCases_ThisCycle)
-   this.TestCases_ThisCycle.forEach(elemt=>{
+   this.TestCases_ThisCycle.forEach(testcase=>{
     var testruns = []
-    if(elemt['testrun']){
-      testruns.push(...Object.values(elemt.testrun))
-      testruns=testruns.filter(elt=>{
-        if('result' in elt){
-          return elt.result._text!=='ok'&&elt.result._text!=='N/A'
-        }
-      })
-      if(testruns.lenght===0){
-        this.TestCases_ThisCycle_Passed.push(elemt)
+    if('testrun' in testcase){
+      if(Array.isArray(testcase.testrun)){
+        testruns.push(...testcase.testrun.filter(testrun=>{
+          return 'result' in testrun&&this.getTestRunResult(testrun).includes('OK')
+        }))
+      }else if('result' in testcase.testrun&&this.getTestRunResult(testcase.testrun).includes('OK')){
+        testruns.push(testcase.testrun)
       }
+    }
+    if(testruns.length>0){
+        this.TestCases_ThisCycle_Passed.push(testcase)
     }
   })
 
-  this.TestCases_ThisCycle.forEach(elemnt=>{
+  this.TestCases_ThisCycle.forEach(testcase=>{
     var testruns = []
-    if(elemnt['testrun']){
-      testruns.push(...Object.values(elemnt.testrun))
-      testruns=testruns.filter(elt=>{
-        if('result' in elt){
-          return (elt.result._text!=='ok'&&elt.result._text!=='N/A')&&(elt.justification&&elt.justification.length!==0)
-        }
-      })
-      if(testruns.lenght!==0){
-        this.TestCases_ThisCycle_NotPassed_Justified.push(elemnt)
+    if('testrun' in testcase){
+      if(Array.isArray(testcase.testrun)){
+        testruns.push(...testcase.testrun.filter(testrun=>{
+          return 'result' in testrun&&!this.getTestRunResult(testrun).includes('OK')&&('justification' in testrun)
+        }))
+      }else if('result' in testcase.testrun&&!this.getTestRunResult(testcase.testrun).includes('OK')&&('justification' in testcase.testrun)){
+        testruns.push(testcase.testrun)
       }
     }
+    if(testruns.length>0){
+        this.TestCases_ThisCycle_NotPassed_Justified.push(testcase)
+    }
   })
+
+
 
   this.NrOf_TestCases_Planned_ThisCycle =  this.TestCases_ThisCycle.filter(elemt=>{
     return elemt._attributes.ExecPlan==='x'
@@ -824,7 +827,7 @@ export default {
   }).length
   
   this.NrOf_TestCases_Planned_ThisCycle_Accepted = this.NrOf_TestCases_Planned_ThisCycle_Passed + this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified
-
+  
   var test = []
   this.TestRuns_QACSummary.forEach(elt=>{
     if(elt.log_build.message&&Array.isArray(elt.log_build.message)){
@@ -843,27 +846,6 @@ export default {
   console.log('$store.state.testRuns', this.$store.state.testRuns)
   this.$store.state.testRuns.forEach(testrun => {
      if('log_build' in testrun ){
-    //   if(Array.isArray(testrun.log_build)){
-    //     var validlogPCLint = testrun.log_build.filter(log=>{
-    //       return '_attributes' in log && 'type' in log._attributes && log._attributes.type==='CheckPClint' 
-    //     }) 
-    //     var validlogBuildEmbeddedCompiler = testrun.log_build.filter(log=>{
-    //       return '_attributes' in log && 'type' in log._attributes && log._attributes.type==='EmbeddedCompiler' && (testrun.testcase_attr.name!=='Build VC8'&&testrun.testcase_attr.name!=='Build VC')
-    //     }) 
-    //     var validlogBuildVisual = testrun.log_build.filter(log=>{
-    //       return '_attributes' in log && 'type' in log._attributes && (log._attributes.type==='Visual' || (testrun.testcase_attr.name==='Build VC8'||testrun.testcase_attr.name==='Build VC'))
-    //     }) 
-    //     if(validlogPCLint.lenght!==0){
-    //       this.TestRuns_PCLint.push(testrun)
-    //     }
-    //     if(validlogBuildEmbeddedCompiler.lenght!==0){
-    //       this.TestRuns_BuildEmbeddedCompiler.push(testrun)
-    //     }
-    //     if(validlogBuildVisual.lenght!==0){
-    //       this.TestRuns_BuildVisual.push(testrun)
-    //     }
-
-    //   }else{
         if('_attributes' in testrun.log_build && 'type' in testrun.log_build._attributes && testrun.log_build._attributes.type==='CheckPClint' ){
           this.TestRuns_PCLint.push(testrun)
         }
@@ -873,7 +855,6 @@ export default {
         if(('_attributes' in testrun.log_build && 'type' in testrun.log_build._attributes && testrun.log_build._attributes.type==='Visual') || testrun.testcase_attr.name==='Build VC8'|| testrun.testcase_attr.name==='Build VC' ){
           this.TestRuns_BuildVisual.push(testrun)
         }
-     // }
     }
   })
   

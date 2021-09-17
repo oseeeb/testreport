@@ -209,13 +209,13 @@ export default {
             this.result.text = (this.metrics.Tested===this.metrics.Total?this.metrics.Tested:(this.metrics.Tested+'/'+this.metrics.Total))+' tested\n'
             this.result.text += this.metrics.Passed+' passed'
             this.result.text +='\n'
-            this.result.text += ' -'+this.metrics.Ok+'*ok '
+            this.result.text += ' - '+this.metrics.Ok+'*ok '
             this.result.text += this.metrics.NA!==0?this.metrics.NA+'*N/A':''
             this.result.text +='\n'
-            this.result.text += this.metrics.NotPassed!==0?(this.metrics.NotPassed+' Not Passed \n'):''
+            this.result.text += this.metrics.NotPassed!==0?(this.metrics.NotPassed+' Not Passed \n - '):''
             this.result.text += (this.metrics.Warn!==0?this.metrics.Warn+'*warn':'')+' '+(this.metrics.Fail!==0?this.metrics.Fail+'*fail':'')+' '+(this.metrics.ProcessError!==0?this.metrics.ProcessError+'*processError':'')
             this.result.text +='\n'
-            this.result.text += (this.metrics.Warn_Justified!==0 || this.metrics.Fail_Justified!==0 || this.metrics.ProcessError_Justified!==0 )?((this.metrics.Warn_Justified+this.metrics.ProcessError_Justified+this.metrics.Fail_Justified)+' Not Passed + Justified\n'):'' 
+            this.result.text += (this.metrics.Warn_Justified!==0 || this.metrics.Fail_Justified!==0 || this.metrics.ProcessError_Justified!==0 )?((this.metrics.Warn_Justified+this.metrics.ProcessError_Justified+this.metrics.Fail_Justified)+' Not Passed + Justified\n - '):'' 
             this.result.text += (this.metrics.Warn_Justified!==0?this.metrics.Warn_Justified+'*warn':'')+' '+(this.metrics.ProcessError_Justified!==0?this.metrics.ProcessError_Justified+'*processError':'')+' '+(this.metrics.Fail_Justified!==0?this.metrics.Fail_Justified+'*fail':'')
         }
         else if(this.Type==='testrun'){
@@ -241,11 +241,11 @@ export default {
                 }).length
 
             this.metrics.Warn = testRunsTested.filter(testrun=>{
-                return this.getTestRunResult(testrun)==='WARN'&&!'justification' in testrun
+                return this.getTestRunResult(testrun)==='WARN'&&!('justification' in testrun)
             }).length
 
             this.metrics.Fail = testRunsTested.filter(testrun=>{
-                return this.getTestRunResult(testrun)==='FAIL'&&!'justification' in testrun
+                return this.getTestRunResult(testrun)==='FAIL'&&!('justification' in testrun)
             }).length
 
             this.metrics.Warn_Justified = testRunsTested.filter(testrun=>{
@@ -265,26 +265,27 @@ export default {
                  return this.getTestRunResult(testrun)==='PROCESSERROR'&&'justification' in testrun
             }).length
 
-            this.metrics.NotPassed = this.metrics.Fail+this.metrics.Warn+this.metrics.ProcessError
+            this.metrics.NotPassed = testRunsTested.filter(testrun=>{
+                return !this.getTestRunResult(testrun).includes('OK')&&!('justification' in testrun)
+            }).length
             this.metrics.NotPassed_Justified =this.metrics.Fail_Justified+this.metrics.Warn_Justified+this.metrics.ProcessError_Justified
 
             
             this.result.ok = this.metrics.Passed*100/this.metrics.Total
 
             this.result.fail = this.metrics.NotPassed*100/this.metrics.Total
-
             this.result.justified = this.metrics.NotPassed_Justified*100/this.metrics.Total
 
             this.result.text = (this.metrics.Tested===this.metrics.Total?this.metrics.Tested:(this.metrics.Tested+'/'+this.metrics.Total))+' tested\n'
             this.result.text += this.metrics.Passed+' passed'
             this.result.text +='\n'
-            this.result.text += ' -'+this.metrics.Ok+'*ok '
+            this.result.text += ' - '+this.metrics.Ok+'*ok '
             this.result.text += this.metrics.NA!==0?this.metrics.NA+'*N/A':''
             this.result.text +='\n'
-            this.result.text += this.metrics.NotPassed!==0?(this.metrics.NotPassed+' Not Passed \n'):''
+            this.result.text += this.metrics.NotPassed!==0?(this.metrics.NotPassed+' Not Passed \n - '):''
             this.result.text += (this.metrics.Warn!==0?this.metrics.Warn+'*warn':'')+' '+(this.metrics.Fail!==0?this.metrics.Fail+'*fail':'')+' '+(this.metrics.ProcessError!==0?this.metrics.ProcessError+'*processError':'')
             this.result.text +='\n'
-            this.result.text += (this.metrics.Warn_Justified!==0 || this.metrics.Fail_Justified!==0 || this.metrics.ProcessError_Justified!==0 )?((this.metrics.Warn_Justified+this.metrics.ProcessError_Justified+this.metrics.Fail_Justified)+' Not Passed + Justified\n'):'' 
+            this.result.text += (this.metrics.Warn_Justified!==0 || this.metrics.Fail_Justified!==0 || this.metrics.ProcessError_Justified!==0 )?((this.metrics.Warn_Justified+this.metrics.ProcessError_Justified+this.metrics.Fail_Justified)+' Not Passed + Justified\n - '):'' 
             this.result.text += (this.metrics.Warn_Justified!==0?this.metrics.Warn_Justified+'*warn':'')+' '+(this.metrics.ProcessError_Justified!==0?this.metrics.ProcessError_Justified+'*processError':'')+' '+(this.metrics.Fail_Justified!==0?this.metrics.Fail_Justified+'*fail':'')
         }
         else if(this.Type==='testconfig'){
@@ -300,50 +301,49 @@ export default {
             })
             
             var testConfigTested = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&testrun.result._text!=='NT' }).length>0})
-            console.log('Configs',testconfigs)
-            var testConfigPassed = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun).includes('OK')}).length===config.testruns.filter(testrun=>{return 'result' in testrun}).length})
+            
+            var testConfigPassed = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun).includes('OK')}).length===config.testruns.filter(testrun=>{return 'result' in testrun}).length})
 
             this.metrics.Total = testconfigs.length
             this.metrics.Tested = testConfigTested.length
             this.metrics.Passed = testConfigPassed.length
 
-            this.metrics.Ok = testConfigPassed.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='OK'}).length>0}).length
+            this.metrics.Ok = testConfigPassed.filter(config=>{return config.testruns.filter(testrun=>{return'result' in testrun&& this.getTestRunResult(testrun)==='OK'}).length>0}).length
 
-            this.metrics.NA = testConfigPassed.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun).includes('N/A')}).length>0}).length
+            this.metrics.NA = testConfigPassed.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun).includes('N/A')}).length>0}).length
 
-            this.metrics.Warn = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='WARN'&&!'justification' in testrun}).length>0}).length
-            console.log('Configs',testconfigs)
-            this.metrics.Fail = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='FAIL'&&!'justification' in testrun}).length>0}).length
-
-
-            this.metrics.Warn_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='WARN'&&'justification' in testrun}).length>0}).length
-            this.metrics.Fail_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='FAIL'&&'justification' in testrun}).length>0}).length
+            this.metrics.Warn = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)==='WARN'&&!('justification' in testrun)}).length>0}).length
+           
+            this.metrics.Fail = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)==='FAIL'&&!('justification' in testrun)}).length>0}).length
 
 
-            this.metrics.ProcessError = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)==='PROCESSERROR'}).length>0}).length
+            this.metrics.Warn_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)==='WARN'&&('justification' in testrun)}).length>0}).length
+            this.metrics.Fail_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)==='FAIL'&&('justification' in testrun)}).length>0}).length
+
+
+            this.metrics.ProcessError = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)==='PROCESSERROR'}).length>0}).length
 
            
-            this.metrics.NotPassed = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)!=='OK'&&!this.getTestRunResult(testrun).includes('N/A')&&!('justification' in testrun)}).length>0}).length
-            this.metrics.NotPassed_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return this.getTestRunResult(testrun)!=='OK'&&!this.getTestRunResult(testrun).includes('N/A')&&!('justification' in testrun)}).length>0}).length
+            this.metrics.NotPassed = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)!=='OK'&&!this.getTestRunResult(testrun).includes('N/A')&&!('justification' in testrun)}).length>0}).length
+            this.metrics.NotPassed_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)!=='OK'&&!this.getTestRunResult(testrun).includes('N/A')&&('justification' in testrun)}).length>0}).length
 
             
             this.result.ok = this.metrics.Passed*100/this.metrics.Total
 
             this.result.fail = this.metrics.NotPassed*100/this.metrics.Total
 
-            this.result.justified = this.metrics.NotPassed_Justified*100/this.metrics.Total
-
+            this.result.justified = this.metrics.NotPassed_Justified *100/this.metrics.Total
             this.result.text = (this.metrics.Tested===this.metrics.Total?this.metrics.Tested:(this.metrics.Tested+'/'+this.metrics.Total))+' tested\n'
             this.result.text += this.metrics.Passed+' passed'
             this.result.text +='\n'
-            this.result.text += ' -'+this.metrics.Ok+'*ok '
+            this.result.text += ' - '+this.metrics.Ok+'*ok '
             this.result.text += this.metrics.NA!==0?this.metrics.NA+'*N/A':''
             this.result.text +='\n'
-            this.result.text += this.metrics.NotPassed!==0?(this.metrics.NotPassed+' Not Passed \n'):''
-            this.result.text += (this.metrics.Warn!==0?this.metrics.Warn+'*warn':'')+' '+(this.metrics.Fail!==0?this.metrics.Fail+'*fail':'')+' '+(this.metrics.ProcessError!==0?this.metrics.ProcessError+'*processError':'')
-            this.result.text +='\n'
-            this.result.text += (this.metrics.Warn_Justified!==0 || this.metrics.Fail_Justified!==0) ?((this.metrics.Warn_Justified+this.metrics.Fail_Justified)+' Not Passed + Justified\n'):'' 
+            this.result.text += (this.metrics.Warn_Justified!==0 || this.metrics.Fail_Justified!==0) ?(this.metrics.NotPassed_Justified +' Not Passed + Justified\n - '):'' 
             this.result.text += (this.metrics.Warn_Justified!==0?this.metrics.Warn_Justified+'*warn':'')+' '+' '+(this.metrics.Fail_Justified!==0?this.metrics.Fail_Justified+'*fail':'')
+            this.result.text +='\n'
+            this.result.text += this.metrics.NotPassed!==0?(this.metrics.NotPassed+' Not Passed + UnJustified \n - '):''
+            this.result.text += (this.metrics.Warn!==0?this.metrics.Warn+'*warn':'')+' '+(this.metrics.Fail!==0?this.metrics.Fail+'*fail':'')+' '+(this.metrics.ProcessError!==0?this.metrics.ProcessError+'*processError':'')
         }
     }
 }
