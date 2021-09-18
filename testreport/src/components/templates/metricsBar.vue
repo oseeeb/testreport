@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="Type!=='coverage'">
         <span v-show="label">{{metrics.Tested===metrics.Total?metrics.Total:(metrics.Tested+'/'+metrics.Total)}} {{Name}}</span><br/>
         <div class="result-diag" data-toggle="tooltip" :title="result.text">
             <div class="flex" :style="'width:'+result.ok+'%;heigth:100%;background-color:#00FF00'"></div>
@@ -8,6 +8,17 @@
             <div class="flex" :style="'width:'+result.warn+'%;heigth:100%;background-color:yellow'"></div>
         </div>
     </div>
+    <div v-else-if="Type==='coverage'&&Todraw.percentage!=='N/A'||!isNaN(Todraw.percentage)">
+        <div class="result-diag" data-toggle="tooltip" :title="result.text">
+            <div class="flex" :style="'width:'+result.ok+'%;heigth:100%;background-color:#00FF00'"></div>
+            <div class="flex" :style="'width:'+result.justified+'%;heigth:100%;background-color:green'"></div>
+            <div class="flex" :style="'width:'+result.fail+'%;heigth:100%;background-color:red'"></div>
+            <div class="flex" :style="'width:'+result.warn+'%;heigth:100%;background-color:yellow'"></div>
+        </div>
+    </div>
+    <div v-else>
+        <span>N/A</span>
+    </div>
 </template>
 <script>
 /* eslint-disable */
@@ -15,7 +26,7 @@ export default {
     name:'metricsBar',
     props:{
         Todraw:{
-            type:Array,
+            type:[Array,Object],
             default:new Array()
         },
         Name:{
@@ -344,6 +355,19 @@ export default {
             this.result.text +='\n'
             this.result.text += this.metrics.NotPassed!==0?(this.metrics.NotPassed+' Not Passed + UnJustified \n - '):''
             this.result.text += (this.metrics.Warn!==0?this.metrics.Warn+'*warn':'')+' '+(this.metrics.Fail!==0?this.metrics.Fail+'*fail':'')+' '+(this.metrics.ProcessError!==0?this.metrics.ProcessError+'*processError':'')
+        }
+        else if(this.Type==='coverage'){
+            var coverage = this.Todraw
+            console.log(coverage)
+            this.result.justified = (parseInt(coverage.count)-parseInt(coverage.covered))*100/coverage.count
+
+            this.result.fail = 0
+
+            this.result.ok = parseInt(coverage.percentage)
+
+            this.result.text = parseInt(coverage.covered)+'/'+parseInt(coverage.count)+' covered ('+parseInt(coverage.percentage)+'%)\n'
+            this.result.text+=parseInt(coverage.accepted)+'/'+parseInt(coverage.count)+' accepted ('+parseInt(coverage.percentage)+'%)\n'
+            this.result.text+=(parseInt(coverage.count)-parseInt(coverage.covered))+' uncovered'
         }
     }
 }

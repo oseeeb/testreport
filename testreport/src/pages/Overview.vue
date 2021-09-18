@@ -54,7 +54,7 @@
       <div class="md-layout-item">
         <md-card>
           <md-card-header>
-            <div class="md-title">Test Cases</div>
+            <div class="md-title"><router-link to="TestCases"> Test Cases</router-link></div>
           </md-card-header>
 
           <md-card-content>
@@ -66,7 +66,7 @@
         </md-card>
         <md-card >
           <md-card-header>
-            <div class="md-title">RunTime Coverage</div>
+            <div class="md-title"><router-link to="runtime_coverage"> Runtime Coverage</router-link></div>
           </md-card-header>
           <md-card-content>
             <span class="symbol_ok"></span> <span>Runtime Coverage (Component Test)</span><br/>
@@ -117,7 +117,7 @@
       <div class="md-layout-item">
         <md-card>
           <md-card-header>
-            <div class="md-title">Test Configuration</div>
+            <div class="md-title"><router-link to="TestConfigurations">Test Configuration</router-link></div>
           </md-card-header>
           <md-card-content> 
             <metrics-bar :Todraw="$store.state.testConfigs" :Type="'testconfig'" :Name="'TestConfigs'"></metrics-bar>
@@ -125,7 +125,7 @@
         </md-card>
         <md-card >
           <md-card-header>
-            <div class="md-title">MISRA</div>
+            <div class="md-title"><router-link to="MISRA">MISRA</router-link></div>
           </md-card-header>
           <md-card-content>
             <OutputConfDevInfo :configCount="configurationCount"/>
@@ -134,7 +134,7 @@
         </md-card>
         <md-card >
           <md-card-header>
-            <div class="md-title">Memory Resource</div>
+            <div class="md-title"><router-link to="memory_resources">Memory Resource</router-link></div>
           </md-card-header>
 
           <md-card-content>
@@ -179,7 +179,7 @@
         </md-card> 
         <md-card>
           <md-card-header>
-            <div class="md-title">CodeMetric</div>
+            <div class="md-title"><router-link to="code_metrics">CodeMetric</router-link></div>
           </md-card-header>
           <md-card-content>
             <metrics-bar :Todraw="TestRuns_QACSummary" :Type="'testrun'" :Name="'TestRuns'"></metrics-bar>

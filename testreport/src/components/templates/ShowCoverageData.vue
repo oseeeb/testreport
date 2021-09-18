@@ -1,27 +1,25 @@
 <template>
-    <div v-if="Array.isArray(coverage)">
-        <PercentageBar
+    <div v-if="Array.isArray(coverage)" style="height:100%;width:100%">
+    <MetricsBar
         v-for="(cov,key) in coverage"
-        :subBar1Value="cov.percentageJustified"
-        :subBar2Class="cov.percentage"
-        :tooltip="getCoverageToolTip(cov)"
-        :key="key"/>
+        :Todraw="cov"
+        :Type="'coverage'"
+        :key="key"
+        
+        />
     </div>
-    <span v-else-if="coverage.percentageJustified==='N/A'||isNaN(coverage.percentageJustified)"> <!-- TBD -->
-    N/A
-    </span>
-    <PercentageBar
-    :subBar1Value="''+coverage.percentageJustified"
-    :subBar2Class="''+coverage.percentage"
-    :tooltip="getCoverageToolTip(coverage)"
+    
+    <MetricsBar
+    :Todraw="coverage"
+    :Type="'coverage'"
     v-else
     />
 </template>
 <script>
-import PercentageBar from './PercentageBar.vue'
+import MetricsBar from './metricsBar.vue'
 export default {
     components:{
-        PercentageBar,
+        MetricsBar,
     },
     props:{
         coverage:{

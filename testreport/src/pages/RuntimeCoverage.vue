@@ -55,11 +55,11 @@
                                         {{getConfig(log.testrunAttr.parameter)!==null?getConfig(log.testrunAttr.parameter)[1]:''}}
                                         <a :href="log.link?log.link._text:'#'">[Details Report]</a>
                                     </md-table-cell>
-                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[0]:[]"></show-coverage-data></md-table-cell>
-                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[1]:[]"></show-coverage-data></md-table-cell>
-                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[2]:[]"></show-coverage-data></md-table-cell>
-                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[3]:[]"></show-coverage-data></md-table-cell>
-                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary)[4]:[]"></show-coverage-data></md-table-cell>
+                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary,'log')[0]:[]"></show-coverage-data></md-table-cell>
+                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary,'log')[1]:[]"></show-coverage-data></md-table-cell>
+                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary,'log')[2]:[]"></show-coverage-data></md-table-cell>
+                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary,'log')[3]:[]"></show-coverage-data></md-table-cell>
+                                    <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary,'log')[4]:[]"></show-coverage-data></md-table-cell>
                                     <md-table-cell></md-table-cell>
                                 </md-table-row>
                             </template>
@@ -87,11 +87,11 @@
                                 <md-table-cell colspan="2">
                                     {{file.name._text}}
                                 </md-table-cell>
-                                <md-table-cell><show-coverage-data :coverage="getCoverage(file)[0]"></show-coverage-data></md-table-cell>
-                                <md-table-cell><show-coverage-data :coverage="getCoverage(file)[1]"></show-coverage-data></md-table-cell>
-                                <md-table-cell><show-coverage-data :coverage="getCoverage(file)[2]"></show-coverage-data></md-table-cell>
-                                <md-table-cell><show-coverage-data :coverage="getCoverage(file)[3]"></show-coverage-data></md-table-cell>
-                                <md-table-cell><show-coverage-data :coverage="getCoverage(file)[4]"></show-coverage-data></md-table-cell>
+                                <md-table-cell><show-coverage-data :coverage="getCoverage(file,'file')[0]"></show-coverage-data></md-table-cell>
+                                <md-table-cell><show-coverage-data :coverage="getCoverage(file,'file')[1]"></show-coverage-data></md-table-cell>
+                                <md-table-cell><show-coverage-data :coverage="getCoverage(file,'file')[2]"></show-coverage-data></md-table-cell>
+                                <md-table-cell><show-coverage-data :coverage="getCoverage(file,'file')[3]"></show-coverage-data></md-table-cell>
+                                <md-table-cell><show-coverage-data :coverage="getCoverage(file,'file')[4]"></show-coverage-data></md-table-cell>
                                 <md-table-cell></md-table-cell>
                             </md-table-row>
                         </template>
@@ -343,51 +343,108 @@ export default {
         
 
     },
-    getCoverage(summary){
-        var coverages =[
-            {
-                type : 'FC',
-                count : summary.modFctCnt?summary.modFctCnt._text:'N/A',
-                covered : summary.modFctCovered?summary.modFctCovered._text:'N/A',
-                accepted : summary.modFctCoveredJust?summary.modFctCoveredJust._text:'N/A',
-                percentage : summary.cov_fct?parseInt(summary.cov_fct._text):'N/A',
-                percentageJustified : summary.covJust_fct?parseInt(summary.covJust_fct._text):'N/A',
-            },
-            {
-                type : 'DC',
-                count : summary.modDecCnt?summary.modDecCnt._text:'N/A',
-                covered : summary.modDecCovered?summary.modDecCovered._text:'N/A',
-                accepted : summary.modDecCoveredJust?summary.modDecCoveredJust._text:'N/A',
-                percentage : summary.dec_fct?parseInt(summary.dec_fct._text):'N/A',
-                percentageJustified : summary.decJust_fct?parseInt(summary.decJust_fct._text):'N/A',
-            },
-            {
-                type : 'SC',
-                count : summary.stmtCnt?summary.stmtCnt._text:'N/A',
-                covered : summary.stmtCovered?summary.stmtCovered._text:'N/A',
-                accepted : summary.stmtCoveredJust?summary.stmtCoveredJust._text:'N/A',
-                percentage : summary.stmt_fct?parseInt(summary.stmt_fct._text):'N/A',
-                percentageJustified : summary.stmtJust_fct?parseInt(summary.stmtJust_fct._text):'N/A',
-            },
-            {
-                type : 'CC',
-                count : summary.callsCnt?summary.callsCnt._text:'N/A',
-                covered : summary.callsCovered?summary.callsCovered._text:'N/A',
-                accepted : summary.callsCoveredJust?summary.callsCoveredJust._text:'N/A',
-                percentage : summary.callcov_fct?parseInt(summary.callcov_fct._text):'N/A',
-                percentageJustified : summary.callcovJust_fct?parseInt(summary.callcovJust_fct._text):'N/A',
-            },
-            {
-                type : 'BC',
-                count : summary.decisionCnt?summary.decisionCnt._text:'N/A',
-                covered : summary.decisionCovered?summary.decisionCovered._text:'N/A',
-                accepted : summary.decisionCoveredJust?summary.decisionCoveredJust._text:'N/A',
-                percentage : summary.decisionCnt?(summary.decisionCnt._text==='N/A'?'N/A':(summary.decisionCovered._text?(parseInt(summary.decisionCovered._text)*100/summary.decisionCnt._text):'N/A')):'N/A',
-                percentageJustified : summary.decisionCnt?(summary.decisionCnt._text==='N/A'?'N/A':(summary.decisionCoveredJust._text?(parseInt(summary.decisionCoveredJust._text)*100/summary.decisionCnt._text):'N/A')):'N/A',
-            }
-        ]
+    getCoverage(summary,type){
+        if(type==='log'){
+            var coverages =[
+                {
+                    type : 'FC',
+                    count : summary.modFctCnt?summary.modFctCnt._text:'N/A',
+                    covered : summary.modFctCovered?summary.modFctCovered._text:'N/A',
+                    accepted : summary.modFctCoveredJust?summary.modFctCoveredJust._text:'N/A',
+                    percentage : summary.cov_fct?parseInt(summary.cov_fct._text):'N/A',
+                    percentageJustified : summary.covJust_fct?parseInt(summary.covJust_fct._text):'N/A',
+                },
+                {
+                    type : 'DC',
+                    count : summary.modDecCnt?summary.modDecCnt._text:'N/A',
+                    covered : summary.modDecCovered?summary.modDecCovered._text:'N/A',
+                    accepted : summary.modDecCoveredJust?summary.modDecCoveredJust._text:'N/A',
+                    percentage : summary.dec_fct?parseInt(summary.dec_fct._text):'N/A',
+                    percentageJustified : summary.decJust_fct?parseInt(summary.decJust_fct._text):'N/A',
+                },
+                {
+                    type : 'SC',
+                    count : summary.stmtCnt?summary.stmtCnt._text:'N/A',
+                    covered : summary.stmtCovered?summary.stmtCovered._text:'N/A',
+                    accepted : summary.stmtCoveredJust?summary.stmtCoveredJust._text:'N/A',
+                    percentage : summary.stmt_fct?parseInt(summary.stmt_fct._text):'N/A',
+                    percentageJustified : summary.stmtJust_fct?parseInt(summary.stmtJust_fct._text):'N/A',
+                },
+                {
+                    type : 'CC',
+                    count : summary.callsCnt?summary.callsCnt._text:'N/A',
+                    covered : summary.callsCovered?summary.callsCovered._text:'N/A',
+                    accepted : summary.callsCoveredJust?summary.callsCoveredJust._text:'N/A',
+                    percentage : summary.callcov_fct?parseInt(summary.callcov_fct._text):'N/A',
+                    percentageJustified : summary.callcovJust_fct?parseInt(summary.callcovJust_fct._text):'N/A',
+                },
+                {
+                    type : 'BC',
+                    count : summary.decisionCnt?summary.decisionCnt._text:'N/A',
+                    covered : summary.decisionCovered?summary.decisionCovered._text:'N/A',
+                    accepted : summary.decisionCoveredJust?summary.decisionCoveredJust._text:'N/A',
+                    percentage : summary.decisionCnt?(summary.decisionCnt._text==='N/A'?'N/A':(summary.decisionCovered._text?(parseInt(summary.decisionCovered._text)*100/summary.decisionCnt._text):'N/A')):'N/A',
+                    percentageJustified : summary.decisionCnt?(summary.decisionCnt._text==='N/A'?'N/A':(summary.decisionCoveredJust._text?(parseInt(summary.decisionCoveredJust._text)*100/summary.decisionCnt._text):'N/A')):'N/A',
+                }
+            ]
 
-        return coverages
+            return coverages
+        }else if(type==='file'){
+            var nodes_file = this.moduleCodeCoverageFileNodes.filter(file=>{
+                return file.name._text === summary.name._text
+            })
+            var itemcoverageFC = []
+            var itemcoverageDC = []
+            var itemcoverageSC = []
+            var itemcoverageCC = []
+            var itemcoverageBC = []
+
+            nodes_file.forEach(file=>{
+                itemcoverageFC.push({
+                    type : 'FC',
+                    count : file.modFctCnt?file.modFctCnt._text:'N/A',
+                    covered : file.modFctCovered?file.modFctCovered._text:'N/A',
+                    accepted : file.modFctCoveredJust?file.modFctCoveredJust._text:'N/A',
+                    percentage : file.cov_fct?parseInt(file.cov_fct._text):'N/A',
+                    percentageJustified : file.covJust_fct?parseInt(file.covJust_fct._text):'N/A',
+                })
+                itemcoverageDC.push({
+                    type : 'DC',
+                    count : file.modDecCnt?file.modDecCnt._text:'N/A',
+                    covered : file.modDecCovered?file.modDecCovered._text:'N/A',
+                    accepted : file.modDecCoveredJust?file.modDecCoveredJust._text:'N/A',
+                    percentage : file.dec_fct?parseInt(file.dec_fct._text):'N/A',
+                    percentageJustified : file.decJust_fct?parseInt(file.decJust_fct._text):'N/A',
+                })
+                itemcoverageSC.push({
+                    type : 'SC',
+                    count : file.stmtCnt?file.stmtCnt._text:'N/A',
+                    covered : file.stmtCovered?file.stmtCovered._text:'N/A',
+                    accepted : file.stmtCoveredJust?file.stmtCoveredJust._text:'N/A',
+                    percentage : file.stmt_fct?parseInt(file.stmt_fct._text):'N/A',
+                    percentageJustified : file.stmtJust_fct?parseInt(file.stmtJust_fct._text):'N/A',
+                })
+                itemcoverageCC.push({
+                    type : 'CC',
+                    count : file.callsCnt?file.callsCnt._text:'N/A',
+                    covered : file.callsCovered?file.callsCovered._text:'N/A',
+                    accepted : file.callsCoveredJust?file.callsCoveredJust._text:'N/A',
+                    percentage : file.callcov_fct?parseInt(file.callcov_fct._text):'N/A',
+                    percentageJustified : file.callcovJust_fct?parseInt(file.callcovJust_fct._text):'N/A',
+                })
+                itemcoverageBC.push({
+                    type : 'BC',
+                    count : file.decisionCnt?file.decisionCnt._text:'N/A',
+                    covered : file.decisionCovered?file.decisionCovered._text:'N/A',
+                    accepted : file.decisionCoveredJust?file.decisionCoveredJust._text:'N/A',
+                    percentage : file.decisionCnt?(file.decisionCnt._text==='N/A'?'N/A':(file.decisionCovered._text?(parseInt(file.decisionCovered._text)*100/file.decisionCnt._text):'N/A')):'N/A',
+                    percentageJustified : file.decisionCnt?(file.decisionCnt._text==='N/A'?'N/A':(file.decisionCoveredJust._text?(parseInt(file.decisionCoveredJust._text)*100/file.decisionCnt._text):'N/A')):'N/A',
+                })
+            })
+
+            return [itemcoverageFC , itemcoverageDC , itemcoverageSC , itemcoverageCC , itemcoverageBC ]
+
+        }
     },
     getMinMaxInfo(path){
           if(path.length>0){
@@ -419,7 +476,7 @@ export default {
           }
     },
     getConfig(parameter){
-        return parameter.match(new RegExp("config=(.*),"))
+        return parameter.match(new RegExp("config=(.*)"))
     },
     filters(bigdata,type,criteria){
         var datas = []
@@ -435,7 +492,6 @@ export default {
   },
   mounted(){
      this.getResultCompliance()
-     console.log('moduleCodeCoverageUniqueFileNodes',this.moduleCodeCoverageUniqueFileNodes)
   }
 };
 </script>
