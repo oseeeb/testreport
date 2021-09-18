@@ -52,7 +52,7 @@
                             <template v-if="quality===getqualityFromString(log.testrunAttr.parameter)">
                                 <md-table-row :key="key">
                                     <md-table-cell colspan="2">
-                                        {{getConfig(log.testrunAttr.parameter)!==null?getConfig(log.testrunAttr.parameter)[1]:''}}
+                                        {{getConfig(log.testrunAttr.parameter)!==null?getConfig(log.testrunAttr.parameter)[1]:'OverallCoverage'}}
                                         <a :href="log.link?log.link._text:'#'">[Details Report]</a>
                                     </md-table-cell>
                                     <md-table-cell><show-coverage-data :coverage="log.summary?getCoverage(log.summary,'log')[0]:[]"></show-coverage-data></md-table-cell>
