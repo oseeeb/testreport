@@ -9,7 +9,7 @@
         </div>
     </div>
     <div v-else-if="Type==='coverage'&&Todraw.percentage!=='N/A'||!isNaN(Todraw.percentage)">
-        <div class="result-diag" data-toggle="tooltip" :title="result.text">
+        <div :class="isNaN(parseInt(Todraw.percentage))?'result-diag':'result-diag-red'" data-toggle="tooltip" :title="result.text">
             <div class="flex" :style="'width:'+result.ok+'%;heigth:100%;background-color:#00FF00'"></div>
             <div class="flex" :style="'width:'+result.justified+'%;heigth:100%;background-color:green'"></div>
             <div class="flex" :style="'width:'+result.fail+'%;heigth:100%;background-color:red'"></div>
@@ -213,7 +213,7 @@ export default {
             
             this.result.ok = this.metrics.Passed*100/this.metrics.Total
 
-            this.result.fail = (this.metrics.NotPassed-this.metrics.NotPassed_Justified)*100/this.metrics.Total
+            this.result.fail = this.metrics.NotPassed*100/this.metrics.Total
 
             this.result.justified = this.metrics.NotPassed_Justified*100/this.metrics.Total
 
@@ -358,7 +358,9 @@ export default {
         }
         else if(this.Type==='coverage'){
             var coverage = this.Todraw
-            console.log(coverage)
+            if(isNaN(parseInt(coverage.percentage))){ 
+                console.log('is NaN',coverage)
+            }
             this.result.justified = (parseInt(coverage.count)-parseInt(coverage.covered))*100/coverage.count
 
             this.result.fail = 0
@@ -379,6 +381,13 @@ export default {
     width:100%;
     height: 5px;
     background: rgb(168, 166, 166);
+  }
+  .result-diag-red{
+    display:flex;
+    flex-direction: row;
+    width:100%;
+    height: 5px;
+    background: rgb(207, 0, 0);
   }
 
 </style>

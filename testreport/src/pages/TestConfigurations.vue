@@ -16,7 +16,7 @@
             </md-table-row>
             <template v-for="(path,key) in paths">
                 <md-table-row colspan="7" :key="key">
-                    {{path}}
+                    {{path===''?'-':path}}
                 </md-table-row>
                 <md-table-row v-for="(config,kex) in filteredConfigs(path)" :key="(kex+testconfigs.length)">   
                   <md-table-cell>{{config.configName}}</md-table-cell> 
@@ -76,8 +76,8 @@
                             <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).BC"></show-coverage-data></md-table-cell>
                         </md-table-row>
                       </md-table>
-                  </md-table-cell>         
-                   <md-table-cell :style="'background-color:'+(getResultbytesruns(config.testruns)==='FAIL'?'red;':getResultbytesruns(config.testruns)==='WARN'?'yellow;':getResultbytesruns(config.testruns)==='OK'?'#00FF00;':'')">{{getResultbytesruns(config.testruns)}}</md-table-cell>           
+                  </md-table-cell>     
+                  <md-table-cell :style="'background-color:'+(getResultbytesruns(config.testruns)==='FAIL*'||getResultbytesruns(config.testruns)==='WARN*'||getResultbytesruns(config.testruns)==='PROCESSERROR*'?'green':(getResultbytesruns(config.testruns)==='FAIL'?'red;':(getResultbytesruns(config.testruns)==='WARN'?'yellow':'#00FF00;')))">{{getResultbytesruns(config.testruns)}}</md-table-cell>           
                 </md-table-row>
             </template>
 
@@ -103,9 +103,17 @@ export default {
   },
   methods:{
     filteredConfigs(path){
-      return this.testconfigs.filter(config=>{
-        return config.name.includes(path)
+      var filtered =  this.testconfigs.filter(config=>{
+        if(path!==''){
+          return config.name.includes(path)
+        }else{
+          return config.name.toLowerCase().includes('overall')
+        }
       })
+
+      console.log('configs path',path)
+
+      return filtered
     },
     getquality(config){
       var testRunsRuntime = []
@@ -191,39 +199,63 @@ export default {
       }
     },
     getsimpleResult(result){
-            if(result.includes('FAIL')){
+      if(result.includes('FAIL*')){
+          return 'FAIL*'
+      }
+      else if(result.includes('FAIL')){
+          return 'FAIL'
+      }
+      else if(result.includes('WARN*')){
+          return 'WARN*'
+      }
+      else if(result.includes('WARN')){
+          return 'WARN'
+      }
+      else if(result.includes('processError')){
+          return 'PROCESSERROR'
+      }
+      else if(result.includes('OK.N/A')){
+          return 'OK'
+      }
+      else if(result.includes('OK')){
+          return 'OK'
+      }
+    },
+    getResult(result,isJustified){
+        if(result.includes('fail')){
+            if(isJustified){
+                return 'FAIL*'
+            }else{
                 return 'FAIL'
             }
-            else if(result.includes('WARN')){
-                return 'WARN'
-            }
-            else if(result.includes('OK')){
-                return 'OK'
-            }
-    },
-    getResult(result){
-        if(result.includes('fail')){
-            return 'FAIL'
         }
         else if(result.includes('warn')){
-            return 'WARN'
+            if(isJustified){
+                return 'WARN*'
+            }else{
+                return 'WARN'
+            }
         }
         else if(result.includes('N/A')){
-            return 'OK'
+            return 'OK.N/A'
+        }
+        else if(result.toLowerCase().includes('processerror')){
+            return 'processError'
         }
         else{
             return 'OK'
         }
     },
     getTestRunResult(testrun){
-        if('result' in testrun){
+        if(testrun.result){
+            var isJustified = 'justification' in testrun
             if('_text' in testrun.result){
-              return this.getResult(testrun.result._text)
+                    return this.getResult(testrun.result._text,isJustified)
             }
             else{
                 var result = []
                 testrun.result.forEach(elt=>{
-                result.push(this.getResult(elt._text))
+                result.push(this.getResult(elt._text,isJustified))
                 })
                 return this.getsimpleResult(result)
             }
@@ -347,7 +379,7 @@ export default {
 
     configNames.forEach(name=>{
       var config = {}
-
+      
       config.name = name
       config.Coverage_Status = 'TBD'
 
@@ -409,10 +441,12 @@ export default {
       config.testruns = this.getTestrunByConfig(name)
       console.log('this testconfigs result',this.getResultbytesruns(config.testruns))
       this.testconfigs.push(config)
+      if(name.toLowerCase()==='overall'){
+        console.log('ce tetu',config)
+      }
     })
 
     this.paths = [...(new Set(this.paths))]
-    
     console.log('this testconfigs',this.testconfigs)
   }
 };
