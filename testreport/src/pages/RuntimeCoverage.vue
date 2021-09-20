@@ -127,9 +127,23 @@
                         :riskMetricAvailableForFunctions="riskMetricAvailableForFunctions"
                        ></output-function-data-for-module-code-coverage>
                     </template>
+                    <template v-else-if="riskMetricAvailableForFunctions">
+                        <md-table-row>
+                            <md-table-cell colspan="7">There are {{moduleCodeCoverageUniqueFunctionNodes.length}} differently named functions. Only functions with a risk metric &gt;={{minimumRiskMetricValueForFunctionOutputInTheOutputFunctionsWithRiskMetricViolationOnlyCase}} are displayed.</md-table-cell>
+                        </md-table-row>
+                       <output-function-data-for-module-code-coverage
+                        v-for="(func,key) in moduleCodeCoverageUniqueFunctionNodes"
+                        :key="key"
+                        :functionNodes="moduleCodeCoverageFunctionNodes"
+                        :func="func"
+                        :outputFunctionsWithRiskMetricViolationOnly="true"
+                        :riskMetricAvailableForFunctions="true"
+                        :minimumRiskMetricValueForFunctionOutputInTheOutputFunctionsWithRiskMetricViolationOnlyCase="minimumRiskMetricValueForFunctionOutputInTheOutputFunctionsWithRiskMetricViolationOnlyCase"
+                       ></output-function-data-for-module-code-coverage>
+                    </template>
                     <template v-else>
                         <md-table-row>
-                            <md-table-cell colspan="7">There are {{moduleCodeCoverageUniqueFileNodes.length}} differently named files in {{moduleCodeCoverageFileNodes.length}} files. Details are not displayed.</md-table-cell>
+                            <md-table-cell colspan="7">There are {{moduleCodeCoverageUniqueFunctionNodes.length}} differently named files in {{moduleCodeCoverageFileNodes.length}} files. Details are not displayed.</md-table-cell>
                         </md-table-row>
                     </template>
                 </md-table>
@@ -154,7 +168,8 @@ export default {
         log_FunctionCoverageNodesForModuleCodeCoverage:[],
         logRuntimeCoverageNodesForModuleCodeCoverage:[],
         moduleCodeCoverageFileNodes:[],
-        moduleCodeCoverageFunctionNodes:[]
+        moduleCodeCoverageFunctionNodes:[],
+        minimumRiskMetricValueForFunctionOutputInTheOutputFunctionsWithRiskMetricViolationOnlyCase:3
     }
   },
   computed:{
@@ -207,7 +222,7 @@ export default {
                     risky_metrics.push(func)
                 }
             })
-        
+        console.log('riskMetricAvailableForFunctions',risky_metrics.length>0)
         return risky_metrics.length>0;
       }
     },
