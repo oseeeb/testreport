@@ -359,17 +359,20 @@ export default {
         else if(this.Type==='coverage'){
             var coverage = this.Todraw
 
-            this.result.justified = (parseInt(coverage.covered)-parseInt(coverage.accepted))*100/coverage.count
+            this.result.text = parseInt(coverage.accepted)+'/'+parseInt(coverage.count)+' covered ('+parseInt(coverage.percentageJustified)+'%)\n'
+            this.result.text+= ' - '+parseInt(coverage.covered)+' measured ('+parseInt(coverage.percentage)+'%)\n'
+            if((coverage.covered!==coverage.accepted)){
+                this.result.text+= ' - '+(parseInt(coverage.accepted)-parseInt(coverage.covered))+' justified \n'
+            }
+            if((coverage.count!==coverage.accepted)){
+                this.result.text+= ' - '+(parseInt(coverage.count)-parseInt(coverage.accepted))+' uncovered \n'
+            }
 
-            this.result.fail = 0
+            this.result.justified = (parseInt(coverage.accepted)-parseInt(coverage.covered))*100/coverage.count
 
-            this.result.ok = parseInt(coverage.percentage)
-            
-            console.log('this.result.ok',this.result.ok)
+            this.result.fail = (parseInt(coverage.count)-parseInt(coverage.accepted))*100/coverage.count
 
-            this.result.text = parseInt(coverage.covered)+'/'+parseInt(coverage.count)+' covered ('+parseInt(coverage.percentage)+'%)\n'
-            this.result.text+=parseInt(coverage.accepted)+'/'+parseInt(coverage.count)+' accepted ('+parseInt(coverage.percentage)+'%)\n'
-            this.result.text+=(parseInt(coverage.count)-parseInt(coverage.covered))+' uncovered'
+            this.result.ok = parseInt(coverage.covered)*100/coverage.count
         }
     }
 }

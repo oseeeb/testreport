@@ -124,25 +124,25 @@
                 <template v-for="(item,key) in condFiles">
                     <md-table-row :key="key">
                         <md-table-cell>{{item.name}}</md-table-cell>
-                        <md-table-cell>{{item.BME.min===item.BME.max?item.BME.min:item.BME.min+'...'+item.BME.max}}</md-table-cell>
-                        <md-table-cell>{{item.BMO.min===item.BMO.max?item.BMO.min:item.BMO.min+'...'+item.BMO.max}}</md-table-cell>
-                        <md-table-cell>{{item.BMS.min===item.BMS.max?item.BMS.min:item.BMS.min+'...'+item.BMS.max}}</md-table-cell>
-                        <md-table-cell>{{item.BUG.min===item.BUG.max?item.BUG.min:item.BUG.min+'...'+item.BUG.max}}</md-table-cell>
-                        <md-table-cell>{{item.CDN.min===item.CDN.max?item.CDN.min:item.CDN.min+'...'+item.CDN.max}}</md-table-cell>
-                        <md-table-cell>{{item.DEV.min===item.DEV.max?item.DEV.min:item.DEV.min+'...'+item.DEV.max}}</md-table-cell>
-                        <md-table-cell>{{item.DIF.min===item.DIF.max?item.DIF.min:item.DIF.min+'...'+item.DIF.max}}</md-table-cell>
-                        <md-table-cell>{{item.ECT.min===item.ECT.max?item.ECT.min:item.ECT.min+'...'+item.ECT.max}}</md-table-cell>
-                        <md-table-cell>{{item.EFF.min===item.EFF.max?item.EFF.min:item.EFF.min+'...'+item.EFF.max}}</md-table-cell>
-                        <md-table-cell>{{item.FCO.min===item.FCO.max?item.FCO.min:item.FCO.min+'...'+item.FCO.max}}</md-table-cell>
-                        <md-table-cell>{{item.FNC.min===item.FNC.max?item.FNC.min:item.FNC.min+'...'+item.FNC.max}}</md-table-cell>
-                        <md-table-cell>{{item.HAL.min===item.HAL.max?item.HAL.min:item.HAL.min+'...'+item.HAL.max}}</md-table-cell>
-                        <md-table-cell>{{item.M20.min===item.M20.max?item.M20.min:item.M20.min+'...'+item.M20.max}}</md-table-cell>
-                        <md-table-cell>{{item.M21.min===item.M21.max?item.M21.min:item.M21.min+'...'+item.M21.max}}</md-table-cell>
-                        <md-table-cell>{{item.M22.min===item.M22.max?item.M22.min:item.M22.min+'...'+item.M22.max}}</md-table-cell>
-                        <md-table-cell>{{item.M28.min===item.M28.max?item.M28.min:item.M28.min+'...'+item.M28.max}}</md-table-cell>
-                        <md-table-cell>{{item.M33.min===item.M33.max?item.M33.min:item.M33.min+'...'+item.M33.max}}</md-table-cell>
-                        <md-table-cell>{{item.OPN.min===item.OPN.max?item.OPN.min:item.OPN.min+'...'+item.OPN.max}}</md-table-cell>
-                        <md-table-cell>{{item.OPT.min===item.OPT.max?item.OPT.min:item.OPT.min+'...'+item.OPT.max}}</md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.BME?(item.BME.max>10000000?'#33BCFF':(item.BME.max>20?'#CCEEFF':'')):'')">{{item.BME.min===item.BME.max?item.BME.min:item.BME.min+'...'+item.BME.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.BMO?(item.BMO.max>10000000?'#33BCFF':(item.BMO.max>20?'#CCEEFF':'')):'')">{{item.BMO.min===item.BMO.max?item.BMO.min:item.BMO.min+'...'+item.BMO.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.BMS?(item.BMS.max>10000000?'#33BCFF':(item.BMS.max>20?'#CCEEFF':'')):'')">{{item.BMS.min===item.BMS.max?item.BMS.min:item.BMS.min+'...'+item.BMS.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.BUG?(item.BUG.max>10000000?'#33BCFF':(item.BUG.max>20?'#CCEEFF':'')):'')">{{item.BUG.min===item.BUG.max?item.BUG.min:item.BUG.min+'...'+item.BUG.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.CDN?(item.CDN.max>10000000?'#33BCFF':(item.CDN.max>20?'#CCEEFF':'')):'')">{{item.CDN.min===item.CDN.max?item.CDN.min:item.CDN.min+'...'+item.CDN.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.DEV?(item.DEV.max>10000000?'#33BCFF':(item.DEV.max>20?'#CCEEFF':'')):'')">{{item.DEV.min===item.DEV.max?item.DEV.min:item.DEV.min+'...'+item.DEV.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.DIF?(item.DIF.max>10000000?'#33BCFF':(item.DIF.max>20?'#CCEEFF':'')):'')">{{item.DIF.min===item.DIF.max?item.DIF.min:item.DIF.min+'...'+item.DIF.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.ECT?(item.ECT.max>10000000?'#33BCFF':(item.ECT.max>20?'#CCEEFF':'')):'')">{{item.ECT.min===item.ECT.max?item.ECT.min:item.ECT.min+'...'+item.ECT.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.EFF?(item.EFF.max>10000000?'#33BCFF':(item.EFF.max>20?'#CCEEFF':'')):'')">{{item.EFF.min===item.EFF.max?item.EFF.min:item.EFF.min+'...'+item.EFF.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.FCO?(item.FCO.max>10000000?'#33BCFF':(item.FCO.max>20?'#CCEEFF':'')):'')">{{item.FCO.min===item.FCO.max?item.FCO.min:item.FCO.min+'...'+item.FCO.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.FNC?(item.FNC.max>10000000?'#33BCFF':(item.FNC.max>20?'#CCEEFF':'')):'')">{{item.FNC.min===item.FNC.max?item.FNC.min:item.FNC.min+'...'+item.FNC.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.HAL?(item.HAL.max>10000000?'#33BCFF':(item.HAL.max>20?'#CCEEFF':'')):'')">{{item.HAL.min===item.HAL.max?item.HAL.min:item.HAL.min+'...'+item.HAL.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.M20?(item.M20.max>10000000?'#33BCFF':(item.M20.max>20?'#CCEEFF':'')):'')">{{item.M20.min===item.M20.max?item.M20.min:item.M20.min+'...'+item.M20.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.M21?(item.M21.max>10000000?'#33BCFF':(item.M21.max>20?'#CCEEFF':'')):'')">{{item.M21.min===item.M21.max?item.M21.min:item.M21.min+'...'+item.M21.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.M22?(item.M22.max>10000000?'#33BCFF':(item.M22.max>20?'#CCEEFF':'')):'')">{{item.M22.min===item.M22.max?item.M22.min:item.M22.min+'...'+item.M22.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.M28?(item.M28.max>10000000?'#33BCFF':(item.M28.max>20?'#CCEEFF':'')):'')">{{item.M28.min===item.M28.max?item.M28.min:item.M28.min+'...'+item.M28.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.M33?(item.M33.max>10000000?'#33BCFF':(item.M33.max>20?'#CCEEFF':'')):'')">{{item.M33.min===item.M33.max?item.M33.min:item.M33.min+'...'+item.M33.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.OPN?(item.OPN.max>10000000?'#33BCFF':(item.OPN.max>20?'#CCEEFF':'')):'')">{{item.OPN.min===item.OPN.max?item.OPN.min:item.OPN.min+'...'+item.OPN.max}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.OPT?(item.OPT.max>10000000?'#33BCFF':(item.OPT.max>20?'#CCEEFF':'')):'')">{{item.OPT.min===item.OPT.max?item.OPT.min:item.OPT.min+'...'+item.OPT.max}}</span></md-table-cell>
                     </md-table-row>
                 </template>
             </md-table>
@@ -268,16 +268,16 @@
                         <md-table-cell><span :style="'background-color:'+(item.RET?(item.RET.max>10000000?'#33BCFF':(item.RET.max>1?'#CCEEFF':'')):'')" >{{item.RET?(item.RET.min===item.RET.max?item.RET.min:item.RET.min+'...'+item.RET.max):'n/a'}}</span></md-table-cell>
                         <md-table-cell><span :style="'background-color:'+(item.ST3?(item.ST3.max>10000000?'#33BCFF':(item.ST3.max>50?'#CCEEFF':'')):'')" >{{item.ST3?(item.ST3.min===item.ST3.max?item.ST3.min:item.ST3.min+'...'+item.ST3.max):'n/a'}}</span></md-table-cell>
 
-                        <md-table-cell><span :style="'background-color:'+(item.AV1?(item.AV1.max>10000000?'#33BCFF':(item.AV1.max>1000000?'#CCEEFF':'')):'')" >{{item.AV1?(item.AV1.min===item.AV1.max?item.AV1.min:item.AV1.min+'...'+item.AV1.max):'n/a'}}</span></md-table-cell>
-                        <md-table-cell><span :style="'background-color:'+(item.KNT?(item.KNT.max>10000000?'#33BCFF':(item.KNT.max>1000000?'#CCEEFF':'')):'')" >{{item.KNT?(item.KNT.min===item.KNT.max?item.KNT.min:item.KNT.min+'...'+item.KNT.max):'n/a'}}</span></md-table-cell>
-                        <md-table-cell><span :style="'background-color:'+(item.LCT?(item.LCT.max>10000000?'#33BCFF':(item.LCT.max>1000000?'#CCEEFF':'')):'')" >{{item.LCT?(item.LCT.min===item.LCT.max?item.LCT.min:item.LCT.min+'...'+item.LCT.max):'n/a'}}</span></md-table-cell>
-                        <md-table-cell><span :style="'background-color:'+(item.LIN?(item.LIN.max>10000000?'#33BCFF':(item.LIN.max>1000000?'#CCEEFF':'')):'')" >{{item.LIN?(item.LIN.min===item.LIN.max?item.LIN.min:item.LIN.min+'...'+item.LIN.max):'n/a'}}</span></md-table-cell>
-                        <md-table-cell><span :style="'background-color:'+(item.M07?(item.M07.max>10000000?'#33BCFF':(item.M07.max>1000000?'#CCEEFF':'')):'')" >{{item.M07?(item.M07.min===item.M07.max?item.M07.min:item.M07.min+'...'+item.M07.max):'n/a'}}</span></md-table-cell>
-                        <md-table-cell><span :style="'background-color:'+(item.M29?(item.M29.max>10000000?'#33BCFF':(item.M29.max>1000000?'#CCEEFF':'')):'')" >{{item.M29?(item.M29.min===item.M29.max?item.M29.min:item.M29.min+'...'+item.M29.max):'n/a'}}</span></md-table-cell>
-                        <md-table-cell><span :style="'background-color:'+(item.SUB?(item.SUB.max>10000000?'#33BCFF':(item.SUB.max>1000000?'#CCEEFF':'')):'')" >{{item.SUB?(item.SUB.min===item.SUB.max?item.SUB.min:item.SUB.min+'...'+item.SUB.max):'n/a'}}</span></md-table-cell>
-                        <md-table-cell><span :style="'background-color:'+(item.UNR?(item.UNR.max>10000000?'#33BCFF':(item.UNR.max>1000000?'#CCEEFF':'')):'')" >{{item.UNR?(item.UNR.min===item.UNR.max?item.UNR.min:item.UNR.min+'...'+item.UNR.max):'n/a'}}</span></md-table-cell>
-                        <md-table-cell><span :style="'background-color:'+(item.UNV?(item.UNV.max>10000000?'#33BCFF':(item.UNV.max>1000000?'#CCEEFF':'')):'')" >{{item.UNV?(item.UNV.min===item.UNV.max?item.UNV.min:item.UNV.min+'...'+item.UNV.max):'n/a'}}</span></md-table-cell>
-                        <md-table-cell><span :style="'background-color:'+(item.XLN?(item.XLN.max>10000000?'#33BCFF':(item.XLN.max>1000000?'#CCEEFF':'')):'')" >{{item.XLN?(item.XLN.min===item.XLN.max?item.XLN.min:item.XLN.min+'...'+item.XLN.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.AV1?(item.AV1.max>10000000?'#33BCFF':(item.AV1.max>20?'#CCEEFF':'')):'')" >{{item.AV1?(item.AV1.min===item.AV1.max?item.AV1.min:item.AV1.min+'...'+item.AV1.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.KNT?(item.KNT.max>10000000?'#33BCFF':(item.KNT.max>20?'#CCEEFF':'')):'')" >{{item.KNT?(item.KNT.min===item.KNT.max?item.KNT.min:item.KNT.min+'...'+item.KNT.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.LCT?(item.LCT.max>10000000?'#33BCFF':(item.LCT.max>20?'#CCEEFF':'')):'')" >{{item.LCT?(item.LCT.min===item.LCT.max?item.LCT.min:item.LCT.min+'...'+item.LCT.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.LIN?(item.LIN.max>10000000?'#33BCFF':(item.LIN.max>20?'#CCEEFF':'')):'')" >{{item.LIN?(item.LIN.min===item.LIN.max?item.LIN.min:item.LIN.min+'...'+item.LIN.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.M07?(item.M07.max>10000000?'#33BCFF':(item.M07.max>20?'#CCEEFF':'')):'')" >{{item.M07?(item.M07.min===item.M07.max?item.M07.min:item.M07.min+'...'+item.M07.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.M29?(item.M29.max>10000000?'#33BCFF':(item.M29.max>20?'#CCEEFF':'')):'')" >{{item.M29?(item.M29.min===item.M29.max?item.M29.min:item.M29.min+'...'+item.M29.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.SUB?(item.SUB.max>10000000?'#33BCFF':(item.SUB.max>20?'#CCEEFF':'')):'')" >{{item.SUB?(item.SUB.min===item.SUB.max?item.SUB.min:item.SUB.min+'...'+item.SUB.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.UNR?(item.UNR.max>10000000?'#33BCFF':(item.UNR.max>20?'#CCEEFF':'')):'')" >{{item.UNR?(item.UNR.min===item.UNR.max?item.UNR.min:item.UNR.min+'...'+item.UNR.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.UNV?(item.UNV.max>10000000?'#33BCFF':(item.UNV.max>20?'#CCEEFF':'')):'')" >{{item.UNV?(item.UNV.min===item.UNV.max?item.UNV.min:item.UNV.min+'...'+item.UNV.max):'n/a'}}</span></md-table-cell>
+                        <md-table-cell><span :style="'background-color:'+(item.XLN?(item.XLN.max>10000000?'#33BCFF':(item.XLN.max>20?'#CCEEFF':'')):'')" >{{item.XLN?(item.XLN.min===item.XLN.max?item.XLN.min:item.XLN.min+'...'+item.XLN.max):'n/a'}}</span></md-table-cell>
                     </md-table-row>
                 </template>
             </md-table>
