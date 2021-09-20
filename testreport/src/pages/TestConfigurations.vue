@@ -39,8 +39,8 @@
                     </template> -->
                   </md-table-cell> 
                   <md-table-cell>
-                    <template v-if="config.Misra.NrOfDeviatedRules>0">
-                      <md-table>
+                      <metrics-bar v-if="getlogbytestconfig(config.name).test_MISRA.length>0" :label="false" :Todraw="getlogbytestconfig(config.name).test_MISRA" :Type="'testrun'" :Name="'Testruns'"></metrics-bar>
+                      <!-- <md-table>
                         <md-table-row>
                             <md-table-cell>
                               <span style="height:15px" :class="config.Misra.status==='OK'?'symbol_ok':'symbol_fail'"> </span>
@@ -49,33 +49,12 @@
                               {{config.Misra.NrOfDeviatedRules}}
                             </md-table-cell>
                         </md-table-row>
-                      </md-table>
-                    </template>
+                      </md-table> -->
                   </md-table-cell> 
                   <md-table-cell>
-                    <md-table>
-                        <md-table-row v-if="getlogbytestconfig(config.name).test_Coverage.length===0">
-                            <md-table-cell><span>N/A</span></md-table-cell>
-                            <md-table-cell><span>N/A</span></md-table-cell>
-                            <md-table-cell><span>N/A</span></md-table-cell>
-                            <md-table-cell><span>N/A</span></md-table-cell>
-                            <md-table-cell><span>N/A</span></md-table-cell>
-                        </md-table-row>
-                        <md-table-row v-else-if="getlogbytestconfig(config.name).test_Coverage.length===1">
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[0]"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[1]"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[2]"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[3]"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name)[4]"></show-coverage-data></md-table-cell>
-                        </md-table-row>
-                        <md-table-row v-else>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).FC"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).DC"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).SC"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).CC"></show-coverage-data></md-table-cell>
-                            <md-table-cell><show-coverage-data :coverage="getDataCoverage(config.name).BC"></show-coverage-data></md-table-cell>
-                        </md-table-row>
-                      </md-table>
+                    <span v-if="getlogbytestconfig(config.name).test_Coverage.length===0">N/A</span>
+                    <show-coverage-data v-else-if="getlogbytestconfig(config.name).test_Coverage.length===1" :coverage="getDataCoverage(config.name)[1]"></show-coverage-data>
+                    <show-coverage-data v-else :coverage="getDataCoverage(config.name).DC"></show-coverage-data>
                   </md-table-cell>     
                   <md-table-cell :style="'background-color:'+(getResultbytesruns(config.testruns)==='FAIL*'||getResultbytesruns(config.testruns)==='WARN*'||getResultbytesruns(config.testruns)==='PROCESSERROR*'?'green':(getResultbytesruns(config.testruns)==='FAIL'?'red;':(getResultbytesruns(config.testruns)==='WARN'?'yellow':'#00FF00;')))">{{getResultbytesruns(config.testruns)}}</md-table-cell>           
                 </md-table-row>
@@ -323,7 +302,6 @@ export default {
           DataCoverage.CC.push(data[3])
           DataCoverage.BC.push(data[4])
         })
-
         return DataCoverage
       }
     },

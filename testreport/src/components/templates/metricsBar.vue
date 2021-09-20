@@ -358,14 +358,14 @@ export default {
         }
         else if(this.Type==='coverage'){
             var coverage = this.Todraw
-            if(isNaN(parseInt(coverage.percentage))){ 
-                console.log('is NaN',coverage)
-            }
-            this.result.justified = (parseInt(coverage.count)-parseInt(coverage.covered))*100/coverage.count
+
+            this.result.justified = (parseInt(coverage.covered)-parseInt(coverage.accepted))*100/coverage.count
 
             this.result.fail = 0
 
             this.result.ok = parseInt(coverage.percentage)
+            
+            console.log('this.result.ok',this.result.ok)
 
             this.result.text = parseInt(coverage.covered)+'/'+parseInt(coverage.count)+' covered ('+parseInt(coverage.percentage)+'%)\n'
             this.result.text+=parseInt(coverage.accepted)+'/'+parseInt(coverage.count)+' accepted ('+parseInt(coverage.percentage)+'%)\n'
