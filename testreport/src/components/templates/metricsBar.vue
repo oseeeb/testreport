@@ -141,10 +141,8 @@ export default {
 
             return testruns
         },
-    },
-    mounted(){
-        if(this.Type==='testcase'){
-            var testCases = this.Todraw
+        getTestcaseMetrics(testcases){
+            var testCases = testcases
             var testcasesTested = testCases.filter(testcase=>{
                 if('testrun' in testcase){
                     if(Array.isArray(testcase.testrun)){
@@ -228,9 +226,9 @@ export default {
             this.result.text +='\n'
             this.result.text += (this.metrics.Warn_Justified!==0 || this.metrics.Fail_Justified!==0 || this.metrics.ProcessError_Justified!==0 )?((this.metrics.Warn_Justified+this.metrics.ProcessError_Justified+this.metrics.Fail_Justified)+' Not Passed + Justified\n - '):'' 
             this.result.text += (this.metrics.Warn_Justified!==0?this.metrics.Warn_Justified+'*warn':'')+' '+(this.metrics.ProcessError_Justified!==0?this.metrics.ProcessError_Justified+'*processError':'')+' '+(this.metrics.Fail_Justified!==0?this.metrics.Fail_Justified+'*fail':'')
-        }
-        else if(this.Type==='testrun'){
-            var testRuns = this.Todraw
+        },
+        getTestRunMetrics(testruns){
+            var testRuns = testruns
             var testRunsTested = testRuns.filter(testrun=>{
                 return 'result' in testrun
             })
@@ -298,10 +296,9 @@ export default {
             this.result.text +='\n'
             this.result.text += (this.metrics.Warn_Justified!==0 || this.metrics.Fail_Justified!==0 || this.metrics.ProcessError_Justified!==0 )?((this.metrics.Warn_Justified+this.metrics.ProcessError_Justified+this.metrics.Fail_Justified)+' Not Passed + Justified\n - '):'' 
             this.result.text += (this.metrics.Warn_Justified!==0?this.metrics.Warn_Justified+'*warn':'')+' '+(this.metrics.ProcessError_Justified!==0?this.metrics.ProcessError_Justified+'*processError':'')+' '+(this.metrics.Fail_Justified!==0?this.metrics.Fail_Justified+'*fail':'')
-        }
-        else if(this.Type==='testconfig'){
-            console.log('this.Todraw',this.Todraw)
-            var Configs = this.Todraw
+        },
+        getTestConfigsMetrics(testconfig){
+            var Configs = testconfig
             var testconfigs = []
             
             Configs.forEach(config=>{
@@ -355,9 +352,9 @@ export default {
             this.result.text +='\n'
             this.result.text += this.metrics.NotPassed!==0?(this.metrics.NotPassed+' Not Passed + UnJustified \n - '):''
             this.result.text += (this.metrics.Warn!==0?this.metrics.Warn+'*warn':'')+' '+(this.metrics.Fail!==0?this.metrics.Fail+'*fail':'')+' '+(this.metrics.ProcessError!==0?this.metrics.ProcessError+'*processError':'')
-        }
-        else if(this.Type==='coverage'){
-            var coverage = this.Todraw
+        },
+        getCoverageMetrics(Coverage){
+            var coverage = Coverage
 
             this.result.text = parseInt(coverage.accepted)+'/'+parseInt(coverage.count)+' covered ('+parseInt(coverage.percentageJustified)+'%)\n'
             this.result.text+= ' - '+parseInt(coverage.covered)+' measured ('+parseInt(coverage.percentage)+'%)\n'
@@ -373,7 +370,24 @@ export default {
             this.result.fail = (parseInt(coverage.count)-parseInt(coverage.accepted))*100/coverage.count
 
             this.result.ok = parseInt(coverage.covered)*100/coverage.count
+        },
+        getMetrics(){
+        if(this.Type==='testcase'){
+            this.getTestcaseMetrics(this.Todraw)
         }
+        else if(this.Type==='testrun'){
+            this.getTestRunMetrics(this.Todraw)
+        }
+        else if(this.Type==='testconfig'){
+            this.getTestConfigsMetrics(this.Todraw)
+        }
+        else if(this.Type==='coverage'){
+            this.getCoverageMetrics(this.Todraw)
+        }
+        }
+    },
+    mounted(){
+        this.getMetrics()
     }
 }
 </script>

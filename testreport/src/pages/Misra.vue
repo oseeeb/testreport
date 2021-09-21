@@ -52,7 +52,7 @@
                     <md-table-cell>{{item._attributes.parameter}}</md-table-cell>
                     <md-table-cell>{{item._attributes.date}}</md-table-cell>
                     <md-table-cell>{{item._attributes.executor}}</md-table-cell>
-                    <md-table-cell>{{item.result._text}}</md-table-cell>
+                    <md-table-cell :style="'text-align:center;background-color:'+((item.result._text.includes('fail')&&'justification' in item)||(item.result._text.includes('warn')&&'justification' in item)||(item.result._text.toLowerCase().includes('processerror')&&'justification' in item)?'green;':(item.result._text.includes('fail')?'red;':(item.result._text.includes('warn')?'yellow;':'#00FF00;')))">{{item.result._text+('justification' in item?'*':'')}}</md-table-cell>
                 </md-table-row>
             </md-table>
         </div> 

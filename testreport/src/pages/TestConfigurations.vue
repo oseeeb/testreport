@@ -56,7 +56,7 @@
                     <show-coverage-data v-else-if="getlogbytestconfig(config.name).test_Coverage.length===1" :coverage="getDataCoverage(config.name)[1]"></show-coverage-data>
                     <show-coverage-data v-else :coverage="getDataCoverage(config.name).DC"></show-coverage-data>
                   </md-table-cell>     
-                  <md-table-cell :style="'background-color:'+(getResultbytesruns(config.testruns)==='FAIL*'||getResultbytesruns(config.testruns)==='WARN*'||getResultbytesruns(config.testruns)==='PROCESSERROR*'?'green':(getResultbytesruns(config.testruns)==='FAIL'?'red;':(getResultbytesruns(config.testruns)==='WARN'?'yellow':'#00FF00;')))">{{getResultbytesruns(config.testruns)}}</md-table-cell>           
+                  <md-table-cell data-toggle="tooltip" :title="getTestRunMetrics(config.testruns)" :style="'background-color:'+(getResultbytesruns(config.testruns)==='FAIL*'||getResultbytesruns(config.testruns)==='WARN*'||getResultbytesruns(config.testruns)==='PROCESSERROR*'?'green':(getResultbytesruns(config.testruns)==='FAIL'?'red;':(getResultbytesruns(config.testruns)==='WARN'?'yellow':'#00FF00;')))">{{getResultbytesruns(config.testruns)}}</md-table-cell>           
                 </md-table-row>
             </template>
 
@@ -77,7 +77,7 @@ export default {
   data() {
     return {
       testconfigs:[],
-      paths:[]
+      paths:[],
     }
   },
   methods:{
@@ -350,6 +350,85 @@ export default {
         ]
 
         return coverages
+    },
+    getTestRunMetrics(testruns){
+        var testRuns = testruns
+        var metrics = {}
+        var result= {
+                        text:'',
+                        fail:0,
+                        warn:0,
+                        ok:0,
+                    }
+        var testRunsTested = testRuns.filter(testrun=>{
+            return 'result' in testrun
+        })
+
+        var testRunsPassed = testRunsTested.filter(testrun=>{
+            return this.getTestRunResult(testrun).includes('OK')
+        })
+
+        metrics.Total = testRuns.length
+        metrics.Tested = testRunsTested.length
+        metrics.Passed = testRunsPassed.length
+
+        metrics.Ok = testRunsPassed.filter(testrun=>{
+          return this.getTestRunResult(testrun)==='OK'
+        }).length
+
+        metrics.NA = testRunsTested.filter(testrun=>{
+            return this.getTestRunResult(testrun).includes('N/A')
+            }).length
+
+        metrics.Warn = testRunsTested.filter(testrun=>{
+            return this.getTestRunResult(testrun)==='WARN'&&!('justification' in testrun)
+        }).length
+
+        metrics.Fail = testRunsTested.filter(testrun=>{
+            return this.getTestRunResult(testrun)==='FAIL'&&!('justification' in testrun)
+        }).length
+
+        metrics.Warn_Justified = testRunsTested.filter(testrun=>{
+            return this.getTestRunResult(testrun)==='WARN'&&'justification' in testrun
+        }).length
+
+        
+        metrics.Fail_Justified = testRunsTested.filter(testrun=>{
+              return this.getTestRunResult(testrun)==='FAIL'&&'justification' in testrun
+        }).length
+
+        metrics.ProcessError = testRunsTested.filter(testrun=>{
+              return this.getTestRunResult(testrun)==='PROCESSERROR'
+        }).length
+
+        metrics.ProcessError_Justified = testRunsTested.filter(testrun=>{
+              return this.getTestRunResult(testrun)==='PROCESSERROR'&&'justification' in testrun
+        }).length
+
+        metrics.NotPassed = testRunsTested.filter(testrun=>{
+            return !this.getTestRunResult(testrun).includes('OK')&&!('justification' in testrun)
+        }).length
+        metrics.NotPassed_Justified =metrics.Fail_Justified+metrics.Warn_Justified+metrics.ProcessError_Justified
+
+        
+        result.ok = metrics.Passed*100/metrics.Total
+
+        result.fail = metrics.NotPassed*100/metrics.Total
+        result.justified = metrics.NotPassed_Justified*100/metrics.Total
+
+        result.text = (metrics.Tested===metrics.Total?metrics.Tested:(metrics.Tested+'/'+metrics.Total))+' tested\n'
+        result.text += metrics.Passed+' passed'
+        result.text +='\n'
+        result.text += ' - '+metrics.Ok+'*ok '
+        result.text += metrics.NA!==0?metrics.NA+'*N/A':''
+        result.text +='\n'
+        result.text += metrics.NotPassed!==0?(metrics.NotPassed+' Not Passed \n - '):''
+        result.text += (metrics.Warn!==0?metrics.Warn+'*warn':'')+' '+(metrics.Fail!==0?metrics.Fail+'*fail':'')+' '+(metrics.ProcessError!==0?metrics.ProcessError+'*processError':'')
+        result.text +='\n'
+        result.text += (metrics.Warn_Justified!==0 || metrics.Fail_Justified!==0 || metrics.ProcessError_Justified!==0 )?((metrics.Warn_Justified+metrics.ProcessError_Justified+metrics.Fail_Justified)+' Not Passed + Justified\n - '):'' 
+        result.text += (metrics.Warn_Justified!==0?metrics.Warn_Justified+'*warn':'')+' '+(metrics.ProcessError_Justified!==0?metrics.ProcessError_Justified+'*processError':'')+' '+(metrics.Fail_Justified!==0?metrics.Fail_Justified+'*fail':'')
+        
+        return result.text 
     },
   },
   mounted(){
