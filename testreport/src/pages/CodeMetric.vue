@@ -472,28 +472,52 @@ export default {
         return parameter.match(new RegExp("config=(.*)"))
     },
     getsimpleResult(result){
-        if(result.includes('FAIL')){
+        if(result.includes('processError')){
+            return 'PROCESSERROR'
+        }
+        else if(result.includes('FAIL')){
             return 'FAIL'
         }
         else if(result.includes('WARN')){
             return 'WARN'
         }
-        else if(result.includes('processError')){
-            return 'PROCESSERROR'
+        else if(result.includes('processError*')){
+            return 'PROCESSERROR*'
+        }
+        else if(result.includes('FAIL*')){
+            return 'FAIL*'
+        }
+        else if(result.includes('WARN*')){
+            return 'WARN*'
         }
         else if(result.includes('OK.N/A')){
-            return 'OK.N/A'
+            return 'OK'
         }
         else if(result.includes('OK')){
             return 'OK'
         }
     },
-    getResult(result){
-        if(result.includes('fail')){
-            return 'FAIL'
+    getResult(result,isJustified){
+        if(result.toLowerCase().includes('processerror')){
+            if(isJustified){
+                return 'processError*'
+            }else{
+                return 'processError'
+            }
+        }
+        else if(result.includes('fail')){
+            if(isJustified){
+                return 'FAIL*'
+            }else{
+                return 'FAIL'
+            }
         }
         else if(result.includes('warn')){
-            return 'WARN'
+            if(isJustified){
+                return 'WARN*'
+            }else{
+                return 'WARN'
+            }
         }
         else if(result.includes('N/A')){
             return 'OK.N/A'
@@ -507,13 +531,14 @@ export default {
     },
     getTestRunResult(testrun){
         if(testrun.result){
+            var isJustified = 'justification' in testrun
             if('_text' in testrun.result){
-                    return this.getResult(testrun.result._text)
+                    return this.getResult(testrun.result._text,isJustified)
             }
             else{
                 var result = []
                 testrun.result.forEach(elt=>{
-                result.push(this.getResult(elt._text))
+                result.push(this.getResult(elt._text,isJustified))
                 })
                 return this.getsimpleResult(result)
             }

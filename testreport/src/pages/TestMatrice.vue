@@ -12,7 +12,7 @@
             </md-table-row>
             <md-table-row v-for="(testcase,ken) in $store.state.testCases" :key="ken+$store.state.testCases.length">  
               <md-table-cell md-tooltip="TEEEEEERRRRRRRRRRRRRRRRRRRREEEEEEEEEEEEEEEEEEE">{{testcase._attributes.id}}</md-table-cell>
-              <md-table-cell :style="'background-color:'+(getResultConfig(testcase,config)==='FAIL'?'red;':getResultConfig(testcase,config)==='WARN'?'yellow;':getResultConfig(testcase,config)==='OK'?'#00FF00;':'')" v-for="(config,ket) in testconfigs" :key="ket">{{getResultConfig(testcase,config)}}</md-table-cell>                
+              <md-table-cell :style="'background-color:'+(getResultConfig(testcase,config)==='FAIL'?'red;':(getResultConfig(testcase,config)==='FAIL*'?'green;':(getResultConfig(testcase,config)==='WARN'?'yellow;':(getResultConfig(testcase,config)==='WARN*'?'green;':getResultConfig(testcase,config)==='OK'?'#00FF00;':''))))" v-for="(config,ket) in testconfigs" :key="ket">{{getResultConfig(testcase,config)}}</md-table-cell>                
             </md-table-row>
        </md-table>
       </div>
@@ -122,41 +122,65 @@ export default {
         test_MISRA:testRundlog_QAC,
         test_Coverage:testRundlog_Runtime
       }
-    },
+    },    
     getsimpleResult(result){
-            if(result.includes('FAIL')){
+      if(result.includes('FAIL*')){
+          return 'FAIL*'
+      }
+      else if(result.includes('FAIL')){
+          return 'FAIL'
+      }
+      else if(result.includes('WARN*')){
+          return 'WARN*'
+      }
+      else if(result.includes('WARN')){
+          return 'WARN'
+      }
+      else if(result.includes('processError')){
+          return 'PROCESSERROR'
+      }
+      else if(result.includes('OK.N/A')){
+          return 'OK'
+      }
+      else if(result.includes('OK')){
+          return 'OK'
+      }
+    },
+    getResult(result,isJustified){
+        if(result.includes('fail')){
+            if(isJustified){
+                return 'FAIL*'
+            }else{
                 return 'FAIL'
             }
-            else if(result.includes('WARN')){
-                return 'WARN'
-            }
-            else if(result.includes('OK')){
-                return 'OK'
-            }
-    },
-    getResult(result){
-        if(result.includes('fail')){
-            return 'FAIL'
         }
         else if(result.includes('warn')){
-            return 'WARN'
+            if(isJustified){
+                return 'WARN*'
+            }else{
+                return 'WARN'
+            }
         }
         else if(result.includes('N/A')){
-            return 'OK'
+            return 'OK.N/A'
+        }
+        else if(result.toLowerCase().includes('processerror')){
+            return 'processError'
         }
         else{
             return 'OK'
         }
     },
     getTestRunResult(testrun){
-        if('result' in testrun){
+        if(testrun.result){
+            var isJustified = 'justification' in testrun
             if('_text' in testrun.result){
-              return this.getResult(testrun.result._text)
+                    return this.getResult(testrun.result._text,isJustified)
             }
             else{
                 var result = []
                 testrun.result.forEach(elt=>{
-                result.push(this.getResult(elt._text))
+                result.push(this.getResult(elt._text,isJustified))
                 })
                 return this.getsimpleResult(result)
             }

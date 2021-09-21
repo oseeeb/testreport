@@ -15,7 +15,7 @@
             </md-table-row>
             <md-table-row v-for="(item,key) in testCasesWithJustification" :key="key">
                 <md-table-cell>{{item.id}}</md-table-cell>
-                <md-table-cell data-toggle="tooltip" :title="getmetricsTestrun(item)" :style="'text-align:center;background-color:'+(item.result==='OK'?'#00FF00;':(item.result==='WARN'?'yellow;':(item.result==='FAIL'?'red':'')))">{{item.result}}</md-table-cell>
+                <md-table-cell data-toggle="tooltip" :title="getTestRunMetrics(item.testrun)" :style="'text-align:center;background-color:green'">{{item.result}}</md-table-cell>
                 <md-table-cell><span>{{item.justification}}</span></md-table-cell>
             </md-table-row>
         </md-table>
@@ -32,46 +32,77 @@ export default {
   },
   methods:{
     getsimpleResult(result){
-      if(result.includes('FAIL')){
+      if(result.includes('processError')){
+          return 'PROCESSERROR'
+      }
+      else if(result.includes('FAIL')){
           return 'FAIL'
       }
       else if(result.includes('WARN')){
           return 'WARN'
       }
+      else if(result.includes('processError*')){
+          return 'PROCESSERROR*'
+      }
+      else if(result.includes('FAIL*')){
+          return 'FAIL*'
+      }
+      else if(result.includes('WARN*')){
+          return 'WARN*'
+      }
       else if(result.includes('OK.N/A')){
-          return 'OK.N/A'
+          return 'OK'
       }
       else if(result.includes('OK')){
           return 'OK'
       }
     },
-    getResult(result){
-      if(result.includes('fail')){
-          return 'FAIL'
-      }
-      else if(result.includes('warn')){
-          return 'WARN'
-      }
-      else if(result.includes('N/A')){
-          return 'OK.N/A'
-      }
-      else{
-          return 'OK'
-      }
-    },
-    getTestRunResult(testrun){
-      if(testrun.result){
-        if('_text' in testrun.result){
-          return this.getResult(testrun.result._text)
+    getResult(result,isJustified){
+        if(result.toLowerCase().includes('processerror')){
+            if(isJustified){
+                return 'processError*'
+            }else{
+                return 'processError'
+            }
+        }
+        else if(result.includes('fail')){
+            if(isJustified){
+                return 'FAIL*'
+            }else{
+                return 'FAIL'
+            }
+        }
+        else if(result.includes('warn')){
+            if(isJustified){
+                return 'WARN*'
+            }else{
+                return 'WARN'
+            }
+        }
+        else if(result.includes('N/A')){
+            return 'OK.N/A'
+        }
+        else if(result.toLowerCase().includes('processerror')){
+            return 'processError'
         }
         else{
-          var result = []
-          testrun.result.forEach(elt=>{
-          result.push(this.getResult(elt._text))
-          })
-          return this.getsimpleResult(result)
+            return 'OK'
         }
-      }
+    },
+    getTestRunResult(testrun){
+        if(testrun.result){
+            var isJustified = 'justification' in testrun
+            if('_text' in testrun.result){
+                    return this.getResult(testrun.result._text,isJustified)
+            }
+            else{
+                var result = []
+                testrun.result.forEach(elt=>{
+                result.push(this.getResult(elt._text,isJustified))
+                })
+                return this.getsimpleResult(result)
+            }
+        }
     },
     getTestCaseResult(testcase){
             if(testcase.testrun){
@@ -86,17 +117,18 @@ export default {
                     return this.getsimpleResult(result)
                 }
             }
-        },
-    getmetricsTestrun(testcase){
-      if(Array.isArray(testcase.testrun)){
-         var result = {
-            text:'',
-            fail:0,
-            warn:0,
-            ok:0,
-          }
-          var metrics={}
-          var testRuns = testcase.testrun
+    },
+    getTestRunMetrics(testruns){
+        var testRuns = testruns
+        
+        var metrics = {}
+        var result= {
+                        text:'',
+                        fail:0,
+                        warn:0,
+                        ok:0,
+                    }
+        if(Array.isArray(testRuns)){
           var testRunsTested = testRuns.filter(testrun=>{
               return 'result' in testrun
           })
@@ -118,61 +150,83 @@ export default {
               }).length
 
           metrics.Warn = testRunsTested.filter(testrun=>{
-              return this.getTestRunResult(testrun)==='WARN'
+              return this.getTestRunResult(testrun)==='WARN'&&!('justification' in testrun)
           }).length
 
           metrics.Fail = testRunsTested.filter(testrun=>{
-              return this.getTestRunResult(testrun)==='FAIL'
+              return this.getTestRunResult(testrun)==='FAIL'&&!('justification' in testrun)
           }).length
 
-          // this.metrics.Warn_Justified = testcasesTested.filter(elt=>{
-          //     if(elt.testrun.length){
-          //         return elt.testrun.filter(elt=>{elt.result._text==='warn'&&(elt.justification&&elt.justification.length!==0)}).length!==0
-          //     }else{
-          //         return elt.testrun.result._text==='warn'&&(elt.testrun.justification&&elt.testrun.justification.length!==0)
-          //     }
-          // }).length
-          // this.metrics.Fail = testCases.filter(elt=>{
-          //     if(elt.testrun.length){
-          //         return elt.testrun.filter(elt=>{elt.result._text==='fail'&&(elt.justification&&elt.justification.length===0)}).length!==0
-          //     }else{
-          //         return elt.testrun.result._text==='fail'&&(elt.testrun.justification&&elt.testrun.justification.length===0)
-          //     }
-          // }).length
-          // this.metrics.Fail_Justified = testcasesTested.filter(elt=>{
-          //     if(elt.testrun.length){
-          //         return elt.testrun.filter(elt=>{elt.result._text==='fail'&&(elt.justification&&elt.justification.length!==0)}).length!==0
-          //     }else{
-          //         return elt.testrun.result._text==='fail'&&(elt.testrun.justification&&elt.testrun.justification.length!==0)
-          //     }
-          // }).length
-          // this.metrics.ProcessError = testCases.filter(elt=>{
-          //     if(elt.testrun.length){
-          //         return elt.testrun.filter(elt=>{elt.result._text==='processError'&&(elt.justification&&elt.justification.length===0)}).length!==0
-          //     }else{
-          //         return elt.testrun.result._text==='processError'&&(elt.testrun.justification&&elt.testrun.justification.length===0)
-          //     }
-          // }).length
-          // this.metrics.NotPassed =
-          // this.metrics.NotPassed_Justified =
-          // this.metrics.Accepted =
+          metrics.Warn_Justified = testRunsTested.filter(testrun=>{
+              return this.getTestRunResult(testrun)==='WARN'&&'justification' in testrun
+          }).length
 
           
-          result.ok = metrics.Passed*100/metrics.Total
+          metrics.Fail_Justified = testRunsTested.filter(testrun=>{
+                return this.getTestRunResult(testrun)==='FAIL'&&'justification' in testrun
+          }).length
 
-          result.fail = metrics.Fail*100/metrics.Total
+          metrics.ProcessError = testRunsTested.filter(testrun=>{
+                return this.getTestRunResult(testrun)==='PROCESSERROR'
+          }).length
 
-          result.text = metrics.Tested+'/'+metrics.Total+' tested\n'
-          result.text += metrics.Passed+' passed\n'
-          result.text += metrics.Ok+'*ok \n'
-          result.text += metrics.NA!==0?metrics.NA+'*N/A \n':''
-          result.text += metrics.Warn!==0?metrics.Warn+'*warn \n':''
-          result.text += metrics.Fail!==0?metrics.Fail+'*fail \n':''
-          return result.text
-      }else{
-        return ''
-      }
-    }
+          metrics.ProcessError_Justified = testRunsTested.filter(testrun=>{
+                return this.getTestRunResult(testrun)==='PROCESSERROR'&&'justification' in testrun
+          }).length
+
+          metrics.NotPassed = testRunsTested.filter(testrun=>{
+              return !this.getTestRunResult(testrun).includes('OK')&&!('justification' in testrun)
+          }).length
+
+        }
+        else{
+          metrics.Total = 1
+          metrics.Tested = 'result' in testRuns?1:0
+          metrics.Passed = 'result' in testRuns&&this.getTestRunResult(testRuns).includes('OK')?1:0
+          
+          metrics.Ok = 'result' in testRuns&&this.getTestRunResult(testRuns)==='OK'?1:0
+
+          metrics.NA = 'result' in testRuns&&this.getTestRunResult(testRuns).includes('N/A')?1:0
+
+          metrics.Warn = 'result' in testRuns&&this.getTestRunResult(testRuns)==='WARN'&&!('justification' in testRuns)?1:0
+
+          metrics.Fail = 'result' in testRuns&&this.getTestRunResult(testRuns)==='FAIL'&&!('justification' in testRuns)?1:0
+
+          metrics.Warn_Justified = 'result' in testRuns&&this.getTestRunResult(testRuns)==='WARN'&&('justification' in testRuns)?1:0
+
+          
+          metrics.Fail_Justified = 'result' in testRuns&&this.getTestRunResult(testRuns)==='FAIL'&&('justification' in testRuns)?1:0
+
+          metrics.ProcessError =  'result' in testRuns&&this.getTestRunResult(testRuns)==='PROCESSERROR'&&!('justification' in testRuns)?1:0
+
+          metrics.ProcessError_Justified = 'result' in testRuns&&this.getTestRunResult(testRuns)==='PROCESSERROR'&&('justification' in testRuns)?1:0
+
+          metrics.NotPassed = 'result' in testRuns&&!this.getTestRunResult(testRuns).includes('OK')&&!('justification' in testRuns)?1:0
+
+        }
+        
+        metrics.NotPassed_Justified =metrics.Fail_Justified+metrics.Warn_Justified+metrics.ProcessError_Justified
+
+        
+        result.ok = metrics.Passed*100/metrics.Total
+
+        result.fail = metrics.NotPassed*100/metrics.Total
+        result.justified = metrics.NotPassed_Justified*100/metrics.Total
+
+        result.text = (metrics.Tested===metrics.Total?metrics.Tested:(metrics.Tested+'/'+metrics.Total))+' tested\n'
+        result.text += metrics.Passed+' passed'
+        result.text +='\n'
+        result.text += ' - '+metrics.Ok+'*ok '
+        result.text += metrics.NA!==0?metrics.NA+'*N/A':''
+        result.text +='\n'
+        result.text += metrics.NotPassed!==0?(metrics.NotPassed+' Not Passed \n - '):''
+        result.text += (metrics.Warn!==0?metrics.Warn+'*warn':'')+' '+(metrics.Fail!==0?metrics.Fail+'*fail':'')+' '+(metrics.ProcessError!==0?metrics.ProcessError+'*processError':'')
+        result.text +='\n'
+        result.text += (metrics.Warn_Justified!==0 || metrics.Fail_Justified!==0 || metrics.ProcessError_Justified!==0 )?((metrics.Warn_Justified+metrics.ProcessError_Justified+metrics.Fail_Justified)+' Not Passed + Justified\n - '):'' 
+        result.text += (metrics.Warn_Justified!==0?metrics.Warn_Justified+'*warn':'')+' '+(metrics.ProcessError_Justified!==0?metrics.ProcessError_Justified+'*processError':'')+' '+(metrics.Fail_Justified!==0?metrics.Fail_Justified+'*fail':'')
+        
+        return result.text 
+    },
   },
   mounted(){
     let TestCaseJustification = new Set()
@@ -199,7 +253,6 @@ export default {
         if('testrun' in testCase){
           testCasebuff.testrun = testCase.testrun
           testCasebuff.result = this.getTestCaseResult(testCase)
-          console.log(this.getTestCaseResult(testCase))
           if(Array.isArray(testCase.testrun)){
               testCase.testrun.forEach(elt=>{
                   if('justification' in elt){  
@@ -215,8 +268,6 @@ export default {
         
          this.testCasesWithJustification.push(testCasebuff)
     })
-  
-    console.log(this.testCasesWithJustification)
   }
 };
 </script>

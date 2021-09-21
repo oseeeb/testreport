@@ -55,28 +55,52 @@ export default {
     },
     methods:{
         getsimpleResult(result){
-            if(result.includes('FAIL')){
+            if(result.includes('processError')){
+                return 'PROCESSERROR'
+            }
+            else if(result.includes('FAIL')){
                 return 'FAIL'
             }
             else if(result.includes('WARN')){
                 return 'WARN'
             }
-            else if(result.includes('processError')){
-                return 'PROCESSERROR'
+            else if(result.includes('processError*')){
+                return 'PROCESSERROR*'
+            }
+            else if(result.includes('FAIL*')){
+                return 'FAIL*'
+            }
+            else if(result.includes('WARN*')){
+                return 'WARN*'
             }
             else if(result.includes('OK.N/A')){
-                return 'OK.N/A'
+                return 'OK'
             }
             else if(result.includes('OK')){
                 return 'OK'
             }
         },
-        getResult(result){
-            if(result.includes('fail')){
-                return 'FAIL'
+        getResult(result,isJustified){
+            if(result.toLowerCase().includes('processerror')){
+                if(isJustified){
+                    return 'processError*'
+                }else{
+                    return 'processError'
+                }
+            }
+            else if(result.includes('fail')){
+                if(isJustified){
+                    return 'FAIL*'
+                }else{
+                    return 'FAIL'
+                }
             }
             else if(result.includes('warn')){
-                return 'WARN'
+                if(isJustified){
+                    return 'WARN*'
+                }else{
+                    return 'WARN'
+                }
             }
             else if(result.includes('N/A')){
                 return 'OK.N/A'
