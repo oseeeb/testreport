@@ -178,20 +178,23 @@ export default {
       }
     },
     getsimpleResult(result){
-      if(result.includes('FAIL*')){
-          return 'FAIL*'
+      if(result.includes('processError')){
+          return 'PROCESSERROR'
       }
       else if(result.includes('FAIL')){
           return 'FAIL'
       }
-      else if(result.includes('WARN*')){
-          return 'WARN*'
-      }
       else if(result.includes('WARN')){
           return 'WARN'
       }
-      else if(result.includes('processError')){
-          return 'PROCESSERROR'
+      else if(result.includes('processError*')){
+          return 'PROCESSERROR*'
+      }
+      else  if(result.includes('FAIL*')){
+          return 'FAIL*'
+      } 
+      else if(result.includes('WARN*')){
+          return 'WARN*'
       }
       else if(result.includes('OK.N/A')){
           return 'OK'
@@ -389,12 +392,12 @@ export default {
         }).length
 
         metrics.Warn_Justified = testRunsTested.filter(testrun=>{
-            return this.getTestRunResult(testrun)==='WARN'&&'justification' in testrun
+            return this.getTestRunResult(testrun)==='WARN*'
         }).length
 
         
         metrics.Fail_Justified = testRunsTested.filter(testrun=>{
-              return this.getTestRunResult(testrun)==='FAIL'&&'justification' in testrun
+              return this.getTestRunResult(testrun)==='FAIL*'
         }).length
 
         metrics.ProcessError = testRunsTested.filter(testrun=>{
@@ -402,7 +405,7 @@ export default {
         }).length
 
         metrics.ProcessError_Justified = testRunsTested.filter(testrun=>{
-              return this.getTestRunResult(testrun)==='PROCESSERROR'&&'justification' in testrun
+              return this.getTestRunResult(testrun)==='PROCESSERROR*'
         }).length
 
         metrics.NotPassed = testRunsTested.filter(testrun=>{
@@ -415,7 +418,7 @@ export default {
 
         result.fail = metrics.NotPassed*100/metrics.Total
         result.justified = metrics.NotPassed_Justified*100/metrics.Total
-
+        console.log('metrics',metrics)
         result.text = (metrics.Tested===metrics.Total?metrics.Tested:(metrics.Tested+'/'+metrics.Total))+' tested\n'
         result.text += metrics.Passed+' passed'
         result.text +='\n'
@@ -440,14 +443,14 @@ export default {
       config.name = name
       config.Coverage_Status = 'TBD'
 
-      var pathelt = name.split('\\')
+      var pathelt = name.includes('\\')?name.split('\\'):name.split('_')
       pathelt.pop()
-      config.ConfigPath  = pathelt.join('\\')
+      config.ConfigPath  = name.includes('\\')?pathelt.join('\\'):pathelt.join('_')
 
       this.paths.push(config.ConfigPath) 
       config.QualityLevel = this.getquality(name)
 
-      config.configName = name.replace(config.ConfigPath,'')
+      config.configName = name.includes('\\')?name.replace(config.ConfigPath,''):name
       var testRunsFunctionnalResultforthisConfig = this.getResultbytesruns(this.getlogbytestconfig(name).test_fonctional)
       config.Functional = {
         result : testRunsFunctionnalResultforthisConfig,

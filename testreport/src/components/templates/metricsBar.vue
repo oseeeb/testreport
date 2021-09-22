@@ -102,14 +102,11 @@ export default {
                     return 'WARN'
                 }
             }
+            else if(result.includes('ok')){
+                return 'OK'
+            }
             else if(result.includes('N/A')){
                 return 'OK.N/A'
-            }
-            else if(result.toLowerCase().includes('processerror')){
-                return 'processError'
-            }
-            else{
-                return 'OK'
             }
         },
         getTestRunResult(testrun){
@@ -343,7 +340,7 @@ export default {
             this.metrics.Ok = testConfigPassed.filter(config=>{return config.testruns.filter(testrun=>{return'result' in testrun&& this.getTestRunResult(testrun)==='OK'}).length>0}).length
 
             this.metrics.NA = testConfigPassed.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun).includes('N/A')}).length>0}).length
-
+            
             this.metrics.Warn = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)==='WARN'&&!('justification' in testrun)}).length>0}).length
            
             this.metrics.Fail = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)==='FAIL'&&!('justification' in testrun)}).length>0}).length
@@ -356,8 +353,9 @@ export default {
             this.metrics.ProcessError = testconfigs.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)==='PROCESSERROR'}).length>0}).length
 
            
-            this.metrics.NotPassed = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)!=='OK'&&!this.getTestRunResult(testrun).includes('N/A')&&!('justification' in testrun)}).length>0}).length
-            this.metrics.NotPassed_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&this.getTestRunResult(testrun)!=='OK'&&!this.getTestRunResult(testrun).includes('N/A')&&('justification' in testrun)}).length>0}).length
+            this.metrics.NotPassed = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&!this.getTestRunResult(testrun).includes('OK')&&!('justification' in testrun)}).length>0}).length
+            console.log('this.metrics.NotPassed',testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&!this.getTestRunResult(testrun).includes('OK')&&('justification' in testrun)}).length>0}))
+            this.metrics.NotPassed_Justified = testConfigTested.filter(config=>{return config.testruns.filter(testrun=>{return 'result' in testrun&&!this.getTestRunResult(testrun).includes('OK')&&('justification' in testrun)}).length>0}).length
 
             
             this.result.ok = this.metrics.Passed*100/this.metrics.Total
