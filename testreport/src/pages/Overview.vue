@@ -655,6 +655,22 @@ export default {
             }
         }
     },
+    testcaseIsJustified(testcase){
+        var testrunsJust = []
+        if('testrun' in testcase){
+            if(Array.isArray(testcase.testrun)){
+                testrunsJust.push(...testcase.testrun.filter(testrun=>{
+                    return 'justification' in testrun
+                }))
+            }else{
+                if('justification' in testcase.testrun){
+                    testrunsJust.push(testcase.testrun)
+                }
+            }
+        }
+
+        return testrunsJust.length===0?false:true
+    }
   },
   mounted(){
   var testrunwithInfo = []
@@ -790,40 +806,15 @@ export default {
         this.TestCases_ThisCycle.push(testcase)
     }
   })
-   this.TestCases_ThisCycle.forEach(testcase=>{
-    var testruns = []
-    if('testrun' in testcase){
-      if(Array.isArray(testcase.testrun)){
-        testruns.push(...testcase.testrun.filter(testrun=>{
-          return 'result' in testrun&&this.getTestRunResult(testrun).includes('OK')
-        }))
-      }else if('result' in testcase.testrun&&this.getTestRunResult(testcase.testrun).includes('OK')){
-        testruns.push(testcase.testrun)
-      }
-    }
-    if(testruns.length>0){
-        this.TestCases_ThisCycle_Passed.push(testcase)
-    }
-  })
 
-  this.TestCases_ThisCycle.forEach(testcase=>{
-    var testruns = []
-    if('testrun' in testcase){
-      if(Array.isArray(testcase.testrun)){
-        testruns.push(...testcase.testrun.filter(testrun=>{
-          return 'result' in testrun&&!this.getTestRunResult(testrun).includes('OK')&&('justification' in testrun)
-        }))
-      }else if('result' in testcase.testrun&&!this.getTestRunResult(testcase.testrun).includes('OK')&&('justification' in testcase.testrun)){
-        testruns.push(testcase.testrun)
-      }
-    }
-    if(testruns.length>0){
-        this.TestCases_ThisCycle_NotPassed_Justified.push(testcase)
-    }
-  })
+  this.TestCases_ThisCycle_Passed.push(...this.TestCases_ThisCycle.filter(testcase=>{
+    return this.getTestCaseResult(testcase)==='OK'
+  }))
 
-
-
+  this.TestCases_ThisCycle_NotPassed_Justified.push(...this.TestCases_ThisCycle.filter(testcase=>{
+    return !this.getTestCaseResult(testcase).includes('OK')&&this.testcaseIsJustified(testcase)
+  }))
+  
   this.NrOf_TestCases_Planned_ThisCycle =  this.TestCases_ThisCycle.filter(elemt=>{
     return elemt._attributes.ExecPlan==='x'
   }).length
@@ -836,7 +827,12 @@ export default {
     return elemt._attributes.ExecPlan==='x'
   }).length
   
+  
   this.NrOf_TestCases_Planned_ThisCycle_Accepted = this.NrOf_TestCases_Planned_ThisCycle_Passed + this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified
+  console.log('this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified',this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified)
+  console.log('this.NrOf_TestCases_Planned_ThisCycle_Passed',this.NrOf_TestCases_Planned_ThisCycle_Passed)
+  console.log('this.NrOf_TestCases_Planned_ThisCycle_Accepted',this.NrOf_TestCases_Planned_ThisCycle_Accepted)
+  console.log('this.TestCases_ThisCycle',this.TestCases_ThisCycle.length)
   
   var test = []
   this.TestRuns_QACSummary.forEach(elt=>{

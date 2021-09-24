@@ -8,11 +8,11 @@
                 </md-table-toolbar>
                 <md-table-row>
                     <md-table-cell style="width:25%;">Version</md-table-cell>
-                    <md-table-cell>{{TestRuns_QACSummary[1].testenv.version._text}}</md-table-cell>
+                    <md-table-cell>{{TestRuns_QACSummary[0].testenv.version._text}}</md-table-cell>
                 </md-table-row>
                 <md-table-row>
                     <md-table-cell style="width:25%;">option</md-table-cell>
-                    <md-table-cell>{{TestRuns_QACSummary[0].testenv.option?TestRuns_QACSummary[1].testenv.option._text:''}}</md-table-cell>
+                    <md-table-cell>{{TestRuns_QACSummary[0].testenv.option?TestRuns_QACSummary[0].testenv.option._text:''}}</md-table-cell>
                 </md-table-row>
                 <md-table-row>
                     <md-table-cell style="width:25%;">Personality files</md-table-cell>

@@ -141,9 +141,13 @@ export default {
             var testrunsJust = []
             if('testrun' in testcase){
                 if(Array.isArray(testcase.testrun)){
-                    testrunsJust = testcase.testrun.filter(testrun=>{
+                    testrunsJust.push(...testcase.testrun.filter(testrun=>{
                         return 'justification' in testrun
-                    })
+                    }))
+                }else{
+                    if('justification' in testcase.testrun){
+                        testrunsJust.push(testcase.testrun)
+                    }
                 }
             }
 
@@ -205,6 +209,9 @@ export default {
             this.metrics.Warn = testCases.filter(testcase=>{
                 return this.getTestCaseResult(testcase)==='WARN' && !this.testcaseIsJustified(testcase)
             }).length
+            console.log('tescase with warn',testCases.filter(testcase=>{
+                return this.getTestCaseResult(testcase)==='WARN' && !this.testcaseIsJustified(testcase)
+            }))
             this.metrics.Warn_Justified = testcasesTested.filter(testcase=>{
                 return this.getTestCaseResult(testcase)==='WARN' && this.testcaseIsJustified(testcase)
             }).length

@@ -136,8 +136,10 @@ export default {
           if(('config' in testrun._attributes)&&(testrun._attributes.config.includes(config))){
               testruns.push(testrun)
           }
-          else if(('parameter' in testrun._attributes)&&(testrun._attributes.parameter.includes(config))){
-            testruns.push(testrun)
+          else if(('parameter' in testrun._attributes)){
+            if(testrun._attributes.parameter.includes(config)){
+              testruns.push(testrun)
+            }
           }
       })
 
@@ -348,7 +350,7 @@ export default {
                 covered : summary.decisionCovered?summary.decisionCovered._text:'N/A',
                 accepted : summary.decisionCoveredJust?summary.decisionCoveredJust._text:'N/A',
                 percentage : summary.decisionCnt?(summary.decisionCnt._text==='N/A'?'N/A':(summary.decisionCovered._text?(parseInt(summary.decisionCovered._text)*100/summary.decisionCnt._text):'N/A')):'N/A',
-                percentageJustified : summary.decisionCnt?(summary.decisionCnt._text==='N/A'?'N/A':(summary.decisionCoveredJust._text?(parseInt(summary.decisionCoveredJust._text)*100/summary.decisionCnt._text):'N/A')):'N/A',
+                percentageJustified : summary.decisionCnt?(summary.decisionCnt._text==='N/A'?'N/A':(summary.decisionCoveredJust?(parseInt(summary.decisionCoveredJust._text)*100/summary.decisionCnt._text):'N/A')):'N/A',
             }
         ]
 

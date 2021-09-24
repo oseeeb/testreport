@@ -99,7 +99,7 @@
             <h2 class="accordion-header" :id="'flush-heading'+level">
               <button :class="'accordion-button collapsed d-flex justify-content-between '+getTestGroupResult(testgroupInit)+'-result'"  type="button" data-bs-toggle="collapse" :data-bs-target="'#flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level" aria-expanded="true" :aria-controls="'flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level">
                  <div class="p-2 bd-highlight">{{(testgroupInit._attributes?testgroupInit._attributes.name:'no-name')}}</div> 
-                <div class="p-2 bd-highlight" :style="'background-color:'+(getTestGroupResult(testgroupInit).includes('*')?'green':(getTestGroupResult(testgroupInit)==='FAIL'?'red;':(getTestGroupResult(testgroupInit)==='WARN'?'yellow':'#00FF00;')))">{{getTestGroupResult(testgroup)}}</div>
+                <div class="p-2 bd-highlight" :style="'background-color:'+(getTestGroupResult(testgroupInit).includes('*')?'green':(getTestGroupResult(testgroupInit)==='FAIL'?'red;':(getTestGroupResult(testgroupInit)==='WARN'?'yellow':'#00FF00;')))">{{getTestGroupResult(testgroupInit)}}</div>
               </button>
             </h2>
             <div :id="'flush-collapse'+(testgroupInit._attributes?testgroupInit._attributes.name.replace(/ /g,'-'):'no-name')+'-'+level" :class="'accordion-collapse collapse '+getTestGroupResult(testgroupInit)+'-collapse'" aria-labelledby="flush-headingOne" :data-bs-parent="'accordionFlush-'+sharename+'-'+level">
@@ -312,9 +312,7 @@ export default {
                 }else{
                     result.push(this.getTestGroupResult(testgroup.testgroup))
                 }
-            }
-
-            if('testcase' in testgroup){
+            }else if('testcase' in testgroup){
                 if('testrun' in testgroup.testcase){
                     result.push(this.getTestCaseResult(testgroup.testcase))
                 }else{
@@ -322,8 +320,9 @@ export default {
                         result.push(this.getTestCaseResult(elt))
                     })
                 }
+                
             }
-
+            
             return this.getsimpleResult(result)
             
         },
