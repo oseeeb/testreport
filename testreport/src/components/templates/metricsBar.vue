@@ -153,19 +153,28 @@ export default {
 
             return testrunsJust.length===0?false:true
         },
-        getTestrunByConfig(config){
-            var testruns = []
-            this.$store.state.testRuns.forEach(testrun=>{
-                if(('config' in testrun._attributes)&&(testrun._attributes.config.includes(config))){
-                    testruns.push(testrun)
-                }
-                else if(('parameter' in testrun._attributes)&&(testrun._attributes.parameter.includes(config))){
-                    testruns.push(testrun)
-                }
-            })
+    getTestrunByConfig(config){
+      var testruns = []
+      this.$store.state.testRuns.forEach(testrun=>{
+          if(('config' in testrun._attributes)&&(testrun._attributes.config.includes(config))){
+              testruns.push(testrun)
+          }
+          else if(('parameter' in testrun._attributes)){
+            var configTest = testrun._attributes.parameter.match(new RegExp("config=(.*)"))?testrun._attributes.parameter.match(new RegExp("config=(.*)"))[1]:''
+            configTest = configTest.includes(',')?configTest.split(',')[0].trim():configTest
 
-            return testruns
-        },
+            if(configTest!==''&&configTest===config){
+              testruns.push(testrun)
+            }
+            else if(testrun._attributes.parameter===''&&config==='Overall'){
+              testruns.push(testrun)
+            }
+          }
+          
+      })
+
+      return testruns
+    },
         getTestcaseMetrics(testcases){
             var testCases = testcases
             var testcasesTested = testCases.filter(testcase=>{

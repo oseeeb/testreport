@@ -54,7 +54,7 @@
       <div class="md-layout-item">
         <md-card>
           <md-card-header>
-            <div class="md-title"><router-link to="TestCases"> Test Cases</router-link></div>
+            <div class="md-title"><router-link to="/test_cases"> Test Cases</router-link></div>
           </md-card-header>
 
           <md-card-content>
@@ -66,7 +66,7 @@
         </md-card>
         <md-card >
           <md-card-header>
-            <div class="md-title"><router-link to="runtime_coverage"> Runtime Coverage</router-link></div>
+            <div class="md-title"><router-link to="/runtime_coverage"> Runtime Coverage</router-link></div>
           </md-card-header>
           <md-card-content>
             <span class="symbol_ok"></span> <span>Runtime Coverage (Component Test)</span><br/>
@@ -117,7 +117,7 @@
       <div class="md-layout-item">
         <md-card>
           <md-card-header>
-            <div class="md-title"><router-link to="TestConfigurations">Test Configuration</router-link></div>
+            <div class="md-title"><router-link to="/test_configurations">Test Configuration</router-link></div>
           </md-card-header>
           <md-card-content> 
             <metrics-bar :Todraw="$store.state.testConfigs" :Type="'testconfig'" :Name="'TestConfigs'"></metrics-bar>
@@ -125,7 +125,7 @@
         </md-card>
         <md-card >
           <md-card-header>
-            <div class="md-title"><router-link to="MISRA">MISRA</router-link></div>
+            <div class="md-title"><router-link to="/misra">MISRA</router-link></div>
           </md-card-header>
           <md-card-content>
             <OutputConfDevInfo :configCount="configurationCount"/>
@@ -788,7 +788,6 @@ export default {
 
   
   this.TestCases_Accepted = this.TestCases_WithResult.filter(testcase=>{return this.getTestCaseResult(testcase).includes('OK')||this.getTestCaseResult(testcase)==='FAIL*'||this.getTestCaseResult(testcase)==='WARN*'||this.getTestCaseResult(testcase)==='PROCESSERROR*'})
-  console.log('this.TestCases_Accepted',this.TestCases_Accepted)
 
   var test = []
   this.TestCases_WithResult.forEach(testcase=>{
@@ -829,10 +828,6 @@ export default {
   
   
   this.NrOf_TestCases_Planned_ThisCycle_Accepted = this.NrOf_TestCases_Planned_ThisCycle_Passed + this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified
-  console.log('this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified',this.NrOf_TestCases_Planned_ThisCycle_NotPassed_Justified)
-  console.log('this.NrOf_TestCases_Planned_ThisCycle_Passed',this.NrOf_TestCases_Planned_ThisCycle_Passed)
-  console.log('this.NrOf_TestCases_Planned_ThisCycle_Accepted',this.NrOf_TestCases_Planned_ThisCycle_Accepted)
-  console.log('this.TestCases_ThisCycle',this.TestCases_ThisCycle.length)
   
   var test = []
   this.TestRuns_QACSummary.forEach(elt=>{
@@ -849,7 +844,6 @@ export default {
   })
 
   this.configurationCount = test.length
-  console.log('$store.state.testRuns', this.$store.state.testRuns)
   this.$store.state.testRuns.forEach(testrun => {
      if('log_build' in testrun ){
         if('_attributes' in testrun.log_build && 'type' in testrun.log_build._attributes && testrun.log_build._attributes.type==='CheckPClint' ){

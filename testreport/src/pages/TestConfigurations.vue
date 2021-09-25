@@ -83,15 +83,8 @@ export default {
   methods:{
     filteredConfigs(path){
       var filtered =  this.testconfigs.filter(config=>{
-        if(path!==''){
-          return config.name.includes(path)
-        }else{
-          return config.name.toLowerCase().includes('overall')
-        }
+          return config.ConfigPath===path
       })
-
-      console.log('configs path',path)
-
       return filtered
     },
     getquality(config){
@@ -100,8 +93,16 @@ export default {
           if(('config' in testrun._attributes)&&(testrun._attributes.config.includes(config))){
             testRunsRuntime.push(testrun)
           }
-          else if(('parameter' in testrun._attributes)&&(testrun._attributes.parameter.includes(config))){
-            testRunsRuntime.push(testrun)
+          else if(('parameter' in testrun._attributes)){
+            var configTest = testrun._attributes.parameter.match(new RegExp("config=(.*)"))?testrun._attributes.parameter.match(new RegExp("config=(.*)"))[1]:''
+            configTest = configTest.includes(',')?configTest.split(',')[0].trim():configTest
+
+            if(configTest!==''&&configTest===config){
+              testRunsRuntime.push(testrun)
+            }
+            else if(testrun._attributes.parameter===''&&config==='Overall'){
+              testRunsRuntime.push(testrun)
+            }
           }
       })
 
@@ -137,10 +138,17 @@ export default {
               testruns.push(testrun)
           }
           else if(('parameter' in testrun._attributes)){
-            if(testrun._attributes.parameter.includes(config)){
+            var configTest = testrun._attributes.parameter.match(new RegExp("config=(.*)"))?testrun._attributes.parameter.match(new RegExp("config=(.*)"))[1]:''
+            configTest = configTest.includes(',')?configTest.split(',')[0].trim():configTest
+
+            if(configTest!==''&&configTest===config){
+              testruns.push(testrun)
+            }
+            else if(testrun._attributes.parameter===''&&config==='Overall'){
               testruns.push(testrun)
             }
           }
+          
       })
 
       return testruns
@@ -420,7 +428,6 @@ export default {
 
         result.fail = metrics.NotPassed*100/metrics.Total
         result.justified = metrics.NotPassed_Justified*100/metrics.Total
-        console.log('metrics',metrics)
         result.text = (metrics.Tested===metrics.Total?metrics.Tested:(metrics.Tested+'/'+metrics.Total))+' tested\n'
         result.text += metrics.Passed+' passed'
         result.text +='\n'
@@ -501,7 +508,6 @@ export default {
       }
 
       config.testruns = this.getTestrunByConfig(name)
-      console.log('this testconfigs result',this.getResultbytesruns(config.testruns))
       this.testconfigs.push(config)
       if(name.toLowerCase()==='overall'){
         console.log('ce tetu',config)
@@ -509,7 +515,6 @@ export default {
     })
 
     this.paths = [...(new Set(this.paths))]
-    console.log('this testconfigs',this.testconfigs)
   }
 };
 </script>

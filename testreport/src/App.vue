@@ -88,7 +88,6 @@ export default {
       
     },
     findTestConfig(testRuns){
-      console.log('testruns for config', testRuns.length)
       testRuns.forEach(testrun=>{
         if('config' in testrun._attributes){
           this.testConfigs.push(testrun._attributes.config)
@@ -100,6 +99,9 @@ export default {
               this.testConfigs.push(config.split(',')[0].trim())
             }
             else{
+              if(config.trim()===''){
+                console.log('testrun ndem',testrun)
+              }
               this.testConfigs.push(config.trim())
             }
           }
@@ -109,8 +111,14 @@ export default {
         }
       })
 
+      this.testConfigs=this.testConfigs.map(config=>{
+        if(config!==''){
+          return config
+        }else{
+          return 'Overall'
+        }
+      })
       this.testConfigs = [...(new Set(this.testConfigs))]
-      console.log('this.testConfigs',this.testConfigs)
     },
   },
   mounted(){
@@ -134,6 +142,7 @@ export default {
 
       this.msg = 'Retrieving TestConfigs...'
       this.findTestConfig(this.testRuns)
+      console.log('testConfigs',this.testConfigs)
       this.$store.dispatch('testConfigs',this.testConfigs)
       this.loading = false;
     })
